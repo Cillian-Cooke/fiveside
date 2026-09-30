@@ -7,7 +7,6 @@ import {
   findTeamBySlug,
   pastGames,
   resultFor,
-  teamProfile,
   upcomingGames,
 } from '../lib/teams.js'
 import MatchCard from '../components/MatchCard.jsx'
@@ -46,7 +45,6 @@ export default function Team() {
   }, [current.fixtures, pastWeeks])
 
   const team = findTeamBySlug(roster, slug)
-  const profile = team ? teamProfile(team.name) : null
 
   const upcoming = useMemo(() => {
     if (!team) return []
@@ -100,7 +98,6 @@ export default function Team() {
       </button>
       <p className="page-kicker">{team.division}</p>
       <h1 className="page-title">{team.name}</h1>
-      <p className="team-meta">Captain {profile.captain}</p>
 
       <h2 className="section-title">Next game</h2>
       {next ? (

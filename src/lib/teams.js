@@ -5,57 +5,6 @@ export function teamSlug(name) {
     .replace(/^-+|-+$/g, '')
 }
 
-function hashString(value) {
-  let hash = 0
-  for (const char of value) hash = (hash * 31 + char.charCodeAt(0)) >>> 0
-  return hash
-}
-
-const FIRST = [
-  'Aoife',
-  'Cillian',
-  'Niamh',
-  'Oisín',
-  'Saoirse',
-  'Eoin',
-  'Ciara',
-  'Fionn',
-  'Maeve',
-  'Tadhg',
-  'Róisín',
-  'Conor',
-  'Orla',
-  'Dara',
-  'Aisling',
-  'Liam',
-]
-
-const LAST = [
-  'Byrne',
-  'Kelly',
-  'Murphy',
-  'Walsh',
-  'Ryan',
-  'Doyle',
-  'Gallagher',
-  'Kennedy',
-  'O’Connor',
-  'Lynch',
-  'Nolan',
-  'Fitzgerald',
-  'McCarthy',
-  'Dunne',
-  'Brennan',
-  'Quinn',
-]
-
-export function teamProfile(name) {
-  const hash = hashString(name)
-  return {
-    captain: `${FIRST[hash % FIRST.length]} ${LAST[(hash >> 5) % LAST.length]}`,
-  }
-}
-
 export function findTeamBySlug(teams, slug) {
   return teams.find((team) => teamSlug(team.name) === slug)
 }
