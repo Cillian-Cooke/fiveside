@@ -138,8 +138,14 @@ function parseTimeLabel(label) {
   return m ? m[1] : null
 }
 
+function pushSlotOverride(slotOverrides, entry) {
+  const key = `${entry.day}|${entry.time}|${entry.venue}`
+  slotOverrides.set(key, entry.status)
+}
+
 function parseSheetRows(rows, colorToDivision) {
   const matches = []
+  const slotOverrides = new Map()
   const warnings = []
 
   for (const row of rows) {
@@ -171,6 +177,13 @@ function parseSheetRows(rows, colorToDivision) {
             color,
             division,
           })
+        } else if (parsed?.kind === 'free' || parsed?.kind === 'unavailable') {
+          pushSlotOverride(slotOverrides, {
+            day,
+            time,
+            venue: 'botany_bay',
+            status: parsed.kind,
+          })
         }
       }
 
@@ -194,12 +207,30 @@ function parseSheetRows(rows, colorToDivision) {
               color,
               division,
             })
+          } else if (parsed?.kind === 'free' || parsed?.kind === 'unavailable') {
+            pushSlotOverride(slotOverrides, {
+              day,
+              time: '12-1pm',
+              venue: hallVenue,
+              status: parsed.kind,
+            })
           }
         }
       } else {
         for (let idx = 8; idx <= 12; idx++) {
           const parsed = parseVsCell(cellText(row[idx]))
-          if (parsed?.kind !== 'match') continue
+          if (parsed?.kind !== 'match') {
+            if (parsed?.kind === 'free' || parsed?.kind === 'unavailable') {
+              const day = DAY_BY_COL[idx]
+              pushSlotOverride(slotOverrides, {
+                day,
+                time: '12-1pm',
+                venue: 'hall_a',
+                status: parsed.kind,
+              })
+            }
+            continue
+          }
           const day = DAY_BY_COL[idx]
           const { division, color } = divisionFromCellColor(
             cellColor(row[idx]),
@@ -223,7 +254,17 @@ function parseSheetRows(rows, colorToDivision) {
 
   const key = (m) => `${m.day}|${m.time}|${m.venue}|${m.home}|${m.away}`
   const deduped = [...new Map(matches.map((m) => [key(m), m])).values()]
-  return { matches: deduped, warnings }
+  const overrides = [...slotOverrides.entries()].map(([k, status]) => {
+    const [day, time, venue] = k.split('|')
+    return { day, time, venue, status }
+  })
+  overrides.sort(
+    (a, b) =>
+      a.day.localeCompare(b.day) ||
+      a.time.localeCompare(b.time) ||
+      a.venue.localeCompare(b.venue),
+  )
+  return { matches: deduped, slotOverrides: overrides, warnings }
 }
 
 function formatMatchesJs(matches) {
@@ -235,8 +276,21 @@ function formatMatchesJs(matches) {
   return `const MATCHES = [\n${lines.join('\n')}\n]`
 }
 
-function patchSeedJs(seedText, matchesBlock, opts) {
-  let out = seedText.replace(/const MATCHES = \[[\s\S]*?\n\]/, matchesBlock)
+function formatSlotOverridesJs(overrides) {
+  const lines = overrides.map(
+    (s) =>
+      `  { day: '${s.day}', time: '${s.time}', venue: '${s.venue}', status: '${s.status}' },`,
+  )
+  return `const SLOT_OVERRIDES = [\n${lines.join('\n')}\n]`
+}
+
+function patchSeedJs(seedText, matchesBlock, overridesBlock, opts) {
+  let out = seedText.replace(/const MATCHES = \[\n[\s\S]*?\n\]\n/, `${matchesBlock}\n`)
+  if (/const SLOT_OVERRIDES = \[\n[\s\S]*?\n\]\n/.test(out)) {
+    out = out.replace(/const SLOT_OVERRIDES = \[\n[\s\S]*?\n\]\n/, `${overridesBlock}\n`)
+  } else {
+    out = out.replace(`${matchesBlock}\n`, `${matchesBlock}\n\n${overridesBlock}\n`)
+  }
   if (opts.weekId) {
     out = out.replace(/const CURRENT_WEEK_ID = '[^']+'/, `const CURRENT_WEEK_ID = '${opts.weekId}'`)
     out = out.replace(
@@ -268,9 +322,10 @@ async function main() {
   refreshTeamDivisionsFromSheet(opts.sheetId)
 
   const colorToDivision = mergeColorMap(sheet.colorToDivision)
-  const { matches, warnings } = parseSheetRows(sheet.rows, colorToDivision)
+  const { matches, slotOverrides, warnings } = parseSheetRows(sheet.rows, colorToDivision)
 
   console.log(`Parsed ${matches.length} fixtures from sheet ${opts.sheetId}`)
+  console.log(`Parsed ${slotOverrides.length} free/unavailable slot overrides from sheet`)
   if (sheet.legend && Object.keys(sheet.legend).length) {
     console.log('Division colours from sheet legend:', sheet.legend)
   }
@@ -280,16 +335,19 @@ async function main() {
   }
 
   const matchesBlock = formatMatchesJs(matches)
+  const overridesBlock = formatSlotOverridesJs(slotOverrides)
   const seedPath = join(root, 'src/data/seed.js')
   const seedText = readFileSync(seedPath, 'utf8')
 
   if (opts.dryRun) {
     console.log('\n--- MATCHES preview (first 5) ---')
     console.log(matches.slice(0, 5))
+    console.log('\n--- SLOT_OVERRIDES ---')
+    console.log(slotOverrides)
     return
   }
 
-  const next = patchSeedJs(seedText, matchesBlock, opts)
+  const next = patchSeedJs(seedText, matchesBlock, overridesBlock, opts)
   writeFileSync(seedPath, next)
   console.log(`Updated ${seedPath}`)
 }

@@ -34,6 +34,32 @@ const MATCHES = [
   { day: 'friday', time: '4-5pm', venue: 'botany_bay', home: 'Trin Tigers', away: 'Roman Empire', color: '#B4A7D6', division: 'Division 6' },
 ]
 
+const SLOT_OVERRIDES = [
+  { day: 'friday', time: '12-1pm', venue: 'hall_a', status: 'unavailable' },
+  { day: 'friday', time: '12-1pm', venue: 'hall_b', status: 'unavailable' },
+  { day: 'friday', time: '2-3pm', venue: 'botany_bay', status: 'free' },
+  { day: 'friday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
+  { day: 'friday', time: '9-10am', venue: 'botany_bay', status: 'free' },
+  { day: 'monday', time: '11-12pm', venue: 'botany_bay', status: 'free' },
+  { day: 'monday', time: '12-1pm', venue: 'hall_a', status: 'free' },
+  { day: 'monday', time: '12-1pm', venue: 'hall_b', status: 'free' },
+  { day: 'monday', time: '3-4pm', venue: 'botany_bay', status: 'free' },
+  { day: 'monday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
+  { day: 'monday', time: '9-10am', venue: 'botany_bay', status: 'free' },
+  { day: 'thursday', time: '12-1pm', venue: 'hall_a', status: 'free' },
+  { day: 'thursday', time: '12-1pm', venue: 'hall_b', status: 'free' },
+  { day: 'thursday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
+  { day: 'thursday', time: '9-10am', venue: 'botany_bay', status: 'free' },
+  { day: 'tuesday', time: '12-1pm', venue: 'hall_a', status: 'free' },
+  { day: 'tuesday', time: '12-1pm', venue: 'hall_b', status: 'free' },
+  { day: 'tuesday', time: '2-3pm', venue: 'botany_bay', status: 'free' },
+  { day: 'tuesday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
+  { day: 'wednesday', time: '12-1pm', venue: 'hall_a', status: 'unavailable' },
+  { day: 'wednesday', time: '12-1pm', venue: 'hall_b', status: 'unavailable' },
+  { day: 'wednesday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
+  { day: 'wednesday', time: '9-10am', venue: 'botany_bay', status: 'free' },
+]
+
 function slotId(weekId, day, time, venue) {
   return `${weekId}-${day}-${time}-${venue}`.replaceAll(' ', '')
 }
@@ -53,11 +79,14 @@ const DIVISION_3 = [
   { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'Loch Bess Monster', away: 'Engibeering', color: '#CFE2F3', division: 'Division 3' },
 ]
 
-export function buildFixtures(weekId, matches) {
+export function buildFixtures(weekId, matches, slotOverrides = SLOT_OVERRIDES) {
   const fixtures = []
   const matchKey = (day, time, venue) => `${day}|${time}|${venue}`
   const matchMap = new Map(
     matches.map((match) => [matchKey(match.day, match.time, match.venue), match]),
+  )
+  const overrideMap = new Map(
+    slotOverrides.map((slot) => [matchKey(slot.day, slot.time, slot.venue), slot.status]),
   )
 
   for (const day of ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']) {
@@ -92,23 +121,19 @@ export function buildFixtures(weekId, matches) {
           status: 'match',
           ...match,
         })
-      } else if (day === 'thursday' || day === 'friday') {
-        fixtures.push({
-          id: slotId(weekId, day, time, 'botany_bay'),
-          weekId,
-          day,
-          time,
-          venue: 'botany_bay',
-          status: 'unavailable',
-        })
       } else {
+        const override = overrideMap.get(matchKey(day, time, 'botany_bay'))
+        let status = override
+        if (!status) {
+          status = day === 'thursday' || day === 'friday' ? 'unavailable' : 'free'
+        }
         fixtures.push({
           id: slotId(weekId, day, time, 'botany_bay'),
           weekId,
           day,
           time,
           venue: 'botany_bay',
-          status: 'free',
+          status,
         })
       }
     }
@@ -126,13 +151,14 @@ export function buildFixtures(weekId, matches) {
           ...match,
         })
       } else {
+        const override = overrideMap.get(matchKey(day, time, venue))
         fixtures.push({
           id: slotId(weekId, day, time, venue),
           weekId,
           day,
           time,
           venue,
-          status: 'unavailable',
+          status: override || 'unavailable',
         })
       }
     }
