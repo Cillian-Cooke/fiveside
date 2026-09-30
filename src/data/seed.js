@@ -18,9 +18,6 @@ const MATCHES = [
   { day: 'thursday', time: '12-1pm', venue: 'botany_bay', home: 'The Screaming Goafers', away: 'FC TRISS', color: '#6AA84F', division: 'Mixed Division' },
   { day: 'friday', time: '12-1pm', venue: 'botany_bay', home: 'Ponzie Prowlers', away: 'Strokes Academy', color: '#D5A6BD', division: 'Division 7' },
   { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'FC TRISS', away: 'Lionel MSISS', color: '#FFE599', division: 'Division 3' },
-  { day: 'monday', time: '1-2pm', venue: 'botany_bay', home: 'Spartak Zubi Piski', away: 'Team Football', color: '#B7B7B7', division: 'Mixed Division' },
-  { day: 'tuesday', time: '1-2pm', venue: 'botany_bay', home: 'Pavillionaires', away: 'Real SosoBad', color: '#B7B7B7', division: 'Mixed Division' },
-  { day: 'wednesday', time: '1-2pm', venue: 'botany_bay', home: 'Kiss My Pass', away: 'Goal Diggers', color: '#B7B7B7', division: 'Mixed Division' },
   { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'Ctrl Alt Defeat', away: 'Hack Tuah', color: '#B4A7D6', division: 'Division 6' },
   { day: 'monday', time: '2-3pm', venue: 'botany_bay', home: 'Himmy Saville', away: 'Carling F.C.', color: '#A4C2F4', division: 'Division 5' },
   { day: 'wednesday', time: '2-3pm', venue: 'botany_bay', home: 'Goaldiggers fc', away: 'Ateltico Unatletico', color: '#D5A6BD', division: 'Division 7' },
@@ -75,6 +72,18 @@ export function buildFixtures(weekId, matches) {
       '3-4pm',
       '4-5pm',
     ]) {
+      if (time === '1-2pm') {
+        fixtures.push({
+          id: slotId(weekId, day, time, 'botany_bay'),
+          weekId,
+          day,
+          time,
+          venue: 'botany_bay',
+          status: 'unavailable',
+        })
+        continue
+      }
+
       const match = matchMap.get(matchKey(day, time, 'botany_bay'))
       if (match) {
         fixtures.push({

@@ -150,7 +150,9 @@ function parseSheetRows(rows, colorToDivision) {
     else if (hallLabel.includes('Hall B')) hallVenue = 'hall_b'
 
     if (time) {
+      const importBayMatches = time !== '1-2pm'
       for (let idx = 1; idx <= 5; idx++) {
+        if (!importBayMatches) continue
         const day = DAY_BY_COL[idx]
         const parsed = parseVsCell(cellText(row[idx]))
         if (parsed?.kind === 'match') {

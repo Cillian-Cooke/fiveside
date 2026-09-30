@@ -1,6 +1,36 @@
-import { BAY_TIMES } from '../constants.js'
+import { BAY_TIMES, DAYS } from '../constants.js'
 
 const VENUE_ORDER = { botany_bay: 0, hall_a: 1, hall_b: 2 }
+
+/** Botany Bay slots that are never booked on the public timetable. */
+const CLOSED_BAY_TIMES = new Set(['1-2pm'])
+
+function closedSlotId(weekId, day, time, venue) {
+  return `${weekId}-${day}-${time}-${venue}`.replaceAll(' ', '')
+}
+
+/** Force closed bay times (e.g. 1–2pm) to unavailable — applies to Firestore and local data. */
+export function applyPitchSlotRules(fixtures, weekId) {
+  const week = weekId || fixtures.find((f) => f.weekId)?.weekId
+  if (!week) return fixtures
+
+  const kept = fixtures.filter(
+    (f) => !(CLOSED_BAY_TIMES.has(f.time) && f.venue === 'botany_bay'),
+  )
+  for (const day of DAYS) {
+    for (const time of CLOSED_BAY_TIMES) {
+      kept.push({
+        id: closedSlotId(week, day, time, 'botany_bay'),
+        weekId: week,
+        day,
+        time,
+        venue: 'botany_bay',
+        status: 'unavailable',
+      })
+    }
+  }
+  return kept
+}
 
 export function contrastText(hex) {
   if (!hex) return '#14211c'

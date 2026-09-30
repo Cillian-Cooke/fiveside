@@ -1,4 +1,5 @@
 import { seedFixtures, seedWeek } from '../data/seed.js'
+import { applyPitchSlotRules } from './fixtures.js'
 
 let currentWeekCache
 let pastWeeksCache
@@ -33,7 +34,11 @@ export async function loadCurrentWeek() {
 
   const { config, ready } = readConfig()
   if (!ready) {
-    currentWeekCache = { week: seedWeek, fixtures: seedFixtures, source: 'local' }
+    currentWeekCache = {
+      week: seedWeek,
+      fixtures: applyPitchSlotRules(seedFixtures, seedWeek.id),
+      source: 'local',
+    }
     return currentWeekCache
   }
 
@@ -54,15 +59,27 @@ export async function loadCurrentWeek() {
     const fixtures = fixturesSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
 
     if (!fixtures.length) {
-      currentWeekCache = { week: seedWeek, fixtures: seedFixtures, source: 'local' }
+      currentWeekCache = {
+        week: seedWeek,
+        fixtures: applyPitchSlotRules(seedFixtures, seedWeek.id),
+        source: 'local',
+      }
       return currentWeekCache
     }
 
-    currentWeekCache = { week, fixtures, source: 'firebase' }
+    currentWeekCache = {
+      week,
+      fixtures: applyPitchSlotRules(fixtures, week.id),
+      source: 'firebase',
+    }
     return currentWeekCache
   } catch (error) {
     console.warn('Firebase unavailable, using local fixtures', error)
-    currentWeekCache = { week: seedWeek, fixtures: seedFixtures, source: 'local' }
+    currentWeekCache = {
+      week: seedWeek,
+      fixtures: applyPitchSlotRules(seedFixtures, seedWeek.id),
+      source: 'local',
+    }
     return currentWeekCache
   }
 }
@@ -97,9 +114,10 @@ export async function loadPastWeeks() {
       const fixturesSnap = await getDocs(
         query(collection(db, 'fixtures'), where('weekId', '==', week.id)),
       )
+      const fixtures = fixturesSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
       result.push({
         week,
-        fixtures: fixturesSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
+        fixtures: applyPitchSlotRules(fixtures, week.id),
       })
     }
     pastWeeksCache = result.length ? result : pastWeeks
