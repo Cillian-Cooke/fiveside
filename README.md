@@ -19,3 +19,14 @@ The board works from local JavaScript seed data until Firebase is connected.
 4. Temporarily allow writes, run `npm run seed`, then lock writes again.
 
 Collections: `weeks`, `fixtures`.
+
+## Fixtures sheet
+
+League grid: [Google Sheet](https://docs.google.com/spreadsheets/d/19BtON4CVCeKyevCYjbYeH58gZ9_lcoyEtK4fFoFrW3o/edit). Sync into local seed data:
+
+```bash
+node scripts/sync-fixtures-from-sheet.mjs --dry-run --week-id YYYY-MM-DD --starts-on YYYY-MM-DD --range-label "Mon – Fri dates"
+node scripts/sync-fixtures-from-sheet.mjs --week-id YYYY-MM-DD --starts-on YYYY-MM-DD --range-label "Mon – Fri dates"
+```
+
+See `npm run sync:sheet` (runs team lookup refresh first).

@@ -7,7 +7,9 @@
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview --host",
-    "seed": "node scripts/seed.mjs"
+    "seed": "node scripts/seed.mjs",
+    "sync:teams": "node scripts/extract-team-divisions.mjs",
+    "sync:sheet": "node scripts/extract-team-divisions.mjs && node scripts/sync-fixtures-from-sheet.mjs"
   },
   "dependencies": {
     "firebase": "^12.0.0",
