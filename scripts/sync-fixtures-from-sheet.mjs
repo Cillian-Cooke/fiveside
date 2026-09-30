@@ -17,6 +17,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { writeDivisionColors } from './division-colors.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -255,9 +256,15 @@ function refreshTeamDivisionsFromSheet(sheetId) {
 
 async function main() {
   const opts = parseArgs(process.argv)
-  refreshTeamDivisionsFromSheet(opts.sheetId)
 
   const sheet = fetchSheetCells(opts.sheetId)
+  if (sheet.legend && Object.keys(sheet.legend).length) {
+    writeDivisionColors(sheet.legend)
+    console.log('Updated src/data/division-colors.json from sheet legend')
+  }
+
+  refreshTeamDivisionsFromSheet(opts.sheetId)
+
   const colorToDivision = mergeColorMap(sheet.colorToDivision)
   const { matches, warnings } = parseSheetRows(sheet.rows, colorToDivision)
 

@@ -1,3 +1,5 @@
+import divisionColors from './data/division-colors.json'
+
 export const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
 export const DAY_SHORT = {
@@ -48,16 +50,25 @@ export const VENUE_LABEL = {
   hall_b: 'Hall B',
 }
 
-export const DIVISIONS = [
-  { name: 'Division 1', color: '#FCE5CD' },
-  { name: 'Division 2', color: '#FFE599' },
-  { name: 'Division 3', color: '#CFE2F3' },
-  { name: 'Division 4', color: '#E6B8AF' },
-  { name: 'Division 5', color: '#D9D2E9' },
-  { name: 'Division 6', color: '#D9EAD3' },
-  { name: 'Division 7', color: '#FF9900' },
-  { name: 'Mixed Division', color: '#4A86E8' },
+const DIVISION_ORDER = [
+  'Division 1',
+  'Division 2',
+  'Division 3',
+  'Division 4',
+  'Division 5',
+  'Division 6',
+  'Division 7',
+  'Mixed Division',
 ]
+
+export const DIVISIONS = DIVISION_ORDER.map((name) => ({
+  name,
+  color: divisionColors[name],
+}))
+
+export function divisionColor(name) {
+  return divisionColors[name] || divisionColors['Mixed Division']
+}
 
 export const NAV = [
   { to: '/', label: 'Fixtures' },

@@ -6,23 +6,12 @@ import { writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { loadDivisionColors } from './division-colors.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 const DEFAULT_SHEET_ID = '19BtON4CVCeKyevCYjbYeH58gZ9_lcoyEtK4fFoFrW3o'
 const DEFAULT_SHEET_NAME = 'Contact Info'
-
-const DIVISION_COLORS = {
-  'Division 1': '#F9CB9C',
-  'Division 2': '#FFE599',
-  'Division 3': '#CFE2F3',
-  'Division 4': '#EA9999',
-  'Division 5': '#B4A7D6',
-  'Division 6': '#D9EAD3',
-  'Division 7': '#FF9900',
-  'Mixed Division': '#1155CC',
-  Mixed: '#1155CC',
-}
 
 function parseArgs(argv) {
   const opts = { sheetId: DEFAULT_SHEET_ID, sheetName: DEFAULT_SHEET_NAME }
@@ -51,11 +40,15 @@ function fetchDivisions(sheetId, sheetName) {
 
 function main() {
   const opts = parseArgs(process.argv)
+  const divisionColors = loadDivisionColors(opts.sheetId)
   const raw = fetchDivisions(opts.sheetId, opts.sheetName)
   const out = {}
   for (const [name, division] of Object.entries(raw).sort(([a], [b]) => a.localeCompare(b))) {
     const div = division === 'Mixed' ? 'Mixed Division' : division
-    out[name] = { division: div, color: DIVISION_COLORS[div] || DIVISION_COLORS['Mixed Division'] }
+    out[name] = {
+      division: div,
+      color: divisionColors[div] || divisionColors['Mixed Division'],
+    }
   }
   const path = join(root, 'src/data/team-divisions.json')
   writeFileSync(path, `${JSON.stringify(out, null, 2)}\n`)
