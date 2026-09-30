@@ -1,75 +1,91 @@
 {
-  "Academy Reps FC": {
+  "Ajaxidative Phosphorylation": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "Ateltico Unatletico": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "Barely Athletic FC": {
+    "division": "Division 1",
+    "color": "#F9CB9C"
+  },
+  "Buenos Aires ballers XI": {
     "division": "Division 3",
     "color": "#CFE2F3"
   },
-  "Ballymun Goats": {
+  "Carling F.C.": {
     "division": "Division 5",
-    "color": "#D9D2E9"
+    "color": "#B4A7D6"
   },
   "Chicken Chasers": {
     "division": "Division 5",
     "color": "#B4A7D6"
   },
-  "CSB FC": {
-    "division": "Division 6",
-    "color": "#D9EAD3"
-  },
-  "CSBGM": {
+  "Choose Football": {
     "division": "Division 1",
     "color": "#F9CB9C"
+  },
+  "Coolock says Goal": {
+    "division": "Division 3",
+    "color": "#CFE2F3"
+  },
+  "CSB FC": {
+    "division": "Division 4",
+    "color": "#EA9999"
   },
   "Ctrl Alt Defeat": {
     "division": "Division 6",
     "color": "#D9EAD3"
   },
-  "Dairy B FC": {
-    "division": "Mixed Division",
-    "color": "#A4C2F4"
-  },
   "Dropouts FC": {
     "division": "Division 2",
     "color": "#FFE599"
   },
-  "DU Divas": {
-    "division": "Mixed Division",
-    "color": "#1155CC"
+  "East Cavan Gaels": {
+    "division": "Division 2",
+    "color": "#FFE599"
   },
-  "Elche C.F": {
+  "Egg Fried Reus": {
+    "division": "Division 1",
+    "color": "#F9CB9C"
+  },
+  "Eng ballers": {
     "division": "Division 1",
     "color": "#F9CB9C"
   },
   "Engibeering": {
-    "division": "Division 3",
-    "color": "#CFE2F3"
-  },
-  "FC TwenteBenson": {
     "division": "Division 1",
     "color": "#F9CB9C"
   },
-  "Git Gud": {
-    "division": "Mixed Division",
-    "color": "#1155CC"
-  },
-  "Gneiss One FC": {
-    "division": "Mixed Division",
-    "color": "#1155CC"
-  },
-  "Goal Diggers": {
+  "Euro football studs": {
     "division": "Division 7",
     "color": "#FF9900"
   },
-  "Goldsmith Gooners": {
+  "FC TRISS": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "Fiery Middle Aged Women": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "git gud": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "Goaldiggers fc": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "Hack Tuah": {
+    "division": "Division 6",
+    "color": "#D9EAD3"
+  },
+  "Hangover97": {
     "division": "Division 3",
     "color": "#CFE2F3"
-  },
-  "H5aSide": {
-    "division": "Mixed Division",
-    "color": "#1155CC"
-  },
-  "Hamilton Hammers": {
-    "division": "Division 2",
-    "color": "#FFE599"
   },
   "Hedley Burnley": {
     "division": "Division 2",
@@ -77,102 +93,166 @@
   },
   "Himmy Saville": {
     "division": "Division 5",
-    "color": "#D9D2E9"
+    "color": "#B4A7D6"
+  },
+  "HurriKanes": {
+    "division": "Division 6",
+    "color": "#D9EAD3"
   },
   "Integer Milan": {
     "division": "Division 1",
     "color": "#F9CB9C"
   },
-  "Kiss My Pass": {
-    "division": "Division 7",
-    "color": "#FF9900"
+  "Inter Milanagement": {
+    "division": "Division 4",
+    "color": "#EA9999"
   },
-  "Lionel MSISS": {
-    "division": "Mixed Division",
-    "color": "#A4C2F4"
-  },
-  "Loch Bess Monster": {
-    "division": "Division 3",
-    "color": "#CFE2F3"
-  },
-  "Madeleine Milan": {
-    "division": "Mixed Division",
-    "color": "#A4C2F4"
-  },
-  "Meath4Sam": {
-    "division": "Division 6",
-    "color": "#D9EAD3"
-  },
-  "Mount Joy FC": {
-    "division": "Division 3",
-    "color": "#CFE2F3"
-  },
-  "Palantir FC": {
+  "Iteam": {
     "division": "Division 5",
     "color": "#B4A7D6"
   },
-  "Pavillionaires": {
+  "Lads on toure": {
     "division": "Division 2",
     "color": "#FFE599"
+  },
+  "Lawdz and Bizches": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "Liampool": {
+    "division": "Division 2",
+    "color": "#FFE599"
+  },
+  "Lionel MSISS": {
+    "division": "Division 3",
+    "color": "#CFE2F3"
+  },
+  "Lochbessmonster": {
+    "division": "Division 3",
+    "color": "#CFE2F3"
+  },
+  "MAMAs Revenge": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "Mauled by the trinners": {
+    "division": "Division 5",
+    "color": "#B4A7D6"
+  },
+  "Mixed League": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "Mountjoy FC": {
+    "division": "Division 1",
+    "color": "#F9CB9C"
+  },
+  "Navier Stokes": {
+    "division": "Division 2",
+    "color": "#FFE599"
+  },
+  "Ø Zone": {
+    "division": "Division 4",
+    "color": "#EA9999"
+  },
+  "Pav Furniture": {
+    "division": "Division 3",
+    "color": "#CFE2F3"
+  },
+  "Pavaria": {
+    "division": "Division 2",
+    "color": "#FFE599"
+  },
+  "Pavillionaires": {
+    "division": "Division 1",
+    "color": "#F9CB9C"
+  },
+  "PBB FC": {
+    "division": "Division 6",
+    "color": "#D9EAD3"
+  },
+  "Ponzie Prowlers": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "Real MAldrid": {
+    "division": "Division 7",
+    "color": "#FF9900"
   },
   "Real Medrid": {
     "division": "Division 4",
     "color": "#EA9999"
   },
-  "Real SosoBad": {
-    "division": "Division 2",
-    "color": "#FFE599"
-  },
-  "Red Light BESStrict": {
+  "Reels Betis": {
     "division": "Division 4",
     "color": "#EA9999"
   },
-  "River Dodder Rodents": {
-    "division": "Mixed Division",
-    "color": "#1155CC"
-  },
-  "Scutch V": {
-    "division": "Division 4",
-    "color": "#EA9999"
-  },
-  "SLAYMAR": {
-    "division": "Mixed Division",
-    "color": "#1155CC"
-  },
-  "Spartak Zubi Piski": {
-    "division": "Division 7",
-    "color": "#FF9900"
-  },
-  "Sporting Unc": {
-    "division": "Division 4",
-    "color": "#EA9999"
-  },
-  "Takin the PH": {
-    "division": "Division 4",
-    "color": "#EA9999"
-  },
-  "TBXI": {
-    "division": "Division 5",
-    "color": "#D9D2E9"
-  },
-  "Team Football": {
-    "division": "Division 7",
-    "color": "#FF9900"
-  },
-  "The Good Ending": {
+  "River dodder rodent": {
     "division": "Division 6",
     "color": "#D9EAD3"
   },
-  "The Palpators": {
+  "Roman Empire": {
+    "division": "Division 6",
+    "color": "#D9EAD3"
+  },
+  "Shabadoo Balompié Calcio": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "Sools fc": {
+    "division": "Division 4",
+    "color": "#EA9999"
+  },
+  "SpVgg F.K. Spartak Ussher 04": {
     "division": "Division 5",
-    "color": "#D9D2E9"
+    "color": "#B4A7D6"
+  },
+  "Strokes Academy": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "TBXI": {
+    "division": "Division 5",
+    "color": "#B4A7D6"
+  },
+  "The BESS Around": {
+    "division": "Division 2",
+    "color": "#FFE599"
+  },
+  "The Fish Tank": {
+    "division": "Division 4",
+    "color": "#EA9999"
+  },
+  "The Palpators 2.0": {
+    "division": "Division 5",
+    "color": "#B4A7D6"
+  },
+  "The Screaming Goafers": {
+    "division": "Division 7",
+    "color": "#FF9900"
   },
   "The Stoppable Force": {
     "division": "Division 7",
     "color": "#FF9900"
   },
-  "The Vincibles FC": {
+  "TPSG": {
     "division": "Division 3",
     "color": "#CFE2F3"
+  },
+  "Trin Tigers": {
+    "division": "Division 6",
+    "color": "#D9EAD3"
+  },
+  "Unathletic Bilbao": {
+    "division": "Division 4",
+    "color": "#EA9999"
+  },
+  "Visiting Ballers": {
+    "division": "Division 7",
+    "color": "#FF9900"
+  },
+  "Wings of a Sparrow": {
+    "division": "Division 6",
+    "color": "#D9EAD3"
   }
 }

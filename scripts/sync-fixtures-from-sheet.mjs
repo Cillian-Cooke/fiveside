@@ -22,16 +22,17 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 const DEFAULT_SHEET_ID = '19BtON4CVCeKyevCYjbYeH58gZ9_lcoyEtK4fFoFrW3o'
 
-const DIVISION_COLORS = {
-  'Division 1': '#F9CB9C',
-  'Division 2': '#FFE599',
-  'Division 3': '#CFE2F3',
-  'Division 4': '#EA9999',
-  'Division 5': '#B4A7D6',
-  'Division 6': '#D9EAD3',
-  'Division 7': '#FF9900',
-  'Mixed Division': '#1155CC',
-  Mixed: '#1155CC',
+/** Fallback when xlsx legend is missing (matches sheet legend row on fixtures tab). */
+const DEFAULT_COLOR_TO_DIVISION = {
+  '#EA9999': 'Division 1',
+  '#F9CB9C': 'Division 2',
+  '#FFE599': 'Division 3',
+  '#B6D7A8': 'Division 4',
+  '#A4C2F4': 'Division 5',
+  '#B4A7D6': 'Division 6',
+  '#D5A6BD': 'Division 7',
+  '#6AA84F': 'Mixed Division',
+  '#B7B7B7': 'Mixed Division',
 }
 
 const DAY_BY_COL = {
@@ -89,50 +90,46 @@ function parseVsCell(text) {
   return { kind: 'match', home: parts[0], away: parts[1] }
 }
 
-function fetchSheetRows(sheetId, gid) {
-  const py = join(dirname(fileURLToPath(import.meta.url)), 'fetch-sheet-rows.py')
-  const result = spawnSync('python3', [py, '--sheet-id', sheetId, '--gid', gid], {
+function fetchSheetCells(sheetId) {
+  const py = join(dirname(fileURLToPath(import.meta.url)), 'fetch-sheet-cells.py')
+  const result = spawnSync('python3', [py, '--sheet-id', sheetId], {
     encoding: 'utf8',
   })
   if (result.status !== 0) {
-    throw new Error(result.stdout || result.stderr || 'fetch-sheet-rows.py failed')
+    throw new Error(result.stdout || result.stderr || 'fetch-sheet-cells.py failed')
   }
   const payload = JSON.parse(result.stdout)
   if (payload.error) throw new Error(payload.error)
-  return payload.rows
+  return payload
 }
 
-function loadTeamLookup() {
-  const path = join(root, 'src/data/team-divisions.json')
-  try {
-    return JSON.parse(readFileSync(path, 'utf8'))
-  } catch {
-    return {}
-  }
+function mergeColorMap(sheetMap) {
+  return { ...DEFAULT_COLOR_TO_DIVISION, ...(sheetMap || {}) }
 }
 
-function normalizeTeamName(name) {
-  return name.trim().replace(/\s+/g, ' ')
+function cellText(cell) {
+  if (cell == null) return ''
+  if (typeof cell === 'string') return cell
+  return cell.text ?? ''
 }
 
-function lookupDivision(home, away, teams, warnings) {
-  const h = normalizeTeamName(home)
-  const a = normalizeTeamName(away)
-  const th = teams[h] || teams[h.toLowerCase()] || teams[Object.keys(teams).find((k) => k.toLowerCase() === h.toLowerCase())]
-  const ta = teams[a] || teams[a.toLowerCase()] || teams[Object.keys(teams).find((k) => k.toLowerCase() === a.toLowerCase())]
-  if (th?.division && ta?.division && th.division !== ta.division) {
-    warnings.push(`Division mismatch ${h} (${th.division}) vs ${a} (${ta.division}); using ${th.division}`)
+function cellColor(cell) {
+  if (cell == null || typeof cell === 'string') return null
+  const c = cell.color
+  return c ? c.toUpperCase() : null
+}
+
+function divisionFromCellColor(color, colorToDivision, warnings, context) {
+  if (!color) {
+    warnings.push(`No cell colour (${context}); default Mixed Division`)
+    return { division: 'Mixed Division', color: '#6AA84F' }
   }
-  const division = th?.division || ta?.division || 'Mixed Division'
-  const color =
-    th?.color ||
-    ta?.color ||
-    DIVISION_COLORS[division] ||
-    DIVISION_COLORS['Mixed Division']
-  if (!th && !ta) {
-    warnings.push(`Unknown teams (default Mixed): ${h} vs ${a}`)
+  const division = colorToDivision[color]
+  if (!division) {
+    warnings.push(`Unknown cell colour ${color} (${context}); default Mixed Division`)
+    return { division: 'Mixed Division', color }
   }
-  return { division: division === 'Mixed' ? 'Mixed Division' : division, color }
+  return { division, color }
 }
 
 function parseTimeLabel(label) {
@@ -140,13 +137,13 @@ function parseTimeLabel(label) {
   return m ? m[1] : null
 }
 
-function parseSheetRows(rows, teamLookup) {
+function parseSheetRows(rows, colorToDivision) {
   const matches = []
   const warnings = []
 
   for (const row of rows) {
-    const time = parseTimeLabel(row[0])
-    const hallLabel = normalizeCell(row[7])
+    const time = parseTimeLabel(cellText(row[0]))
+    const hallLabel = normalizeCell(cellText(row[7]))
     let hallVenue = null
     if (hallLabel.includes('Hall A')) hallVenue = 'hall_a'
     else if (hallLabel.includes('Hall B')) hallVenue = 'hall_b'
@@ -154,9 +151,14 @@ function parseSheetRows(rows, teamLookup) {
     if (time) {
       for (let idx = 1; idx <= 5; idx++) {
         const day = DAY_BY_COL[idx]
-        const parsed = parseVsCell(row[idx])
+        const parsed = parseVsCell(cellText(row[idx]))
         if (parsed?.kind === 'match') {
-          const { division, color } = lookupDivision(parsed.home, parsed.away, teamLookup, warnings)
+          const { division, color } = divisionFromCellColor(
+            cellColor(row[idx]),
+            colorToDivision,
+            warnings,
+            `${parsed.home} vs ${parsed.away}`,
+          )
           matches.push({
             day,
             time,
@@ -172,9 +174,14 @@ function parseSheetRows(rows, teamLookup) {
       if (hallVenue) {
         for (let idx = 8; idx <= 12; idx++) {
           const day = DAY_BY_COL[idx]
-          const parsed = parseVsCell(row[idx])
+          const parsed = parseVsCell(cellText(row[idx]))
           if (parsed?.kind === 'match') {
-            const { division, color } = lookupDivision(parsed.home, parsed.away, teamLookup, warnings)
+            const { division, color } = divisionFromCellColor(
+              cellColor(row[idx]),
+              colorToDivision,
+              warnings,
+              `${parsed.home} vs ${parsed.away}`,
+            )
             matches.push({
               day,
               time: '12-1pm',
@@ -188,10 +195,15 @@ function parseSheetRows(rows, teamLookup) {
         }
       } else {
         for (let idx = 8; idx <= 12; idx++) {
-          const parsed = parseVsCell(row[idx])
+          const parsed = parseVsCell(cellText(row[idx]))
           if (parsed?.kind !== 'match') continue
           const day = DAY_BY_COL[idx]
-          const { division, color } = lookupDivision(parsed.home, parsed.away, teamLookup, warnings)
+          const { division, color } = divisionFromCellColor(
+            cellColor(row[idx]),
+            colorToDivision,
+            warnings,
+            `${parsed.home} vs ${parsed.away}`,
+          )
           matches.push({
             day,
             time: '12-1pm',
@@ -232,14 +244,27 @@ function patchSeedJs(seedText, matchesBlock, opts) {
   return out
 }
 
+function refreshTeamDivisionsFromSheet(sheetId) {
+  const script = join(dirname(fileURLToPath(import.meta.url)), 'sync-team-divisions-from-sheet.mjs')
+  const result = spawnSync('node', [script, '--sheet-id', sheetId], { encoding: 'utf8', cwd: root })
+  if (result.status !== 0) {
+    throw new Error(result.stderr || result.stdout || 'sync-team-divisions-from-sheet.mjs failed')
+  }
+  console.log(result.stdout.trim())
+}
+
 async function main() {
   const opts = parseArgs(process.argv)
-  const teamLookup = loadTeamLookup()
+  refreshTeamDivisionsFromSheet(opts.sheetId)
 
-  const rows = fetchSheetRows(opts.sheetId, opts.gid)
-  const { matches, warnings } = parseSheetRows(rows, teamLookup)
+  const sheet = fetchSheetCells(opts.sheetId)
+  const colorToDivision = mergeColorMap(sheet.colorToDivision)
+  const { matches, warnings } = parseSheetRows(sheet.rows, colorToDivision)
 
   console.log(`Parsed ${matches.length} fixtures from sheet ${opts.sheetId}`)
+  if (sheet.legend && Object.keys(sheet.legend).length) {
+    console.log('Division colours from sheet legend:', sheet.legend)
+  }
   if (warnings.length) {
     console.log('\nWarnings:')
     for (const w of warnings) console.log(`  - ${w}`)
