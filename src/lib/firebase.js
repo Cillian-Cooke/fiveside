@@ -88,6 +88,11 @@ export async function loadPastWeeks() {
   if (pastWeeksCache) return pastWeeksCache
 
   const { pastWeeks } = await import('../data/seed.js')
+  if (!pastWeeks.length) {
+    pastWeeksCache = []
+    return pastWeeksCache
+  }
+
   const { config, ready } = readConfig()
   if (!ready) {
     pastWeeksCache = pastWeeks

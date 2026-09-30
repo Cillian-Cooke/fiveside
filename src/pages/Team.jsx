@@ -100,17 +100,7 @@ export default function Team() {
       </button>
       <p className="page-kicker">{team.division}</p>
       <h1 className="page-title">{team.name}</h1>
-      <p className="team-meta">
-        Captain {profile.captain}
-        <span aria-hidden="true">·</span>
-        <a href={profile.instagram} target="_blank" rel="noreferrer">
-          {profile.instagramHandle}
-        </a>
-        <span aria-hidden="true">·</span>
-        <a href={profile.tiktok} target="_blank" rel="noreferrer">
-          TikTok
-        </a>
-      </p>
+      <p className="team-meta">Captain {profile.captain}</p>
 
       <h2 className="section-title">Next game</h2>
       {next ? (

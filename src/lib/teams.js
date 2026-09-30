@@ -51,13 +51,8 @@ const LAST = [
 
 export function teamProfile(name) {
   const hash = hashString(name)
-  const handle = teamSlug(name).replace(/-/g, '') || 'tcd5aside'
   return {
     captain: `${FIRST[hash % FIRST.length]} ${LAST[(hash >> 5) % LAST.length]}`,
-    instagramHandle: `@${handle}`,
-    instagram: `https://www.instagram.com/${handle}/`,
-    tiktokHandle: `@${handle}`,
-    tiktok: `https://www.tiktok.com/@${handle}`,
   }
 }
 

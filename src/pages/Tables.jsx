@@ -15,16 +15,18 @@ export default function Tables() {
   const [fixtures, setFixtures] = useState(() =>
     cached ? cached.flatMap((item) => item.fixtures) : [],
   )
+  const [ready, setReady] = useState(() => cached !== undefined)
   const [query, setQuery] = useState(snap?.query ?? '')
   const [league, setLeague] = useState(snap?.league ?? 'all')
 
   useEffect(() => {
     loadPastWeeks().then((weeks) => {
       setFixtures(weeks.flatMap((item) => item.fixtures))
+      setReady(true)
     })
   }, [])
 
-  useStackPage({ query, league }, fixtures.length > 0)
+  useStackPage({ query, league }, ready)
 
   const tables = useMemo(() => buildLeagueTables(fixtures), [fixtures])
   const wantedDivision = divisionFromQuery(query)
@@ -35,14 +37,21 @@ export default function Tables() {
     return tables.has(division.name)
   })
 
-  if (!fixtures.length) {
-    return <p className="lede">Loading tables…</p>
-  }
+  const hasStandings = fixtures.length > 0
 
   return (
     <>
       <h1 className="page-title">Tables</h1>
       <p className="week-range">Semester standings from played matches</p>
+      {!ready ? (
+        <p className="lede">Loading tables…</p>
+      ) : !hasStandings ? (
+        <article className="placeholder-card">
+          <h2>No standings yet</h2>
+          <p>League tables will appear here once match results are published.</p>
+        </article>
+      ) : (
+        <>
       <SearchBar
         value={query}
         onChange={setQuery}
@@ -103,6 +112,8 @@ export default function Tables() {
           </section>
         )
       })}
+        </>
+      )}
     </>
   )
 }

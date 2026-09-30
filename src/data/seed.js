@@ -64,21 +64,6 @@ function slotId(weekId, day, time, venue) {
   return `${weekId}-${day}-${time}-${venue}`.replaceAll(' ', '')
 }
 
-function withScores(matches, offset) {
-  return matches.map((match, index) => ({
-    ...match,
-    homeScore: (index + offset) % 6,
-    awayScore: (index * 2 + offset) % 5,
-  }))
-}
-
-const DIVISION_3 = [
-  { day: 'monday', time: '8-9am', venue: 'botany_bay', home: 'Academy Reps FC', away: 'Loch Bess Monster', color: '#CFE2F3', division: 'Division 3' },
-  { day: 'tuesday', time: '8-9am', venue: 'botany_bay', home: 'Goldsmith Gooners', away: 'Mount Joy FC', color: '#CFE2F3', division: 'Division 3' },
-  { day: 'wednesday', time: '8-9am', venue: 'botany_bay', home: 'The Vincibles FC', away: 'Engibeering', color: '#CFE2F3', division: 'Division 3' },
-  { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'Loch Bess Monster', away: 'Engibeering', color: '#CFE2F3', division: 'Division 3' },
-]
-
 export function buildFixtures(weekId, matches, slotOverrides = SLOT_OVERRIDES) {
   const fixtures = []
   const matchKey = (day, time, venue) => `${day}|${time}|${venue}`
@@ -177,35 +162,5 @@ export const seedWeek = {
 
 export const seedFixtures = buildFixtures(CURRENT_WEEK_ID, MATCHES)
 
-export const pastWeeks = [
-  {
-    week: {
-      id: '2026-03-16',
-      label: 'Week of 16 March',
-      rangeLabel: '16–20 March',
-      startsOn: '2026-03-16',
-      isCurrent: false,
-    },
-    fixtures: buildFixtures('2026-03-16', withScores([...MATCHES, ...DIVISION_3], 1)),
-  },
-  {
-    week: {
-      id: '2026-03-09',
-      label: 'Week of 9 March',
-      rangeLabel: '9–13 March',
-      startsOn: '2026-03-09',
-      isCurrent: false,
-    },
-    fixtures: buildFixtures('2026-03-09', withScores([...MATCHES, ...DIVISION_3], 3)),
-  },
-  {
-    week: {
-      id: '2026-03-02',
-      label: 'Week of 2 March',
-      rangeLabel: '2–6 March',
-      startsOn: '2026-03-02',
-      isCurrent: false,
-    },
-    fixtures: buildFixtures('2026-03-02', withScores([...MATCHES, ...DIVISION_3], 4)),
-  },
-]
+/** Played weeks + scores — filled when results are published. */
+export const pastWeeks = []
