@@ -350,6 +350,13 @@ async function main() {
   const next = patchSeedJs(seedText, matchesBlock, overridesBlock, opts)
   writeFileSync(seedPath, next)
   console.log(`Updated ${seedPath}`)
+
+  const shareMeta = join(dirname(fileURLToPath(import.meta.url)), 'share-metadata.mjs')
+  const metaResult = spawnSync('node', [shareMeta], { encoding: 'utf8', cwd: root })
+  if (metaResult.status !== 0) {
+    throw new Error(metaResult.stderr || metaResult.stdout || 'share-metadata.mjs failed')
+  }
+  console.log(metaResult.stdout.trim())
 }
 
 main().catch((err) => {

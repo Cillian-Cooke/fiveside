@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build",
+    "build": "node scripts/share-metadata.mjs && vite build",
+    "share:meta": "node scripts/share-metadata.mjs",
     "preview": "vite preview --host",
     "seed": "node scripts/seed.mjs",
     "sync:teams": "node scripts/sync-team-divisions-from-sheet.mjs",
