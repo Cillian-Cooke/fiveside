@@ -2,10 +2,10 @@
  * Refresh index.html Open Graph / WhatsApp meta + og-timetable.png from seed data.
  */
 import { readFileSync, writeFileSync } from 'node:fs'
-import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { seedFixtures, seedWeek } from '../src/data/seed.js'
+import { generateOgImage } from './generate-og-image.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const indexPath = join(root, 'index.html')
@@ -139,20 +139,9 @@ function patchIndexHtml({ title, description }) {
   writeFileSync(indexPath, html)
 }
 
-function generateOgImage(payload) {
-  const py = join(dirname(fileURLToPath(import.meta.url)), 'generate-og-image.py')
-  const result = spawnSync('python3', [py], {
-    input: JSON.stringify(payload),
-    encoding: 'utf8',
-    cwd: root,
-  })
-  if (result.status !== 0) {
-    throw new Error(result.stderr || result.stdout || 'generate-og-image.py failed')
-  }
-  console.log(result.stdout.trim())
-}
-
 const { title, subtitle, description, ogColumns } = buildSharePayload()
-generateOgImage({ title, subtitle, columns: ogColumns })
+const ogPath = join(root, 'public', 'og-timetable.png')
+await generateOgImage({ title, subtitle, columns: ogColumns }, ogPath)
+console.log(ogPath)
 patchIndexHtml({ title, description })
 console.log(`Updated share metadata for ${seedWeek.rangeLabel}`)
