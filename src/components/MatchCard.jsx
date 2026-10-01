@@ -1,5 +1,5 @@
-import { VENUE_LABEL, divisionColor } from '../constants.js'
-import { contrastText } from '../lib/fixtures.js'
+import { VENUE_LABEL } from '../constants.js'
+import { canonicalMatchColor, contrastText } from '../lib/fixtures.js'
 import TeamLink from './TeamLink.jsx'
 
 export default function MatchCard({ fixture, compact = false, blank = false }) {
@@ -30,7 +30,7 @@ export default function MatchCard({ fixture, compact = false, blank = false }) {
     )
   }
 
-  const color = fixture.color || divisionColor(fixture.division)
+  const color = canonicalMatchColor(fixture)
   const text = contrastText(color)
   const hasScore =
     typeof fixture.homeScore === 'number' && typeof fixture.awayScore === 'number'

@@ -1,4 +1,4 @@
-import { BAY_TIMES, DAYS, divisionColor } from '../constants.js'
+import { BAY_TIMES, DAYS, DIVISIONS, divisionColor } from '../constants.js'
 
 const VENUE_ORDER = { botany_bay: 0, hall_a: 1, hall_b: 2 }
 
@@ -30,6 +30,16 @@ export function applyPitchSlotRules(fixtures, weekId) {
     }
   }
   return kept
+}
+
+const CANONICAL_COLORS = new Set(
+  DIVISIONS.map((division) => String(division.color || '').toUpperCase()).filter(Boolean),
+)
+
+export function canonicalMatchColor(fixture) {
+  const hex = String(fixture?.color || '').toUpperCase()
+  if (hex && CANONICAL_COLORS.has(hex)) return hex
+  return divisionColor(fixture?.division) || hex || '#6AA84F'
 }
 
 export function contrastText(hex) {
@@ -69,20 +79,27 @@ export function hallSlots(fixtures, day) {
 }
 
 export function hallSlot(fixtures, day, venue) {
-  return (
-    fixtures.find(
-      (fixture) =>
-        fixture.day === day &&
-        fixture.time === '12-1pm' &&
-        fixture.venue === venue,
-    ) || {
+  const slots = hallCellFixtures(fixtures, day, venue)
+  return slots[0]
+}
+
+export function hallCellFixtures(fixtures, day, venue) {
+  const slots = (fixtures || []).filter(
+    (fixture) =>
+      fixture.day === day &&
+      fixture.time === '12-1pm' &&
+      fixture.venue === venue,
+  )
+  if (slots.length) return slots
+  return [
+    {
       id: `closed-${day}-${venue}`,
       day,
       time: '12-1pm',
       venue,
-      status: 'unavailable',
-    }
-  )
+      status: day === 'wednesday' || day === 'friday' ? 'unavailable' : 'free',
+    },
+  ]
 }
 
 export function uniqueTeams(fixtures) {
@@ -94,7 +111,7 @@ export function uniqueTeams(fixtures) {
         teams.set(name, {
           name,
           division: fixture.division,
-          color: fixture.color || divisionColor(fixture.division),
+          color: canonicalMatchColor(fixture),
         })
       }
     }
@@ -162,9 +179,9 @@ export function slotFill(fixture, query = '', league = 'all') {
   if (!fixture || fixture.status === 'unavailable') return '#3d3d3d'
   if (fixture.status === 'free') return '#ffffff'
   if (fixture.status === 'match' && !isMatchVisible(fixture, query, league)) {
-    return '#ffffff'
+    return '#d8d8d5'
   }
-  return fixture.color || divisionColor(fixture.division) || '#ffffff'
+  return canonicalMatchColor(fixture)
 }
 
 function emptyRow(name, division, color) {
@@ -194,7 +211,7 @@ export function buildLeagueTables(fixtures) {
     if (fixture.status !== 'match') continue
     if (typeof fixture.homeScore !== 'number' || typeof fixture.awayScore !== 'number') continue
 
-    const color = fixture.color || divisionColor(fixture.division)
+    const color = canonicalMatchColor(fixture)
     const home = rowFor(fixture.home, fixture.division, color)
     const away = rowFor(fixture.away, fixture.division, color)
     home.played += 1

@@ -8,6 +8,7 @@
   --line: #e1e1df;
   --card: #ffffff;
   --free: #ffffff;
+  --blank: #d8d8d5;
   --closed: #3d3d3d;
   --shadow: 0 8px 22px rgba(51, 54, 59, 0.08);
   --radius: 8px;
@@ -485,8 +486,8 @@ a {
 }
 
 .match-card.blank {
-  background: var(--free);
-  box-shadow: inset 0 0 0 1px var(--line);
+  background: var(--blank);
+  box-shadow: none;
 }
 
 .match-card.unavailable {
@@ -744,7 +745,7 @@ a {
   .week-stage {
     display: grid;
     grid-template-columns: 44px minmax(0, 1fr) 44px;
-    align-items: center;
+    align-items: start;
     gap: 10px;
   }
 
@@ -759,7 +760,8 @@ a {
   }
 
   .grid-wrap {
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: visible;
     border: 1px solid var(--line);
     border-radius: 4px;
     background: #fff;
@@ -824,7 +826,8 @@ a {
   }
 
   .timetable td {
-    height: 124px;
+    height: auto;
+    min-height: 124px;
   }
 
   .grid-slot {

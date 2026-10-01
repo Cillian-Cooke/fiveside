@@ -107,6 +107,101 @@ function fetchSheetCells(sheetId) {
   return payload
 }
 
+const MIXED_COLOR = '#6AA84F'
+const NEAREST_COLOR_MAX = 4800
+
+function hexToRgb(hex) {
+  const h = String(hex || '').replace('#', '')
+  if (h.length !== 6) return null
+  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]
+}
+
+function colorDistance(a, b) {
+  const left = hexToRgb(a)
+  const right = hexToRgb(b)
+  if (!left || !right) return Infinity
+  return (left[0] - right[0]) ** 2 + (left[1] - right[1]) ** 2 + (left[2] - right[2]) ** 2
+}
+
+function invertColorMap(colorToDivision) {
+  const out = {}
+  for (const [hex, division] of Object.entries(colorToDivision || {})) {
+    if (division === 'Mixed Division' && hex !== MIXED_COLOR) continue
+    if (!out[division]) out[division] = hex
+  }
+  if (!out['Mixed Division']) out['Mixed Division'] = MIXED_COLOR
+  return out
+}
+
+function nearestLegendHex(color, colorToDivision) {
+  if (!color) return null
+  if (colorToDivision[color]) return color
+  let best = null
+  let bestDist = Infinity
+  for (const hex of Object.keys(colorToDivision)) {
+    const dist = colorDistance(color, hex)
+    if (dist < bestDist) {
+      bestDist = dist
+      best = hex
+    }
+  }
+  return bestDist <= NEAREST_COLOR_MAX ? best : null
+}
+
+function loadTeamLookup() {
+  try {
+    return JSON.parse(readFileSync(join(root, 'src/data/team-divisions.json'), 'utf8'))
+  } catch {
+    return {}
+  }
+}
+
+function lookupTeam(lookup, name) {
+  if (!name) return null
+  if (lookup[name]) return lookup[name]
+  const needle = normalizeCell(name).toLowerCase()
+  for (const [team, info] of Object.entries(lookup)) {
+    if (normalizeCell(team).toLowerCase() === needle) return info
+  }
+  return null
+}
+
+function divisionFromTeams(lookup, home, away) {
+  const homeInfo = lookupTeam(lookup, home)
+  const awayInfo = lookupTeam(lookup, away)
+  if (homeInfo && awayInfo && homeInfo.division === awayInfo.division) return homeInfo
+  if (homeInfo && awayInfo) return null
+  return homeInfo || awayInfo || null
+}
+
+function resolveMatchStyle(color, home, away, colorToDivision, divisionColors, teamLookup, warnings) {
+  const matchedHex = nearestLegendHex(color, colorToDivision)
+  if (matchedHex) {
+    const division = colorToDivision[matchedHex]
+    return { division, color: divisionColors[division] || matchedHex }
+  }
+
+  const fromTeams = divisionFromTeams(teamLookup, home, away)
+  if (fromTeams?.division) {
+    warnings.push(
+      `Used team list for ${home} vs ${away} (${fromTeams.division}${color ? `; cell ${color}` : ''})`,
+    )
+    return {
+      division: fromTeams.division,
+      color: divisionColors[fromTeams.division] || fromTeams.color || MIXED_COLOR,
+    }
+  }
+
+  warnings.push(`No colour/team match (${home} vs ${away}${color ? `; cell ${color}` : ''}); Mixed Division`)
+  return { division: 'Mixed Division', color: divisionColors['Mixed Division'] || MIXED_COLOR }
+}
+
+function isHallNoise(text) {
+  const value = normalizeCell(text)
+  if (!value) return true
+  return /^(division \d+|mixed|mixed division|games to be played\.?|\.)$/i.test(value)
+}
+
 function mergeColorMap(sheetMap) {
   return { ...DEFAULT_COLOR_TO_DIVISION, ...(sheetMap || {}) }
 }
@@ -123,19 +218,6 @@ function cellColor(cell) {
   return c ? c.toUpperCase() : null
 }
 
-function divisionFromCellColor(color, colorToDivision, warnings, context) {
-  if (!color) {
-    warnings.push(`No cell colour (${context}); default Mixed Division`)
-    return { division: 'Mixed Division', color: '#6AA84F' }
-  }
-  const division = colorToDivision[color]
-  if (!division) {
-    warnings.push(`Unknown cell colour ${color} (${context}); default Mixed Division`)
-    return { division: 'Mixed Division', color }
-  }
-  return { division, color }
-}
-
 function parseTimeLabel(label) {
   const m = normalizeCell(label).match(/^(\d{1,2}-\d{1,2}(?:am|pm))/)
   return m ? m[1] : null
@@ -146,18 +228,49 @@ function pushSlotOverride(slotOverrides, entry) {
   slotOverrides.set(key, entry.status)
 }
 
-function parseSheetRows(rows, colorToDivision) {
+function parseSheetRows(rows, colorToDivision, teamLookup = {}) {
   const matches = []
   const slotOverrides = new Map()
   const warnings = []
   const layout = detectGridLayout(rows)
+  const divisionColors = invertColorMap(colorToDivision)
+  const hallState = new Map()
+  const overflowByDay = new Map()
+
+  const rememberHall = (day, venue, entry) => {
+    hallState.set(`${day}|${venue}`, entry)
+  }
+
+  const styleFor = (cell, home, away) =>
+    resolveMatchStyle(
+      cellColor(cell),
+      home,
+      away,
+      colorToDivision,
+      divisionColors,
+      teamLookup,
+      warnings,
+    )
 
   for (const row of rows) {
     const time = parseTimeLabel(cellText(row[layout.timeCol]))
     const hallLabel = normalizeCell(cellText(row[layout.hallLabelCol]))
     let hallVenue = null
-    if (hallLabel.includes('Hall A')) hallVenue = 'hall_a'
-    else if (hallLabel.includes('Hall B')) hallVenue = 'hall_b'
+    if (/\bhall\s*a\b/i.test(hallLabel)) hallVenue = 'hall_a'
+    else if (/\bhall\s*b\b/i.test(hallLabel)) hallVenue = 'hall_b'
+    else {
+      for (const cell of row) {
+        const label = normalizeCell(cellText(cell))
+        if (/\bhall\s*a\b/i.test(label)) {
+          hallVenue = 'hall_a'
+          break
+        }
+        if (/\bhall\s*b\b/i.test(label)) {
+          hallVenue = 'hall_b'
+          break
+        }
+      }
+    }
 
     if (time) {
       const importBayMatches = time !== '1-2pm'
@@ -167,12 +280,7 @@ function parseSheetRows(rows, colorToDivision) {
         const day = DAYS[i]
         const parsed = parseVsCell(cellText(row[idx]))
         if (parsed?.kind === 'match') {
-          const { division, color } = divisionFromCellColor(
-            cellColor(row[idx]),
-            colorToDivision,
-            warnings,
-            `${parsed.home} vs ${parsed.away}`,
-          )
+          const { division, color } = styleFor(row[idx], parsed.home, parsed.away)
           matches.push({
             day,
             time,
@@ -191,82 +299,108 @@ function parseSheetRows(rows, colorToDivision) {
           })
         }
       }
+    }
 
-      if (layout.hallStart == null) continue
+    if (layout.hallStart == null) continue
 
-      if (hallVenue) {
-        for (let i = 0; i < DAYS.length; i++) {
-          const idx = layout.hallStart + i
-          const day = DAYS[i]
-          const parsed = parseVsCell(cellText(row[idx]))
-          if (parsed?.kind === 'match') {
-            const { division, color } = divisionFromCellColor(
-              cellColor(row[idx]),
-              colorToDivision,
-              warnings,
-              `${parsed.home} vs ${parsed.away}`,
-            )
-            matches.push({
-              day,
-              time: '12-1pm',
-              venue: hallVenue,
-              home: parsed.home,
-              away: parsed.away,
-              color,
-              division,
-            })
-          } else if (parsed?.kind === 'free' || parsed?.kind === 'unavailable') {
-            pushSlotOverride(slotOverrides, {
-              day,
-              time: '12-1pm',
-              venue: hallVenue,
-              status: parsed.kind,
-            })
-          }
-        }
-      } else {
-        for (let i = 0; i < DAYS.length; i++) {
-          const idx = layout.hallStart + i
-          const parsed = parseVsCell(cellText(row[idx]))
-          if (parsed?.kind !== 'match') {
-            if (parsed?.kind === 'free' || parsed?.kind === 'unavailable') {
-              const day = DAYS[i]
-              pushSlotOverride(slotOverrides, {
-                day,
-                time: '12-1pm',
-                venue: 'hall_a',
-                status: parsed.kind,
-              })
-            }
-            continue
-          }
-          const day = DAYS[i]
-          const { division, color } = divisionFromCellColor(
-            cellColor(row[idx]),
-            colorToDivision,
-            warnings,
-            `${parsed.home} vs ${parsed.away}`,
-          )
-          matches.push({
+    if (hallVenue) {
+      for (let i = 0; i < DAYS.length; i++) {
+        const idx = layout.hallStart + i
+        const day = DAYS[i]
+        const parsed = parseVsCell(cellText(row[idx]))
+        if (parsed?.kind === 'match') {
+          const { division, color } = styleFor(row[idx], parsed.home, parsed.away)
+          rememberHall(day, hallVenue, {
+            kind: 'match',
             day,
             time: '12-1pm',
-            venue: 'hall_a',
+            venue: hallVenue,
             home: parsed.home,
             away: parsed.away,
             color,
             division,
           })
+        } else if (parsed?.kind === 'free' || parsed?.kind === 'unavailable') {
+          rememberHall(day, hallVenue, { kind: parsed.kind, day, venue: hallVenue })
         }
       }
+    } else if (time) {
+      for (let i = 0; i < DAYS.length; i++) {
+        const idx = layout.hallStart + i
+        const text = cellText(row[idx])
+        if (isHallNoise(text)) continue
+        const parsed = parseVsCell(text)
+        if (parsed?.kind !== 'match') continue
+        const day = DAYS[i]
+        const { division, color } = styleFor(row[idx], parsed.home, parsed.away)
+        if (!overflowByDay.has(day)) overflowByDay.set(day, [])
+        overflowByDay.get(day).push({
+          kind: 'match',
+          day,
+          time: '12-1pm',
+          home: parsed.home,
+          away: parsed.away,
+          color,
+          division,
+        })
+      }
+    }
+  }
+
+  for (const day of DAYS) {
+    for (const venue of ['hall_a', 'hall_b']) {
+      if (hallState.has(`${day}|${venue}`)) continue
+      const kind = day === 'wednesday' || day === 'friday' ? 'unavailable' : 'free'
+      rememberHall(day, venue, { kind, day, venue })
+    }
+  }
+
+  for (const day of DAYS) {
+    for (const extra of overflowByDay.get(day) || []) {
+      const venue = ['hall_a', 'hall_b'].find((name) => {
+        const current = hallState.get(`${day}|${name}`)
+        return !current || current.kind === 'free'
+      })
+      if (!venue) {
+        warnings.push(
+          `No free hall slot on ${day} for ${extra.home} vs ${extra.away}`,
+        )
+        continue
+      }
+      rememberHall(day, venue, { ...extra, venue })
+    }
+  }
+
+  for (const entry of hallState.values()) {
+    if (entry.kind === 'match') {
+      matches.push({
+        day: entry.day,
+        time: '12-1pm',
+        venue: entry.venue,
+        home: entry.home,
+        away: entry.away,
+        color: entry.color,
+        division: entry.division,
+      })
+    } else {
+      pushSlotOverride(slotOverrides, {
+        day: entry.day,
+        time: '12-1pm',
+        venue: entry.venue,
+        status: entry.kind,
+      })
     }
   }
 
   const key = (m) => `${m.day}|${m.time}|${m.venue}|${m.home}|${m.away}`
   const deduped = [...new Map(matches.map((m) => [key(m), m])).values()]
-  const overrides = [...slotOverrides.entries()].map(([k, status]) => {
-    const [day, time, venue] = k.split('|')
-    return { day, time, venue, status }
-  })
+  const taken = new Set(deduped.map((m) => `${m.day}|${m.time}|${m.venue}`))
+  const overrides = [...slotOverrides.entries()]
+    .map(([k, status]) => {
+      const [day, time, venue] = k.split('|')
+      return { day, time, venue, status }
+    })
+    .filter((slot) => !taken.has(`${slot.day}|${slot.time}|${slot.venue}`))
   overrides.sort(
     (a, b) =>
       a.day.localeCompare(b.day) ||
@@ -352,6 +486,7 @@ async function main() {
   }
 
   refreshTeamDivisionsFromSheet(opts.sheetId)
+  const teamLookup = loadTeamLookup()
 
   const colorToDivision = mergeColorMap(sheet.colorToDivision)
   const weeks = []
@@ -360,7 +495,11 @@ async function main() {
   for (const [index, tab] of tabs.entries()) {
     if (!tab.rows || tab.rows.length < 5) continue
     const startsOn = startsOnForTab(tab.name, index)
-    const { matches, slotOverrides, warnings } = parseSheetRows(tab.rows, colorToDivision)
+    const { matches, slotOverrides, warnings } = parseSheetRows(
+      tab.rows,
+      colorToDivision,
+      teamLookup,
+    )
     weeks.push({ startsOn, tab: tab.name, matches, slotOverrides })
     allWarnings.push(...warnings.map((w) => `${tab.name}: ${w}`))
     console.log(

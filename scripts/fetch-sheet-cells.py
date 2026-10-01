@@ -12,7 +12,7 @@ from xml.etree import ElementTree as ET
 
 DEFAULT_SHEET_ID = "19BtON4CVCeKyevCYjbYeH58gZ9_lcoyEtK4fFoFrW3o"
 NS = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
-COLS = 16
+COLS = 20
 SKIP_RGB = frozenset(
     {
         "FFFFFFFF",
@@ -67,20 +67,74 @@ def load_shared_strings(z: zipfile.ZipFile) -> list[str]:
     return out
 
 
-def rgb_to_hex(fg: dict) -> str | None:
+def load_theme_rgbs(z: zipfile.ZipFile) -> list[str]:
+    path = "xl/theme/theme1.xml"
+    if path not in z.namelist():
+        return []
+    ns = {"a": "http://schemas.openxmlformats.org/drawingml/2006/main"}
+    root = ET.fromstring(z.read(path))
+    scheme = root.find(".//a:clrScheme", ns)
+    if scheme is None:
+        return []
+    out: list[str] = []
+    for child in list(scheme):
+        srgb = child.find(".//a:srgbClr", ns)
+        sys = child.find(".//a:sysClr", ns)
+        if srgb is not None and srgb.get("val"):
+            out.append(srgb.get("val", "").upper())
+        elif sys is not None and sys.get("lastClr"):
+            out.append(sys.get("lastClr", "").upper())
+        else:
+            out.append("000000")
+    return out
+
+
+def apply_tint(rgb: str, tint: float) -> str:
+    if len(rgb) != 6:
+        return rgb
+    channels = [int(rgb[i : i + 2], 16) for i in (0, 2, 4)]
+    out = []
+    for channel in channels:
+        if tint < 0:
+            value = channel * (1 + tint)
+        else:
+            value = channel * (1 - tint) + 255 * tint
+        out.append(f"{max(0, min(255, round(value))):02X}")
+    return "".join(out)
+
+
+def rgb_to_hex(fg: dict, theme_rgbs: list[str]) -> str | None:
     rgb = fg.get("rgb")
-    if not rgb or rgb in SKIP_RGB or len(rgb) != 8:
+    if rgb and rgb not in SKIP_RGB and len(rgb) == 8:
+        return "#" + rgb[2:].upper()
+    theme = fg.get("theme")
+    if theme is None or not theme_rgbs:
         return None
-    return "#" + rgb[2:].upper()
+    idx = int(theme)
+    if idx >= len(theme_rgbs):
+        return None
+    raw = theme_rgbs[idx]
+    tint = float(fg.get("tint", "0") or "0")
+    if tint:
+        raw = apply_tint(raw, tint)
+    hex_color = "#" + raw.upper()
+    if hex_color in {"#FFFFFF", "#000000"}:
+        return None
+    return hex_color
 
 
-def cell_style_hex(style_index: int, fills: list[dict], xfs: list[ET.Element]) -> str | None:
+def cell_style_hex(
+    style_index: int,
+    fills: list[dict],
+    xfs: list[ET.Element],
+    theme_rgbs: list[str],
+) -> str | None:
     if style_index >= len(xfs):
         return None
     fill_id = int(xfs[style_index].get("fillId", "0"))
     if fill_id >= len(fills):
         return None
-    return rgb_to_hex(fills[fill_id])
+    return rgb_to_hex(fills[fill_id], theme_rgbs)
 
 
 def cell_text(cell: ET.Element, shared: list[str]) -> str:
@@ -125,6 +179,7 @@ def parse_worksheet(
     fills: list[dict],
     xfs: list[ET.Element],
     shared: list[str],
+    theme_rgbs: list[str],
 ) -> tuple[list[list[dict]], dict[str, str]]:
     sh = ET.fromstring(z.read(path))
     sparse: dict[tuple[int, int], dict] = {}
@@ -138,7 +193,7 @@ def parse_worksheet(
             r_idx, c_idx = cell_ref_indices(ref)
             text = cell_text(cell, shared)
             style = int(cell.get("s", "0"))
-            color = cell_style_hex(style, fills, xfs)
+            color = cell_style_hex(style, fills, xfs, theme_rgbs)
             sparse[(r_idx, c_idx)] = {"text": text, "color": color}
 
             label = text.strip().replace("\n", " ")
@@ -150,10 +205,11 @@ def parse_worksheet(
         return [], legend_by_division
 
     max_row = max(r for r, _ in sparse)
+    max_col = max(max(c for _, c in sparse) + 1, COLS)
     rows: list[list[dict]] = []
     for r in range(max_row + 1):
         row: list[dict] = []
-        for c in range(COLS):
+        for c in range(max_col):
             cell = sparse.get((r, c), {"text": "", "color": None})
             row.append(cell)
         rows.append(row)
@@ -164,10 +220,11 @@ def parse_workbook(xlsx: bytes) -> tuple[list[dict], dict[str, str], dict[str, s
     z = zipfile.ZipFile(__import__("io").BytesIO(xlsx))
     fills, xfs = load_styles(z)
     shared = load_shared_strings(z)
+    theme_rgbs = load_theme_rgbs(z)
     tabs: list[dict] = []
     legend: dict[str, str] = {}
     for name, path in worksheet_targets(z):
-        rows, tab_legend = parse_worksheet(z, path, fills, xfs, shared)
+        rows, tab_legend = parse_worksheet(z, path, fills, xfs, shared, theme_rgbs)
         if len(rows) < 5:
             continue
         tabs.append({"name": name, "rows": rows})

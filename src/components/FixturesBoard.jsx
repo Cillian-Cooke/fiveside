@@ -11,7 +11,7 @@ import {
 import {
   baySlot,
   fixturesForDay,
-  hallSlot,
+  hallCellFixtures,
   isMatchVisible,
 } from '../lib/fixtures.js'
 import MatchCard from './MatchCard.jsx'
@@ -138,14 +138,17 @@ function DesktopGrid({ fixtures, query, league, searching }) {
                   <small>{TIME_SHORT['12-1pm']}</small>
                 </th>
                 {DAYS.map((day) => {
-                  const hall = hallSlot(fixtures, day, venue)
+                  const halls = hallCellFixtures(fixtures, day, venue)
                   return (
                     <td key={day}>
-                      <MatchCard
-                        fixture={hall}
-                        compact
-                        blank={slotIsBlank(hall, query, league, searching)}
-                      />
+                      {halls.map((hall) => (
+                        <MatchCard
+                          key={hall.id}
+                          fixture={hall}
+                          compact
+                          blank={slotIsBlank(hall, query, league, searching)}
+                        />
+                      ))}
                     </td>
                   )
                 })}
