@@ -22,11 +22,20 @@ Collections: `weeks`, `fixtures`.
 
 ## Fixtures sheet
 
-League grid: [Google Sheet](https://docs.google.com/spreadsheets/d/19BtON4CVCeKyevCYjbYeH58gZ9_lcoyEtK4fFoFrW3o/edit). Sync into local seed data:
+The [Google Sheet](https://docs.google.com/spreadsheets/d/19BtON4CVCeKyevCYjbYeH58gZ9_lcoyEtK4fFoFrW3o/edit) is the source of truth. Edit the sheet; the site follows.
+
+A GitHub Action runs `npm run sync:sheet` every 30 minutes and on demand. If seed data changed, it commits and Vercel redeploys.
+
+- **Sync now:** [Actions → Sync fixtures from sheet → Run workflow](https://github.com/Cillian-Cooke/fiveside/actions/workflows/sync-sheet.yml)
+- Optional repo secrets (only if Vercel ignores `github-actions[bot]` pushes):
+  - `SYNC_GIT_TOKEN` — personal access token with `contents: write`, so the commit is yours and Vercel deploys it
+  - `VERCEL_DEPLOY_HOOK` — Deploy Hook URL from the Vercel project Git settings
+
+Local dry-run / manual sync:
 
 ```bash
-node scripts/sync-fixtures-from-sheet.mjs --dry-run --week-id YYYY-MM-DD --starts-on YYYY-MM-DD --range-label "Mon – Fri dates"
-node scripts/sync-fixtures-from-sheet.mjs --week-id YYYY-MM-DD --starts-on YYYY-MM-DD --range-label "Mon – Fri dates"
+npm run sync:sheet -- --dry-run
+npm run sync:sheet
 ```
 
-See `npm run sync:sheet` (runs team lookup refresh first).
+Week dates default to the current Monday in Europe/Dublin. Override with `--week-id`, `--starts-on`, and `--range-label` if needed.

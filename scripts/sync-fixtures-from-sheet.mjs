@@ -8,7 +8,7 @@
  * Options:
  *   --sheet-id ID     (default: league fixtures sheet)
  *   --gid 0           Sheet tab gid for export URL
- *   --week-id YYYY-MM-DD
+ *   --week-id YYYY-MM-DD   (default: Monday of the current Dublin week)
  *   --starts-on YYYY-MM-DD
  *   --range-label "29 Sep – 3 Oct"
  *   --dry-run         Print summary only; do not write seed.js
@@ -49,6 +49,41 @@ const DAY_BY_COL = {
   12: 'friday',
 }
 
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+function isoDate(date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function formatWeekRange(startsOn) {
+  const start = new Date(`${startsOn}T12:00:00`)
+  const end = new Date(start)
+  end.setDate(start.getDate() + 4)
+  const fmt = (date) => `${date.getDate()} ${MONTHS[date.getMonth()]}`
+  return `${fmt(start)} – ${fmt(end)}`
+}
+
+/** Monday of the current Dublin week (Mon–Sun). */
+function currentWeekMonday(now = new Date()) {
+  const dateStr = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Dublin',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(now)
+  const weekday = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/Dublin',
+    weekday: 'short',
+  }).format(now)
+  const date = new Date(`${dateStr}T12:00:00`)
+  const offset = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6 }[weekday] ?? 0
+  date.setDate(date.getDate() - offset)
+  return isoDate(date)
+}
+
 function parseArgs(argv) {
   const opts = {
     sheetId: DEFAULT_SHEET_ID,
@@ -67,6 +102,9 @@ function parseArgs(argv) {
     else if (a === '--starts-on') opts.startsOn = argv[++i]
     else if (a === '--range-label') opts.rangeLabel = argv[++i]
   }
+  if (!opts.weekId) opts.weekId = currentWeekMonday()
+  if (!opts.startsOn) opts.startsOn = opts.weekId
+  if (!opts.rangeLabel) opts.rangeLabel = formatWeekRange(opts.startsOn)
   return opts
 }
 
@@ -314,6 +352,9 @@ async function main() {
   const opts = parseArgs(process.argv)
 
   const sheet = fetchSheetCells(opts.sheetId)
+  if (!sheet.rows || sheet.rows.length < 5) {
+    throw new Error('Sheet export looked empty; refusing to overwrite seed.js')
+  }
   if (sheet.legend && Object.keys(sheet.legend).length) {
     writeDivisionColors(sheet.legend)
     console.log('Updated src/data/division-colors.json from sheet legend')
