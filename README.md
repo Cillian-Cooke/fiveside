@@ -24,7 +24,7 @@ Collections: `weeks`, `fixtures`.
 
 The [Google Sheet](https://docs.google.com/spreadsheets/d/19BtON4CVCeKyevCYjbYeH58gZ9_lcoyEtK4fFoFrW3o/edit) is the source of truth. Edit the sheet; the site follows.
 
-A GitHub Action runs `npm run sync:sheet` every 30 minutes and on demand. If seed data changed, it commits and Vercel redeploys.
+A GitHub Action runs `npm run sync:sheet` every 10 minutes and on demand. If seed data changed, it commits and Vercel redeploys.
 
 - **Sync now:** [Actions → Sync fixtures from sheet → Run workflow](https://github.com/Cillian-Cooke/fiveside/actions/workflows/sync-sheet.yml)
 - Optional repo secrets (only if Vercel ignores `github-actions[bot]` pushes):
