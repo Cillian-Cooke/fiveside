@@ -1,8 +1,10 @@
 import { seedFixtures, seedWeek } from '../data/seed.js'
 import { applyPitchSlotRules } from './fixtures.js'
+import { sortWeekEntries } from './weeks.js'
 
 let currentWeekCache
 let pastWeeksCache
+let allWeeksCache
 
 function readConfig() {
   const config = {
@@ -132,4 +134,28 @@ export async function loadPastWeeks() {
     pastWeeksCache = pastWeeks
     return pastWeeksCache
   }
+}
+
+function asWeekEntry(item) {
+  if (!item?.week) return null
+  return { week: item.week, fixtures: item.fixtures || [] }
+}
+
+export function peekAllWeeks() {
+  return allWeeksCache
+}
+
+export async function loadAllWeeks() {
+  if (allWeeksCache) return allWeeksCache
+
+  const [current, past] = await Promise.all([loadCurrentWeek(), loadPastWeeks()])
+  const byId = new Map()
+  for (const item of [...past, current]) {
+    const entry = asWeekEntry(item)
+    if (!entry) continue
+    byId.set(entry.week.id, entry)
+  }
+
+  allWeeksCache = sortWeekEntries([...byId.values()])
+  return allWeeksCache
 }

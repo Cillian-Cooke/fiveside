@@ -43,6 +43,7 @@ export default function WeekCalendar({
   return (
     <div className="mobile-only">
       <section className="cal-block">
+        <h2 className="cal-title">Botany Bay</h2>
         <div className="cal-grid">
           <div className="cal-time" aria-hidden="true" />
           {DAYS.map((day) => (
@@ -74,6 +75,7 @@ export default function WeekCalendar({
       </section>
 
       <section className="cal-block">
+        <h2 className="cal-title">Hall</h2>
         <div className="cal-grid">
           <div className="cal-time" aria-hidden="true" />
           {DAYS.map((day) => (
@@ -88,7 +90,10 @@ export default function WeekCalendar({
           ))}
           {HALL_VENUES.map((venue) => (
             <div key={venue} className="cal-contents">
-              <div className="cal-time">{VENUE_LABEL[venue].replace('Hall ', '')}</div>
+              <div className="cal-time hall-cal-time">
+                <span>{VENUE_LABEL[venue].replace('Hall ', '')}</span>
+                <small>{TIME_SHORT['12-1pm']}</small>
+              </div>
               {DAYS.map((day) => (
                 <Cell
                   key={day}

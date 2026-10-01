@@ -2,7 +2,16 @@ import { VENUE_LABEL, divisionColor } from '../constants.js'
 import { contrastText } from '../lib/fixtures.js'
 import TeamLink from './TeamLink.jsx'
 
-export default function MatchCard({ fixture, compact = false }) {
+export default function MatchCard({ fixture, compact = false, blank = false }) {
+  if (blank) {
+    return (
+      <article
+        className={`match-card blank ${compact ? 'grid-slot' : ''}`}
+        aria-hidden="true"
+      />
+    )
+  }
+
   if (!fixture) return null
 
   if (fixture.status === 'free') {

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   BAY_TIMES,
@@ -77,10 +77,17 @@ function DayDetails({ fixtures, day, query, league, searching }) {
   )
 }
 
+function slotIsBlank(fixture, query, league, searching) {
+  if (!searching) return false
+  if (!fixture || fixture.status !== 'match') return false
+  return !isMatchVisible(fixture, query, league)
+}
+
 function DesktopGrid({ fixtures, query, league, searching }) {
   return (
     <div className="desktop-only">
       <div className="grid-wrap">
+        <h2 className="grid-title">Botany Bay</h2>
         <table className="timetable">
           <thead>
             <tr>
@@ -96,14 +103,13 @@ function DesktopGrid({ fixtures, query, league, searching }) {
                 <th className="time-cell">{TIME_SHORT[time]}</th>
                 {DAYS.map((day) => {
                   const bay = baySlot(fixtures, day, time)
-                  const shown = [bay].filter((fixture) =>
-                    keepSlot(fixture, query, league, searching),
-                  )
                   return (
                     <td key={day}>
-                      {shown.map((fixture) => (
-                        <MatchCard key={fixture.id} fixture={fixture} compact />
-                      ))}
+                      <MatchCard
+                        fixture={bay}
+                        compact
+                        blank={slotIsBlank(bay, query, league, searching)}
+                      />
                     </td>
                   )
                 })}
@@ -114,6 +120,7 @@ function DesktopGrid({ fixtures, query, league, searching }) {
       </div>
 
       <div className="grid-wrap">
+        <h2 className="grid-title">Hall</h2>
         <table className="timetable">
           <thead>
             <tr>
@@ -126,15 +133,19 @@ function DesktopGrid({ fixtures, query, league, searching }) {
           <tbody>
             {HALL_VENUES.map((venue) => (
               <tr key={venue}>
-                <th className="time-cell">{VENUE_LABEL[venue].replace('Hall ', '')}</th>
+                <th className="time-cell hall-time-cell">
+                  <span>{VENUE_LABEL[venue].replace('Hall ', '')}</span>
+                  <small>{TIME_SHORT['12-1pm']}</small>
+                </th>
                 {DAYS.map((day) => {
                   const hall = hallSlot(fixtures, day, venue)
-                  const shown = keepSlot(hall, query, league, searching) ? [hall] : []
                   return (
                     <td key={day}>
-                      {shown.map((fixture) => (
-                        <MatchCard key={fixture.id} fixture={fixture} compact />
-                      ))}
+                      <MatchCard
+                        fixture={hall}
+                        compact
+                        blank={slotIsBlank(hall, query, league, searching)}
+                      />
                     </td>
                   )
                 })}
@@ -147,12 +158,59 @@ function DesktopGrid({ fixtures, query, league, searching }) {
   )
 }
 
+function useWeekSwipe(onPrev, onNext) {
+  const origin = useRef(null)
+  const swiping = useRef(false)
+  const suppressClick = useRef(false)
+
+  return {
+    onPointerDown(event) {
+      if (window.matchMedia('(min-width: 960px)').matches) return
+      origin.current = { x: event.clientX, y: event.clientY }
+      swiping.current = false
+    },
+    onPointerMove(event) {
+      if (!origin.current) return
+      const dx = event.clientX - origin.current.x
+      const dy = event.clientY - origin.current.y
+      if (Math.abs(dx) > 28 && Math.abs(dx) > Math.abs(dy)) {
+        swiping.current = true
+      }
+    },
+    onPointerUp(event) {
+      if (!origin.current) return
+      const dx = event.clientX - origin.current.x
+      const dy = event.clientY - origin.current.y
+      origin.current = null
+      if (!swiping.current) return
+      swiping.current = false
+      if (Math.abs(dx) < 56 || Math.abs(dx) < Math.abs(dy) * 1.15) return
+      suppressClick.current = true
+      if (dx < 0) onNext?.()
+      else onPrev?.()
+    },
+    onPointerCancel() {
+      origin.current = null
+      swiping.current = false
+    },
+    onClickCapture(event) {
+      if (!suppressClick.current) return
+      event.preventDefault()
+      event.stopPropagation()
+      suppressClick.current = false
+    },
+  }
+}
+
 export default function FixturesBoard({
   title = 'Current week',
   rangeLabel,
   fixtures,
   showLeagueFilters = false,
   searchPlaceholder,
+  weekId,
+  onPrevWeek,
+  onNextWeek,
 }) {
   const location = useLocation()
   const snap = readSnapshot(location.key)
@@ -167,8 +225,10 @@ export default function FixturesBoard({
   const [query, setQuery] = useState(snap?.query ?? '')
   const [league, setLeague] = useState(snap?.league ?? 'all')
   const searching = query.trim().length > 0 || league !== 'all'
+  const swipe = useWeekSwipe(onPrevWeek, onNextWeek)
+  const canPage = Boolean(onPrevWeek && onNextWeek)
 
-  useStackPage({ day, query, league }, true)
+  useStackPage({ day, query, league, weekId }, true)
 
   return (
     <>
@@ -184,30 +244,56 @@ export default function FixturesBoard({
         <LeagueFilters value={league} onChange={setLeague} />
       ) : null}
 
-      <WeekCalendar
-        fixtures={fixtures}
-        selectedDay={day}
-        onSelectDay={setDay}
-        query={query}
-        league={league}
-      />
+      <div className="week-stage">
+        {canPage ? (
+          <button
+            type="button"
+            className="week-arrow week-arrow-prev desktop-only"
+            aria-label="Previous week"
+            onClick={onPrevWeek}
+          >
+            ‹
+          </button>
+        ) : null}
 
-      <div className="mobile-only day-details">
-        <DayDetails
-          fixtures={fixtures}
-          day={day}
-          query={query}
-          league={league}
-          searching={searching}
-        />
+        <div className="week-stage-main" {...(canPage ? swipe : {})}>
+          <WeekCalendar
+            fixtures={fixtures}
+            selectedDay={day}
+            onSelectDay={setDay}
+            query={query}
+            league={league}
+          />
+
+          <div className="mobile-only day-details">
+            <DayDetails
+              fixtures={fixtures}
+              day={day}
+              query={query}
+              league={league}
+              searching={searching}
+            />
+          </div>
+
+          <DesktopGrid
+            fixtures={fixtures}
+            query={query}
+            league={league}
+            searching={searching}
+          />
+        </div>
+
+        {canPage ? (
+          <button
+            type="button"
+            className="week-arrow week-arrow-next desktop-only"
+            aria-label="Next week"
+            onClick={onNextWeek}
+          >
+            ›
+          </button>
+        ) : null}
       </div>
-
-      <DesktopGrid
-        fixtures={fixtures}
-        query={query}
-        league={league}
-        searching={searching}
-      />
       <Legend />
     </>
   )
