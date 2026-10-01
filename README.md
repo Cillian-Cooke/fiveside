@@ -31,11 +31,9 @@ A GitHub Action runs `npm run sync:sheet` every 10 minutes and on demand. If see
   - `SYNC_GIT_TOKEN` — personal access token with `contents: write`, so the commit is yours and Vercel deploys it
   - `VERCEL_DEPLOY_HOOK` — Deploy Hook URL from the Vercel project Git settings
 
-Local dry-run / manual sync:
+Each fixture tab in the sheet is a week. Tab names like `Week 1 28th` and `Week 2 5th` set the Monday date; the site opens on the week that matches today in Europe/Dublin.
 
 ```bash
 npm run sync:sheet -- --dry-run
 npm run sync:sheet
 ```
-
-Week dates default to the current Monday in Europe/Dublin. Override with `--week-id`, `--starts-on`, and `--range-label` if needed.

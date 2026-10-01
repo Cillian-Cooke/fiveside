@@ -12,7 +12,7 @@ from xml.etree import ElementTree as ET
 
 DEFAULT_SHEET_ID = "19BtON4CVCeKyevCYjbYeH58gZ9_lcoyEtK4fFoFrW3o"
 NS = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
-COLS = 14
+COLS = 16
 SKIP_RGB = frozenset(
     {
         "FFFFFFFF",
@@ -95,12 +95,38 @@ def cell_text(cell: ET.Element, shared: list[str]) -> str:
     return ""
 
 
-def parse_sheet(xlsx: bytes) -> tuple[list[list[dict]], dict[str, str], dict[str, str]]:
-    z = zipfile.ZipFile(__import__("io").BytesIO(xlsx))
-    fills, xfs = load_styles(z)
-    shared = load_shared_strings(z)
-    sh = ET.fromstring(z.read("xl/worksheets/sheet1.xml"))
+REL_NS = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
 
+
+def worksheet_targets(z: zipfile.ZipFile) -> list[tuple[str, str]]:
+    wb = ET.fromstring(z.read("xl/workbook.xml"))
+    rels = ET.fromstring(z.read("xl/_rels/workbook.xml.rels"))
+    rel_map = {rel.attrib["Id"]: rel.attrib["Target"] for rel in rels}
+    out: list[tuple[str, str]] = []
+    for sh in wb.findall("m:sheets/m:sheet", NS):
+        name = sh.attrib.get("name", "")
+        if sh.attrib.get("state") == "hidden":
+            continue
+        if "contact" in name.lower():
+            continue
+        rid = sh.attrib.get(f"{REL_NS}id")
+        target = rel_map.get(rid or "")
+        if not target:
+            continue
+        if not target.startswith("xl/"):
+            target = "xl/" + target.lstrip("/")
+        out.append((name, target))
+    return out
+
+
+def parse_worksheet(
+    z: zipfile.ZipFile,
+    path: str,
+    fills: list[dict],
+    xfs: list[ET.Element],
+    shared: list[str],
+) -> tuple[list[list[dict]], dict[str, str]]:
+    sh = ET.fromstring(z.read(path))
     sparse: dict[tuple[int, int], dict] = {}
     legend_by_division: dict[str, str] = {}
 
@@ -121,7 +147,7 @@ def parse_sheet(xlsx: bytes) -> tuple[list[list[dict]], dict[str, str], dict[str
                     legend_by_division[label if label != "Mixed" else "Mixed Division"] = color
 
     if not sparse:
-        return [], legend_by_division, {}
+        return [], legend_by_division
 
     max_row = max(r for r, _ in sparse)
     rows: list[list[dict]] = []
@@ -131,14 +157,28 @@ def parse_sheet(xlsx: bytes) -> tuple[list[list[dict]], dict[str, str], dict[str
             cell = sparse.get((r, c), {"text": "", "color": None})
             row.append(cell)
         rows.append(row)
+    return rows, legend_by_division
+
+
+def parse_workbook(xlsx: bytes) -> tuple[list[dict], dict[str, str], dict[str, str]]:
+    z = zipfile.ZipFile(__import__("io").BytesIO(xlsx))
+    fills, xfs = load_styles(z)
+    shared = load_shared_strings(z)
+    tabs: list[dict] = []
+    legend: dict[str, str] = {}
+    for name, path in worksheet_targets(z):
+        rows, tab_legend = parse_worksheet(z, path, fills, xfs, shared)
+        if len(rows) < 5:
+            continue
+        tabs.append({"name": name, "rows": rows})
+        legend.update(tab_legend)
 
     color_to_division: dict[str, str] = {}
-    for division, color in legend_by_division.items():
+    for division, color in legend.items():
         color_to_division[color.upper()] = division
     if GREY_MIXED not in color_to_division:
         color_to_division[GREY_MIXED] = "Mixed Division"
-
-    return rows, legend_by_division, color_to_division
+    return tabs, legend, color_to_division
 
 
 def main() -> None:
@@ -147,14 +187,14 @@ def main() -> None:
     args = parser.parse_args()
     try:
         xlsx = download_xlsx(args.sheet_id)
-        rows, legend, color_to_division = parse_sheet(xlsx)
+        tabs, legend, color_to_division = parse_workbook(xlsx)
     except Exception as exc:  # noqa: BLE001
         print(json.dumps({"error": str(exc)}))
         sys.exit(1)
     print(
         json.dumps(
             {
-                "rows": rows,
+                "tabs": tabs,
                 "legend": legend,
                 "colorToDivision": color_to_division,
             }

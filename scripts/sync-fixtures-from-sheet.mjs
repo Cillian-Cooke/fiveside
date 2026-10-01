@@ -1,16 +1,12 @@
 /**
- * Pull Trinity five-a-side fixtures from the league Google Sheet (CSV export)
- * and update src/data/seed.js MATCHES + week metadata.
+ * Pull Trinity five-a-side fixtures from the league Google Sheet
+ * (one tab per week) and update src/data/seed.js.
  *
  * Usage:
  *   node scripts/sync-fixtures-from-sheet.mjs [options]
  *
  * Options:
  *   --sheet-id ID     (default: league fixtures sheet)
- *   --gid 0           Sheet tab gid for export URL
- *   --week-id YYYY-MM-DD   (default: Monday of the current Dublin week)
- *   --starts-on YYYY-MM-DD
- *   --range-label "29 Sep – 3 Oct"
  *   --dry-run         Print summary only; do not write seed.js
  */
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -18,6 +14,11 @@ import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { writeDivisionColors } from './division-colors.mjs'
+import {
+  currentWeekMonday,
+  mondayFromTabName,
+  shiftStartsOn,
+} from '../src/lib/week-dates.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -36,76 +37,40 @@ const DEFAULT_COLOR_TO_DIVISION = {
   '#B7B7B7': 'Mixed Division',
 }
 
-const DAY_BY_COL = {
-  1: 'monday',
-  2: 'tuesday',
-  3: 'wednesday',
-  4: 'thursday',
-  5: 'friday',
-  8: 'monday',
-  9: 'tuesday',
-  10: 'wednesday',
-  11: 'thursday',
-  12: 'friday',
-}
+const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-function isoDate(date) {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
-
-function formatWeekRange(startsOn) {
-  const start = new Date(`${startsOn}T12:00:00`)
-  const end = new Date(start)
-  end.setDate(start.getDate() + 4)
-  const fmt = (date) => `${date.getDate()} ${MONTHS[date.getMonth()]}`
-  return `${fmt(start)} – ${fmt(end)}`
-}
-
-/** Monday of the current Dublin week (Mon–Sun). */
-function currentWeekMonday(now = new Date()) {
-  const dateStr = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Europe/Dublin',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(now)
-  const weekday = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Europe/Dublin',
-    weekday: 'short',
-  }).format(now)
-  const date = new Date(`${dateStr}T12:00:00`)
-  const offset = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6 }[weekday] ?? 0
-  date.setDate(date.getDate() - offset)
-  return isoDate(date)
+function detectGridLayout(rows) {
+  for (const row of rows) {
+    const texts = row.map((cell) => normalizeCell(cellText(cell)).toLowerCase())
+    const firstMon = texts.indexOf('monday')
+    if (firstMon < 0) continue
+    if (!DAYS.every((day, i) => texts[firstMon + i] === day)) continue
+    const hallStart = texts.indexOf('monday', firstMon + DAYS.length)
+    return {
+      timeCol: Math.max(0, firstMon - 1),
+      bayStart: firstMon,
+      hallLabelCol: hallStart > 0 ? hallStart - 1 : firstMon + DAYS.length,
+      hallStart: hallStart > 0 ? hallStart : null,
+    }
+  }
+  return { timeCol: 0, bayStart: 1, hallLabelCol: 7, hallStart: 8 }
 }
 
 function parseArgs(argv) {
   const opts = {
     sheetId: DEFAULT_SHEET_ID,
-    gid: '0',
-    weekId: null,
-    startsOn: null,
-    rangeLabel: null,
     dryRun: false,
   }
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i]
     if (a === '--dry-run') opts.dryRun = true
     else if (a === '--sheet-id') opts.sheetId = argv[++i]
-    else if (a === '--gid') opts.gid = argv[++i]
-    else if (a === '--week-id') opts.weekId = argv[++i]
-    else if (a === '--starts-on') opts.startsOn = argv[++i]
-    else if (a === '--range-label') opts.rangeLabel = argv[++i]
   }
-  if (!opts.weekId) opts.weekId = currentWeekMonday()
-  if (!opts.startsOn) opts.startsOn = opts.weekId
-  if (!opts.rangeLabel) opts.rangeLabel = formatWeekRange(opts.startsOn)
   return opts
+}
+
+function startsOnForTab(name, index) {
+  return mondayFromTabName(name) || shiftStartsOn(currentWeekMonday(), index)
 }
 
 function normalizeCell(text) {
@@ -185,19 +150,21 @@ function parseSheetRows(rows, colorToDivision) {
   const matches = []
   const slotOverrides = new Map()
   const warnings = []
+  const layout = detectGridLayout(rows)
 
   for (const row of rows) {
-    const time = parseTimeLabel(cellText(row[0]))
-    const hallLabel = normalizeCell(cellText(row[7]))
+    const time = parseTimeLabel(cellText(row[layout.timeCol]))
+    const hallLabel = normalizeCell(cellText(row[layout.hallLabelCol]))
     let hallVenue = null
     if (hallLabel.includes('Hall A')) hallVenue = 'hall_a'
     else if (hallLabel.includes('Hall B')) hallVenue = 'hall_b'
 
     if (time) {
       const importBayMatches = time !== '1-2pm'
-      for (let idx = 1; idx <= 5; idx++) {
+      for (let i = 0; i < DAYS.length; i++) {
         if (!importBayMatches) continue
-        const day = DAY_BY_COL[idx]
+        const idx = layout.bayStart + i
+        const day = DAYS[i]
         const parsed = parseVsCell(cellText(row[idx]))
         if (parsed?.kind === 'match') {
           const { division, color } = divisionFromCellColor(
@@ -225,9 +192,12 @@ function parseSheetRows(rows, colorToDivision) {
         }
       }
 
+      if (layout.hallStart == null) continue
+
       if (hallVenue) {
-        for (let idx = 8; idx <= 12; idx++) {
-          const day = DAY_BY_COL[idx]
+        for (let i = 0; i < DAYS.length; i++) {
+          const idx = layout.hallStart + i
+          const day = DAYS[i]
           const parsed = parseVsCell(cellText(row[idx]))
           if (parsed?.kind === 'match') {
             const { division, color } = divisionFromCellColor(
@@ -255,11 +225,12 @@ function parseSheetRows(rows, colorToDivision) {
           }
         }
       } else {
-        for (let idx = 8; idx <= 12; idx++) {
+        for (let i = 0; i < DAYS.length; i++) {
+          const idx = layout.hallStart + i
           const parsed = parseVsCell(cellText(row[idx]))
           if (parsed?.kind !== 'match') {
             if (parsed?.kind === 'free' || parsed?.kind === 'unavailable') {
-              const day = DAY_BY_COL[idx]
+              const day = DAYS[i]
               pushSlotOverride(slotOverrides, {
                 day,
                 time: '12-1pm',
@@ -269,7 +240,7 @@ function parseSheetRows(rows, colorToDivision) {
             }
             continue
           }
-          const day = DAY_BY_COL[idx]
+          const day = DAYS[i]
           const { division, color } = divisionFromCellColor(
             cellColor(row[idx]),
             colorToDivision,
@@ -305,38 +276,57 @@ function parseSheetRows(rows, colorToDivision) {
   return { matches: deduped, slotOverrides: overrides, warnings }
 }
 
-function formatMatchesJs(matches) {
+function jsString(value) {
+  return String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'")
+}
+
+function formatMatchesJs(matches, indent = 2) {
+  const pad = ' '.repeat(indent)
   const lines = matches.map((m) => {
-    const home = m.home.replace(/'/g, "\\'")
-    const away = m.away.replace(/'/g, "\\'")
-    return `  { day: '${m.day}', time: '${m.time}', venue: '${m.venue}', home: '${home}', away: '${away}', color: '${m.color}', division: '${m.division}' },`
+    const home = jsString(m.home)
+    const away = jsString(m.away)
+    return `${pad}{ day: '${m.day}', time: '${m.time}', venue: '${m.venue}', home: '${home}', away: '${away}', color: '${m.color}', division: '${jsString(m.division)}' },`
   })
-  return `const MATCHES = [\n${lines.join('\n')}\n]`
+  return lines.join('\n')
 }
 
-function formatSlotOverridesJs(overrides) {
-  const lines = overrides.map(
-    (s) =>
-      `  { day: '${s.day}', time: '${s.time}', venue: '${s.venue}', status: '${s.status}' },`,
-  )
-  return `const SLOT_OVERRIDES = [\n${lines.join('\n')}\n]`
-}
-
-function patchSeedJs(seedText, matchesBlock, overridesBlock, opts) {
-  let out = seedText.replace(/const MATCHES = \[\n[\s\S]*?\n\]\n/, `${matchesBlock}\n`)
-  if (/const SLOT_OVERRIDES = \[\n[\s\S]*?\n\]\n/.test(out)) {
-    out = out.replace(/const SLOT_OVERRIDES = \[\n[\s\S]*?\n\]\n/, `${overridesBlock}\n`)
-  } else {
-    out = out.replace(`${matchesBlock}\n`, `${matchesBlock}\n\n${overridesBlock}\n`)
-  }
-  if (opts.weekId) {
-    out = out.replace(/const CURRENT_WEEK_ID = '[^']+'/, `const CURRENT_WEEK_ID = '${opts.weekId}'`)
-    out = out.replace(
-      /id: CURRENT_WEEK_ID,\n  label: '[^']*',\n  rangeLabel: '[^']*',\n  startsOn: '[^']*'/,
-      `id: CURRENT_WEEK_ID,\n  label: 'Current week',\n  rangeLabel: '${opts.rangeLabel || opts.weekId}',\n  startsOn: '${opts.startsOn || opts.weekId}'`,
+function formatSlotOverridesJs(overrides, indent = 2) {
+  const pad = ' '.repeat(indent)
+  return overrides
+    .map(
+      (s) =>
+        `${pad}{ day: '${s.day}', time: '${s.time}', venue: '${s.venue}', status: '${s.status}' },`,
     )
+    .join('\n')
+}
+
+function formatWeeksJs(weeks) {
+  const chunks = weeks.map((week) => {
+    const matches = formatMatchesJs(week.matches, 6)
+    const overrides = formatSlotOverridesJs(week.slotOverrides, 6)
+    return `  {
+    startsOn: '${week.startsOn}',
+    tab: '${jsString(week.tab)}',
+    matches: [
+${matches}
+    ],
+    slotOverrides: [
+${overrides}
+    ],
+  },`
+  })
+  return `const WEEKS = [\n${chunks.join('\n')}\n]\n`
+}
+
+function patchSeedJs(seedText, weeksBlock) {
+  const start = '/* SHEET-WEEKS:START */'
+  const end = '/* SHEET-WEEKS:END */'
+  const a = seedText.indexOf(start)
+  const b = seedText.indexOf(end)
+  if (a < 0 || b < 0) {
+    throw new Error('seed.js missing SHEET-WEEKS markers')
   }
-  return out
+  return `${seedText.slice(0, a)}${start}\n${weeksBlock}${end}${seedText.slice(b + end.length)}`
 }
 
 function refreshTeamDivisionsFromSheet(sheetId) {
@@ -352,7 +342,8 @@ async function main() {
   const opts = parseArgs(process.argv)
 
   const sheet = fetchSheetCells(opts.sheetId)
-  if (!sheet.rows || sheet.rows.length < 5) {
+  const tabs = sheet.tabs || (sheet.rows ? [{ name: 'Fixtures', rows: sheet.rows }] : [])
+  if (!tabs.length || tabs.every((tab) => !tab.rows || tab.rows.length < 5)) {
     throw new Error('Sheet export looked empty; refusing to overwrite seed.js')
   }
   if (sheet.legend && Object.keys(sheet.legend).length) {
@@ -363,32 +354,48 @@ async function main() {
   refreshTeamDivisionsFromSheet(opts.sheetId)
 
   const colorToDivision = mergeColorMap(sheet.colorToDivision)
-  const { matches, slotOverrides, warnings } = parseSheetRows(sheet.rows, colorToDivision)
+  const weeks = []
+  const allWarnings = []
 
-  console.log(`Parsed ${matches.length} fixtures from sheet ${opts.sheetId}`)
-  console.log(`Parsed ${slotOverrides.length} free/unavailable slot overrides from sheet`)
+  for (const [index, tab] of tabs.entries()) {
+    if (!tab.rows || tab.rows.length < 5) continue
+    const startsOn = startsOnForTab(tab.name, index)
+    const { matches, slotOverrides, warnings } = parseSheetRows(tab.rows, colorToDivision)
+    weeks.push({ startsOn, tab: tab.name, matches, slotOverrides })
+    allWarnings.push(...warnings.map((w) => `${tab.name}: ${w}`))
+    console.log(
+      `Tab "${tab.name}" → ${startsOn}: ${matches.length} fixtures, ${slotOverrides.length} slot overrides`,
+    )
+  }
+
+  if (!weeks.length) {
+    throw new Error('No fixture tabs parsed; refusing to overwrite seed.js')
+  }
+
+  weeks.sort((a, b) => a.startsOn.localeCompare(b.startsOn))
+
   if (sheet.legend && Object.keys(sheet.legend).length) {
     console.log('Division colours from sheet legend:', sheet.legend)
   }
-  if (warnings.length) {
+  if (allWarnings.length) {
     console.log('\nWarnings:')
-    for (const w of warnings) console.log(`  - ${w}`)
+    for (const w of allWarnings) console.log(`  - ${w}`)
   }
 
-  const matchesBlock = formatMatchesJs(matches)
-  const overridesBlock = formatSlotOverridesJs(slotOverrides)
+  const weeksBlock = formatWeeksJs(weeks)
   const seedPath = join(root, 'src/data/seed.js')
   const seedText = readFileSync(seedPath, 'utf8')
 
   if (opts.dryRun) {
-    console.log('\n--- MATCHES preview (first 5) ---')
-    console.log(matches.slice(0, 5))
-    console.log('\n--- SLOT_OVERRIDES ---')
-    console.log(slotOverrides)
+    console.log('\n--- WEEKS preview ---')
+    for (const week of weeks) {
+      console.log(week.tab, week.startsOn, 'matches', week.matches.length)
+      console.log(week.matches.slice(0, 3))
+    }
     return
   }
 
-  const next = patchSeedJs(seedText, matchesBlock, overridesBlock, opts)
+  const next = patchSeedJs(seedText, weeksBlock)
   writeFileSync(seedPath, next)
   console.log(`Updated ${seedPath}`)
 

@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { collection, doc, getFirestore, setDoc } from 'firebase/firestore'
 import { readFileSync } from 'node:fs'
-import { seedFixtures, seedWeek } from '../src/data/seed.js'
+import { seedWeeks } from '../src/data/seed.js'
 
 function loadEnv() {
   const env = { ...process.env }
@@ -35,20 +35,21 @@ if (!config.apiKey || !config.projectId) {
 }
 
 const db = getFirestore(initializeApp(config))
-
-await setDoc(doc(db, 'weeks', seedWeek.id), {
-  label: seedWeek.label,
-  rangeLabel: seedWeek.rangeLabel,
-  startsOn: seedWeek.startsOn,
-  isCurrent: seedWeek.isCurrent,
-  pitch: seedWeek.pitch,
-  halls: seedWeek.halls,
-})
-
 const fixturesRef = collection(db, 'fixtures')
-for (const fixture of seedFixtures) {
-  const { id, ...data } = fixture
-  await setDoc(doc(fixturesRef, id), data)
-}
 
-console.log(`Seeded week ${seedWeek.id} with ${seedFixtures.length} slots.`)
+for (const entry of seedWeeks) {
+  const { week, fixtures } = entry
+  await setDoc(doc(db, 'weeks', week.id), {
+    label: week.label,
+    rangeLabel: week.rangeLabel,
+    startsOn: week.startsOn,
+    isCurrent: week.isCurrent,
+    pitch: week.pitch,
+    halls: week.halls,
+  })
+  for (const fixture of fixtures) {
+    const { id, ...data } = fixture
+    await setDoc(doc(fixturesRef, id), data)
+  }
+  console.log(`Seeded week ${week.id} with ${fixtures.length} slots.`)
+}

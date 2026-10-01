@@ -2,7 +2,8 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { useNavigate, useNavigationType, useParams } from 'react-router-dom'
 import { DAY_LONG, VENUE_LABEL } from '../constants.js'
 import { uniqueTeams } from '../lib/fixtures.js'
-import { loadCurrentWeek, loadPastWeeks } from '../lib/firebase.js'
+import { loadAllWeeks } from '../lib/firebase.js'
+import { currentWeekMonday } from '../lib/weeks.js'
 import {
   findTeamBySlug,
   pastGames,
@@ -17,14 +18,12 @@ export default function Team() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const navType = useNavigationType()
-  const [current, setCurrent] = useState({ week: null, fixtures: [] })
-  const [pastWeeks, setPastWeeks] = useState([])
+  const [weeks, setWeeks] = useState([])
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    Promise.all([loadCurrentWeek(), loadPastWeeks()]).then(([week, past]) => {
-      setCurrent(week)
-      setPastWeeks(past)
+    loadAllWeeks().then((list) => {
+      setWeeks(list)
       setReady(true)
     })
   }, [])
@@ -36,35 +35,44 @@ export default function Team() {
 
   useStackPage(null, ready)
 
+  const monday = currentWeekMonday()
+
   const roster = useMemo(() => {
-    const fromCurrent = uniqueTeams(current.fixtures)
-    const fromPast = uniqueTeams(pastWeeks.flatMap((item) => item.fixtures))
     const merged = new Map()
-    for (const team of [...fromPast, ...fromCurrent]) merged.set(team.name, team)
+    for (const side of uniqueTeams(weeks.flatMap((item) => item.fixtures))) {
+      merged.set(side.name, side)
+    }
     return [...merged.values()]
-  }, [current.fixtures, pastWeeks])
+  }, [weeks])
 
   const team = findTeamBySlug(roster, slug)
 
   const upcoming = useMemo(() => {
     if (!team) return []
-    return upcomingGames(team.name, current.fixtures).map((fixture) => ({
-      ...fixture,
-      weekLabel: current.week?.rangeLabel,
-    }))
-  }, [team, current])
+    return weeks
+      .filter((item) => String(item.week.startsOn || item.week.id) >= monday)
+      .flatMap((item) =>
+        upcomingGames(team.name, item.fixtures).map((fixture) => ({
+          ...fixture,
+          weekLabel: item.week?.rangeLabel,
+          startsOn: item.week?.startsOn,
+        })),
+      )
+  }, [team, weeks, monday])
 
   const history = useMemo(() => {
     if (!team) return []
-    const games = pastWeeks.flatMap((item) =>
-      item.fixtures.map((fixture) => ({
-        ...fixture,
-        weekLabel: item.week.rangeLabel,
-        startsOn: item.week.startsOn,
-      })),
-    )
+    const games = weeks
+      .filter((item) => String(item.week.startsOn || item.week.id) < monday)
+      .flatMap((item) =>
+        item.fixtures.map((fixture) => ({
+          ...fixture,
+          weekLabel: item.week.rangeLabel,
+          startsOn: item.week.startsOn,
+        })),
+      )
     return pastGames(team.name, games)
-  }, [team, pastWeeks])
+  }, [team, weeks, monday])
 
   function goBack() {
     if ((window.history.state?.idx ?? 0) > 0) {
@@ -116,7 +124,7 @@ export default function Team() {
 
       {upcoming.length > 1 ? (
         <>
-          <h2 className="section-title">Also this week</h2>
+          <h2 className="section-title">Also coming up</h2>
           {upcoming.slice(1).map((fixture) => (
             <MatchCard key={fixture.id} fixture={fixture} />
           ))}

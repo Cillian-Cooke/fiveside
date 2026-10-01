@@ -3,11 +3,7 @@ import { useLocation } from 'react-router-dom'
 import FixturesBoard from '../components/FixturesBoard.jsx'
 import { loadAllWeeks, peekAllWeeks } from '../lib/firebase.js'
 import { readSnapshot } from '../lib/navStack.js'
-import { makeEmptyWeek, shiftStartsOn, sortWeekEntries } from '../lib/weeks.js'
-
-function currentId(list) {
-  return list.find((item) => item.week.isCurrent)?.week.id || list[0]?.week.id || null
-}
+import { makeEmptyWeek, shiftStartsOn, sortWeekEntries, currentWeekId } from '../lib/weeks.js'
 
 export default function Home() {
   const location = useLocation()
@@ -15,7 +11,7 @@ export default function Home() {
   const cached = peekAllWeeks()
   const [weeks, setWeeks] = useState(cached || [])
   const [weekId, setWeekId] = useState(
-    () => snap?.weekId || currentId(cached || []),
+    () => snap?.weekId || currentWeekId(cached || []),
   )
   const [loading, setLoading] = useState(!cached?.length)
 
@@ -24,7 +20,7 @@ export default function Home() {
     loadAllWeeks().then((list) => {
       if (ignore) return
       setWeeks(list)
-      setWeekId((id) => (list.some((item) => item.week.id === id) ? id : currentId(list)))
+      setWeekId((id) => (list.some((item) => item.week.id === id) ? id : currentWeekId(list)))
       setLoading(false)
     })
     return () => {

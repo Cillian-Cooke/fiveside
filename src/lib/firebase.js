@@ -1,6 +1,6 @@
-import { seedFixtures, seedWeek } from '../data/seed.js'
+import { seedWeeks } from '../data/seed.js'
 import { applyPitchSlotRules } from './fixtures.js'
-import { sortWeekEntries } from './weeks.js'
+import { currentWeekMonday, markCurrentWeeks, sortWeekEntries } from './weeks.js'
 
 let currentWeekCache
 let pastWeeksCache
@@ -23,6 +23,15 @@ export function isFirebaseConfigured() {
   return readConfig().ready
 }
 
+function asWeekEntry(item) {
+  if (!item?.week) return null
+  return { week: item.week, fixtures: item.fixtures || [] }
+}
+
+function fromSeed() {
+  return markCurrentWeeks(sortWeekEntries(seedWeeks.map(asWeekEntry).filter(Boolean)))
+}
+
 export function peekCurrentWeek() {
   return currentWeekCache
 }
@@ -31,131 +40,69 @@ export function peekPastWeeks() {
   return pastWeeksCache
 }
 
-export async function loadCurrentWeek() {
-  if (currentWeekCache) return currentWeekCache
-
-  const { config, ready } = readConfig()
-  if (!ready) {
-    currentWeekCache = {
-      week: seedWeek,
-      fixtures: applyPitchSlotRules(seedFixtures, seedWeek.id),
-      source: 'local',
-    }
-    return currentWeekCache
-  }
-
-  try {
-    const { initializeApp } = await import('firebase/app')
-    const { collection, getDocs, getFirestore, query, where } = await import(
-      'firebase/firestore'
-    )
-    const db = getFirestore(initializeApp(config))
-    const weeksSnap = await getDocs(
-      query(collection(db, 'weeks'), where('isCurrent', '==', true)),
-    )
-    const weekDoc = weeksSnap.docs[0]
-    const week = weekDoc ? { id: weekDoc.id, ...weekDoc.data() } : seedWeek
-    const fixturesSnap = await getDocs(
-      query(collection(db, 'fixtures'), where('weekId', '==', week.id)),
-    )
-    const fixtures = fixturesSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-
-    if (!fixtures.length) {
-      currentWeekCache = {
-        week: seedWeek,
-        fixtures: applyPitchSlotRules(seedFixtures, seedWeek.id),
-        source: 'local',
-      }
-      return currentWeekCache
-    }
-
-    currentWeekCache = {
-      week,
-      fixtures: applyPitchSlotRules(fixtures, week.id),
-      source: 'firebase',
-    }
-    return currentWeekCache
-  } catch (error) {
-    console.warn('Firebase unavailable, using local fixtures', error)
-    currentWeekCache = {
-      week: seedWeek,
-      fixtures: applyPitchSlotRules(seedFixtures, seedWeek.id),
-      source: 'local',
-    }
-    return currentWeekCache
-  }
-}
-
-export async function loadPastWeeks() {
-  if (pastWeeksCache) return pastWeeksCache
-
-  const { pastWeeks } = await import('../data/seed.js')
-  if (!pastWeeks.length) {
-    pastWeeksCache = []
-    return pastWeeksCache
-  }
-
-  const { config, ready } = readConfig()
-  if (!ready) {
-    pastWeeksCache = pastWeeks
-    return pastWeeksCache
-  }
-
-  try {
-    const { initializeApp } = await import('firebase/app')
-    const { collection, getDocs, getFirestore, query, where } = await import(
-      'firebase/firestore'
-    )
-    const db = getFirestore(initializeApp(config))
-    const weeksSnap = await getDocs(
-      query(collection(db, 'weeks'), where('isCurrent', '==', false)),
-    )
-    const weeks = weeksSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-    if (!weeks.length) {
-      pastWeeksCache = pastWeeks
-      return pastWeeksCache
-    }
-
-    const result = []
-    for (const week of weeks) {
-      const fixturesSnap = await getDocs(
-        query(collection(db, 'fixtures'), where('weekId', '==', week.id)),
-      )
-      const fixtures = fixturesSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-      result.push({
-        week,
-        fixtures: applyPitchSlotRules(fixtures, week.id),
-      })
-    }
-    pastWeeksCache = result.length ? result : pastWeeks
-    return pastWeeksCache
-  } catch (error) {
-    console.warn('Firebase unavailable, using local results', error)
-    pastWeeksCache = pastWeeks
-    return pastWeeksCache
-  }
-}
-
-function asWeekEntry(item) {
-  if (!item?.week) return null
-  return { week: item.week, fixtures: item.fixtures || [] }
-}
-
 export function peekAllWeeks() {
   return allWeeksCache
+}
+
+function cacheSlices(list) {
+  const monday = currentWeekMonday()
+  currentWeekCache = list.find((item) => item.week.isCurrent) || list[0] || null
+  pastWeeksCache = list.filter((item) => String(item.week.startsOn || item.week.id) < monday)
+  allWeeksCache = list
+}
+
+async function loadWeeksFromFirebase(config) {
+  const { initializeApp } = await import('firebase/app')
+  const { collection, getDocs, getFirestore } = await import('firebase/firestore')
+  const db = getFirestore(initializeApp(config))
+  const weeksSnap = await getDocs(collection(db, 'weeks'))
+  const weeks = weeksSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+  if (!weeks.length) return []
+
+  const fixturesSnap = await getDocs(collection(db, 'fixtures'))
+  const fixtures = fixturesSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+  const byWeek = new Map()
+  for (const fixture of fixtures) {
+    const key = fixture.weekId
+    if (!byWeek.has(key)) byWeek.set(key, [])
+    byWeek.get(key).push(fixture)
+  }
+
+  return weeks.map((week) => ({
+    week,
+    fixtures: applyPitchSlotRules(byWeek.get(week.id) || [], week.id),
+  }))
 }
 
 export async function loadAllWeeks() {
   if (allWeeksCache) return allWeeksCache
 
-  const [current, past] = await Promise.all([loadCurrentWeek(), loadPastWeeks()])
-  const byId = new Map()
-  for (const item of [...past, current]) {
-    const entry = asWeekEntry(item)
-    if (!entry) continue
-    byId.set(entry.week.id, entry)
+  const { config, ready } = readConfig()
+  if (!ready) {
+    cacheSlices(fromSeed())
+    return allWeeksCache
   }
 
-  allWeeksCache = sortWeekEntries([...byId.values()])
-  return allWeeksCache
+  try {
+    const remote = await loadWeeksFromFirebase(config)
+    const list = markCurrentWeeks(sortWeekEntries((remote.length ? remote : fromSeed()).map(asWeekEntry).filter(Boolean)))
+    cacheSlices(list)
+    return allWeeksCache
+  } catch (error) {
+    console.warn('Firebase unavailable, using local fixtures', error)
+    cacheSlices(fromSeed())
+    return allWeeksCache
+  }
+}
+
+export async function loadCurrentWeek() {
+  if (currentWeekCache) return currentWeekCache
+  const weeks = await loadAllWeeks()
+  return weeks.find((item) => item.week.isCurrent) || weeks[0] || null
+}
+
+export async function loadPastWeeks() {
+  if (pastWeeksCache) return pastWeeksCache
+  await loadAllWeeks()
+  return pastWeeksCache || []
 }
