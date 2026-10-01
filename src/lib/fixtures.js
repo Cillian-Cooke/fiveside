@@ -1,4 +1,4 @@
-import { BAY_TIMES, DAYS } from '../constants.js'
+import { BAY_TIMES, DAYS, divisionColor } from '../constants.js'
 
 const VENUE_ORDER = { botany_bay: 0, hall_a: 1, hall_b: 2 }
 
@@ -94,7 +94,7 @@ export function uniqueTeams(fixtures) {
         teams.set(name, {
           name,
           division: fixture.division,
-          color: fixture.color,
+          color: fixture.color || divisionColor(fixture.division),
         })
       }
     }
@@ -164,7 +164,7 @@ export function slotFill(fixture, query = '', league = 'all') {
   if (fixture.status === 'match' && !isMatchVisible(fixture, query, league)) {
     return '#ffffff'
   }
-  return fixture.color || '#ffffff'
+  return fixture.color || divisionColor(fixture.division) || '#ffffff'
 }
 
 function emptyRow(name, division, color) {
@@ -194,8 +194,9 @@ export function buildLeagueTables(fixtures) {
     if (fixture.status !== 'match') continue
     if (typeof fixture.homeScore !== 'number' || typeof fixture.awayScore !== 'number') continue
 
-    const home = rowFor(fixture.home, fixture.division, fixture.color)
-    const away = rowFor(fixture.away, fixture.division, fixture.color)
+    const color = fixture.color || divisionColor(fixture.division)
+    const home = rowFor(fixture.home, fixture.division, color)
+    const away = rowFor(fixture.away, fixture.division, color)
     home.played += 1
     away.played += 1
     home.gf += fixture.homeScore

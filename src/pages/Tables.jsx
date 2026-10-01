@@ -4,7 +4,7 @@ import { DIVISIONS } from '../constants.js'
 import SearchBar from '../components/SearchBar.jsx'
 import LeagueFilters from '../components/LeagueFilters.jsx'
 import TeamLink from '../components/TeamLink.jsx'
-import { buildLeagueTables, divisionFromQuery, teamMatchesQuery } from '../lib/fixtures.js'
+import { buildLeagueTables, contrastText, divisionFromQuery, teamMatchesQuery } from '../lib/fixtures.js'
 import { loadPastWeeks, peekPastWeeks } from '../lib/firebase.js'
 import { readSnapshot, useStackPage } from '../lib/navStack.js'
 
@@ -74,7 +74,10 @@ export default function Tables() {
             }
             key={division.name}
           >
-            <header className="league-table-head" style={{ background: division.color }}>
+            <header
+              className="league-table-head"
+              style={{ background: division.color, color: contrastText(division.color) }}
+            >
               <h2>{division.name}</h2>
             </header>
             <div className="table-scroll">
