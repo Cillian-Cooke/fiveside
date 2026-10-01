@@ -47,7 +47,7 @@ export default function Tables() {
         <p className="lede">Loading tables…</p>
       ) : !hasStandings ? (
         <article className="placeholder-card">
-          <h2>No standings yet</h2>
+          <h2>Coming soon</h2>
           <p>League tables will appear here once match results are published.</p>
         </article>
       ) : (

@@ -73,6 +73,7 @@ export function divisionColor(name) {
 export const NAV = [
   { to: '/', label: 'Fixtures' },
   { to: '/tables', label: 'Tables' },
+  { to: '/tournament', label: 'Tournament' },
 ]
 
 export const LEAGUE_FILTERS = [
