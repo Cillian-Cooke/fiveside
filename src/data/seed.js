@@ -1,4 +1,4 @@
-const CURRENT_WEEK_ID = '2026-09-29'
+const CURRENT_WEEK_ID = '2026-09-28'
 
 const MATCHES = [
   { day: 'tuesday', time: '9-10am', venue: 'botany_bay', home: 'East Cavan Gaels', away: 'Dropouts FC', color: '#F9CB9C', division: 'Division 2' },
@@ -19,7 +19,6 @@ const MATCHES = [
   { day: 'friday', time: '12-1pm', venue: 'botany_bay', home: 'Ponzie Prowlers', away: 'Strokes Academy', color: '#D5A6BD', division: 'Division 7' },
   { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'FC TRISS', away: 'Lionel MSISS', color: '#FFE599', division: 'Division 3' },
   { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'Ctrl Alt Defeat', away: 'Hack Tuah', color: '#B4A7D6', division: 'Division 6' },
-  { day: 'monday', time: '2-3pm', venue: 'botany_bay', home: 'Himmy Saville', away: 'Carling F.C.', color: '#A4C2F4', division: 'Division 5' },
   { day: 'wednesday', time: '2-3pm', venue: 'botany_bay', home: 'Goaldiggers fc', away: 'Ateltico Unatletico', color: '#D5A6BD', division: 'Division 7' },
   { day: 'thursday', time: '2-3pm', venue: 'botany_bay', home: 'Ø Zone', away: 'Reels Betis', color: '#B6D7A8', division: 'Division 4' },
   { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'Iteam', away: 'TBXI', color: '#A4C2F4', division: 'Division 5' },
@@ -27,6 +26,7 @@ const MATCHES = [
   { day: 'wednesday', time: '3-4pm', venue: 'botany_bay', home: 'Real MAldrid', away: 'The Stoppable Force', color: '#D5A6BD', division: 'Division 7' },
   { day: 'thursday', time: '3-4pm', venue: 'botany_bay', home: 'CSB FC', away: 'Sools fc', color: '#B6D7A8', division: 'Division 4' },
   { day: 'friday', time: '3-4pm', venue: 'botany_bay', home: 'Chicken Chasers', away: 'SpVgg F.K. Spartak Ussher 04', color: '#A4C2F4', division: 'Division 5' },
+  { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'Himmy Saville', away: 'Carling F.C.', color: '#A4C2F4', division: 'Division 5' },
   { day: 'monday', time: '4-5pm', venue: 'botany_bay', home: 'Egg Fried Reus', away: 'Barely Athletic FC', color: '#EA9999', division: 'Division 1' },
   { day: 'tuesday', time: '4-5pm', venue: 'botany_bay', home: 'Buenos Aires ballers XI', away: 'Pav Furniture', color: '#FFE599', division: 'Division 3' },
   { day: 'wednesday', time: '4-5pm', venue: 'botany_bay', home: 'Coolock says Goal', away: 'TPSG', color: '#FFE599', division: 'Division 3' },
@@ -43,6 +43,7 @@ const SLOT_OVERRIDES = [
   { day: 'monday', time: '11-12pm', venue: 'botany_bay', status: 'free' },
   { day: 'monday', time: '12-1pm', venue: 'hall_a', status: 'free' },
   { day: 'monday', time: '12-1pm', venue: 'hall_b', status: 'free' },
+  { day: 'monday', time: '2-3pm', venue: 'botany_bay', status: 'free' },
   { day: 'monday', time: '3-4pm', venue: 'botany_bay', status: 'free' },
   { day: 'monday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
   { day: 'monday', time: '9-10am', venue: 'botany_bay', status: 'free' },
@@ -155,8 +156,8 @@ export function buildFixtures(weekId, matches, slotOverrides = SLOT_OVERRIDES) {
 export const seedWeek = {
   id: CURRENT_WEEK_ID,
   label: 'Current week',
-  rangeLabel: '29 Sep – 3 Oct',
-  startsOn: '2026-09-29',
+  rangeLabel: '28 Sep – 2 Oct',
+  startsOn: '2026-09-28',
   isCurrent: true,
 }
 
