@@ -9,7 +9,7 @@ function closedSlotId(weekId, day, time, venue) {
   return `${weekId}-${day}-${time}-${venue}`.replaceAll(' ', '')
 }
 
-/** Force closed bay times (e.g. 1–2pm) to unavailable — applies to Firestore and local data. */
+/** Force closed bay times (e.g. 1–2pm) to unavailable on the public timetable. */
 export function applyPitchSlotRules(fixtures, weekId) {
   const week = weekId || fixtures.find((f) => f.weekId)?.weekId
   if (!week) return fixtures

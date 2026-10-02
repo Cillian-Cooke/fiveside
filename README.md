@@ -9,16 +9,7 @@ npm install
 npm run dev
 ```
 
-The board works from local JavaScript seed data until Firebase is connected.
-
-## Firebase
-
-1. Create a Firestore project.
-2. Copy `.env.example` to `.env.local` and fill in the Vite keys.
-3. Deploy rules: `npx firebase deploy --only firestore:rules`
-4. Temporarily allow writes, run `npm run seed`, then lock writes again.
-
-Collections: `weeks`, `fixtures`. The sheet sync updates `seed.js` only — after parser fixes or schedule changes, run `npm run seed` again so Firestore drops stale slots (e.g. hall games on the wrong weekday). The live app always prefers seed for the grid and only pulls **scores** from Firestore when both exist.
+Fixture data is bundled from `src/data/seed.js` (updated by sheet sync).
 
 ## Fixtures sheet
 
@@ -37,3 +28,5 @@ Each fixture tab in the sheet is a week. Tab names like `Week 1 28th` and `Week 
 npm run sync:sheet -- --dry-run
 npm run sync:sheet
 ```
+
+Match scores can be added to `seed.js` later (e.g. from the sheet); the UI already shows scores when `homeScore` / `awayScore` are present on fixtures.

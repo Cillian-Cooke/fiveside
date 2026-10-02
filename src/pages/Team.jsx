@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { useNavigate, useNavigationType, useParams } from 'react-router-dom'
 import { DAY_LONG, VENUE_LABEL } from '../constants.js'
 import { uniqueTeams } from '../lib/fixtures.js'
-import { loadAllWeeks } from '../lib/firebase.js'
+import { loadAllWeeks } from '../lib/weeks-data.js'
 import { currentWeekMonday } from '../lib/weeks.js'
 import {
   findTeamBySlug,

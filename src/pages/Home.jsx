@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import FixturesBoard from '../components/FixturesBoard.jsx'
-import { loadAllWeeks, peekAllWeeks } from '../lib/firebase.js'
+import { loadAllWeeks, peekAllWeeks } from '../lib/weeks-data.js'
 import { readSnapshot } from '../lib/navStack.js'
 import { makeEmptyWeek, shiftStartsOn, sortWeekEntries, currentWeekId } from '../lib/weeks.js'
 

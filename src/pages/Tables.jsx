@@ -5,7 +5,7 @@ import SearchBar from '../components/SearchBar.jsx'
 import LeagueFilters from '../components/LeagueFilters.jsx'
 import TeamLink from '../components/TeamLink.jsx'
 import { buildLeagueTables, contrastText, divisionFromQuery, teamMatchesQuery } from '../lib/fixtures.js'
-import { loadPastWeeks, peekPastWeeks } from '../lib/firebase.js'
+import { loadPastWeeks, peekPastWeeks } from '../lib/weeks-data.js'
 import { readSnapshot, useStackPage } from '../lib/navStack.js'
 
 export default function Tables() {
