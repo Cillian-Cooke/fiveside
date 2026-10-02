@@ -18,7 +18,7 @@ The board works from local JavaScript seed data until Firebase is connected.
 3. Deploy rules: `npx firebase deploy --only firestore:rules`
 4. Temporarily allow writes, run `npm run seed`, then lock writes again.
 
-Collections: `weeks`, `fixtures`.
+Collections: `weeks`, `fixtures`. The sheet sync updates `seed.js` only — after parser fixes or schedule changes, run `npm run seed` again so Firestore drops stale slots (e.g. hall games on the wrong weekday). The live app always prefers seed for the grid and only pulls **scores** from Firestore when both exist.
 
 ## Fixtures sheet
 

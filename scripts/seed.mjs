@@ -1,5 +1,14 @@
 import { initializeApp } from 'firebase/app'
-import { collection, doc, getFirestore, setDoc } from 'firebase/firestore'
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  getFirestore,
+  query,
+  setDoc,
+  where,
+} from 'firebase/firestore'
 import { readFileSync } from 'node:fs'
 import { seedWeeks } from '../src/data/seed.js'
 
@@ -47,6 +56,14 @@ for (const entry of seedWeeks) {
     pitch: week.pitch,
     halls: week.halls,
   })
+  const keepIds = new Set(fixtures.map((fixture) => fixture.id))
+  const existing = await getDocs(query(fixturesRef, where('weekId', '==', week.id)))
+  for (const snap of existing.docs) {
+    if (!keepIds.has(snap.id)) {
+      await deleteDoc(snap.ref)
+    }
+  }
+
   for (const fixture of fixtures) {
     const { id, ...data } = fixture
     await setDoc(doc(fixturesRef, id), data)

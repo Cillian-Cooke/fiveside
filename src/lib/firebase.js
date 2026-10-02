@@ -32,6 +32,48 @@ function fromSeed() {
   return markCurrentWeeks(sortWeekEntries(seedWeeks.map(asWeekEntry).filter(Boolean)))
 }
 
+/** Scores may live in Firestore; schedule always follows git seed (sheet sync). */
+function overlayRemoteScores(seedFixtures, remoteFixtures) {
+  const remoteById = new Map((remoteFixtures || []).map((fixture) => [fixture.id, fixture]))
+  return (seedFixtures || []).map((fixture) => {
+    const remote = remoteById.get(fixture.id)
+    if (!remote) return fixture
+    const patch = {}
+    if (typeof remote.homeScore === 'number') patch.homeScore = remote.homeScore
+    if (typeof remote.awayScore === 'number') patch.awayScore = remote.awayScore
+    return Object.keys(patch).length ? { ...fixture, ...patch } : fixture
+  })
+}
+
+function mergeSeedWithRemote(seedList, remoteList) {
+  if (!remoteList?.length) return seedList
+  const remoteByWeek = new Map(remoteList.map((entry) => [entry.week.id, entry]))
+  const merged = seedList.map((seedEntry) => {
+    const remoteEntry = remoteByWeek.get(seedEntry.week.id)
+    if (!remoteEntry) return seedEntry
+    return {
+      week: {
+        ...remoteEntry.week,
+        ...seedEntry.week,
+        label: seedEntry.week.label,
+        rangeLabel: seedEntry.week.rangeLabel,
+        isCurrent: seedEntry.week.isCurrent,
+        tab: seedEntry.week.tab,
+      },
+      fixtures: applyPitchSlotRules(
+        overlayRemoteScores(seedEntry.fixtures, remoteEntry.fixtures),
+        seedEntry.week.id,
+      ),
+    }
+  })
+  for (const remoteEntry of remoteList) {
+    if (!seedList.some((entry) => entry.week.id === remoteEntry.week.id)) {
+      merged.push(remoteEntry)
+    }
+  }
+  return merged
+}
+
 export function peekCurrentWeek() {
   return currentWeekCache
 }
@@ -85,7 +127,10 @@ export async function loadAllWeeks() {
 
   try {
     const remote = await loadWeeksFromFirebase(config)
-    const list = markCurrentWeeks(sortWeekEntries((remote.length ? remote : fromSeed()).map(asWeekEntry).filter(Boolean)))
+    const seedList = fromSeed()
+    const list = markCurrentWeeks(
+      sortWeekEntries(mergeSeedWithRemote(seedList, remote).map(asWeekEntry).filter(Boolean)),
+    )
     cacheSlices(list)
     return allWeeksCache
   } catch (error) {
