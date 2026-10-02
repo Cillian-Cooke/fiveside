@@ -1,46 +1,34 @@
 #!/usr/bin/env python3
-"""Parse team → division from the league sheet Contact Info tab (public gviz CSV)."""
+"""Parse team → division + Contact section colour from the league sheet Contact Info tab."""
 from __future__ import annotations
 
 import argparse
-import csv
-import io
 import json
-import re
 import sys
-import urllib.parse
-import urllib.request
+from pathlib import Path
+
+TCD_SCRIPTS = Path(__file__).resolve().parents[2] / "tcd5aside" / "scripts"
+sys.path.insert(0, str(TCD_SCRIPTS))
+
+from contact_info_layout import parse_contact_layout  # noqa: E402
 
 DEFAULT_SHEET_ID = "19BtON4CVCeKyevCYjbYeH58gZ9_lcoyEtK4fFoFrW3o"
 DEFAULT_SHEET_NAME = "Contact Info"
 
-DIVISION_HEADER = re.compile(r"^Division \d+$")
 
-
-def fetch_contact_rows(sheet_id: str, sheet_name: str) -> list[list[str]]:
-    quoted = urllib.parse.quote(sheet_name)
-    url = (
-        f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq"
-        f"?tqx=out:csv&sheet={quoted}"
-    )
-    with urllib.request.urlopen(url, timeout=60) as resp:
-        text = resp.read().decode("utf-8-sig")
-    reader = csv.reader(io.StringIO(text))
-    return [row for row in reader]
-
-
-def parse_divisions(rows: list[list[str]]) -> dict[str, str]:
-    current: str | None = None
-    teams: dict[str, str] = {}
-    for row in rows:
-        name = (row[1] if len(row) > 1 else "").strip()
-        if not name:
+def build_teams(
+    contacts: list[dict], division_colors: dict[str, str]
+) -> dict[str, dict[str, str]]:
+    teams: dict[str, dict[str, str]] = {}
+    for row in contacts:
+        name = row.get("team", "")
+        if not name or name == "Mixed League":
             continue
-        if DIVISION_HEADER.match(name) or name in ("Mixed Division", "Mixed"):
-            current = "Mixed Division" if name == "Mixed" else name
+        if name in teams:
             continue
-        if current:
-            teams[name] = current
+        division = row.get("division", "")
+        color = division_colors.get(division) or row.get("color") or ""
+        teams[name] = {"division": division, "color": color}
     return teams
 
 
@@ -50,12 +38,20 @@ def main() -> None:
     parser.add_argument("--sheet-name", default=DEFAULT_SHEET_NAME)
     args = parser.parse_args()
     try:
-        rows = fetch_contact_rows(args.sheet_id, args.sheet_name)
-        teams = parse_divisions(rows)
+        contacts, division_colors = parse_contact_layout(args.sheet_id, args.sheet_name)
+        teams = build_teams(contacts, division_colors)
     except Exception as exc:  # noqa: BLE001
         print(json.dumps({"error": str(exc)}))
         sys.exit(1)
-    print(json.dumps({"teams": teams, "count": len(teams)}))
+    print(
+        json.dumps(
+            {
+                "teams": teams,
+                "division_colors": division_colors,
+                "count": len(teams),
+            }
+        )
+    )
 
 
 if __name__ == "__main__":

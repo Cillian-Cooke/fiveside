@@ -196,12 +196,6 @@ function resolveMatchStyle(color, home, away, colorToDivision, divisionColors, t
   return { division: 'Mixed Division', color: divisionColors['Mixed Division'] || MIXED_COLOR }
 }
 
-function isHallNoise(text) {
-  const value = normalizeCell(text)
-  if (!value) return true
-  return /^(division \d+|mixed|mixed division|games to be played\.?|\.)$/i.test(value)
-}
-
 function mergeColorMap(sheetMap) {
   return { ...DEFAULT_COLOR_TO_DIVISION, ...(sheetMap || {}) }
 }
@@ -235,10 +229,17 @@ function parseSheetRows(rows, colorToDivision, teamLookup = {}) {
   const layout = detectGridLayout(rows)
   const divisionColors = invertColorMap(colorToDivision)
   const hallState = new Map()
-  const overflowByDay = new Map()
 
   const rememberHall = (day, venue, entry) => {
     hallState.set(`${day}|${venue}`, entry)
+  }
+
+  /** Hall bookings only come from the dedicated Hall A / Hall B label column — never bay time rows. */
+  function hallVenueFromLabel(hallLabelText) {
+    const hallLabel = normalizeCell(hallLabelText)
+    if (/12-1pm\s*\(\s*hall\s*a\s*\)/i.test(hallLabel)) return 'hall_a'
+    if (/12-1pm\s*\(\s*hall\s*b\s*\)/i.test(hallLabel)) return 'hall_b'
+    return null
   }
 
   const styleFor = (cell, home, away) =>
@@ -254,23 +255,7 @@ function parseSheetRows(rows, colorToDivision, teamLookup = {}) {
 
   for (const row of rows) {
     const time = parseTimeLabel(cellText(row[layout.timeCol]))
-    const hallLabel = normalizeCell(cellText(row[layout.hallLabelCol]))
-    let hallVenue = null
-    if (/\bhall\s*a\b/i.test(hallLabel)) hallVenue = 'hall_a'
-    else if (/\bhall\s*b\b/i.test(hallLabel)) hallVenue = 'hall_b'
-    else {
-      for (const cell of row) {
-        const label = normalizeCell(cellText(cell))
-        if (/\bhall\s*a\b/i.test(label)) {
-          hallVenue = 'hall_a'
-          break
-        }
-        if (/\bhall\s*b\b/i.test(label)) {
-          hallVenue = 'hall_b'
-          break
-        }
-      }
-    }
+    const hallVenue = hallVenueFromLabel(cellText(row[layout.hallLabelCol]))
 
     if (time) {
       const importBayMatches = time !== '1-2pm'
@@ -324,26 +309,6 @@ function parseSheetRows(rows, colorToDivision, teamLookup = {}) {
           rememberHall(day, hallVenue, { kind: parsed.kind, day, venue: hallVenue })
         }
       }
-    } else if (time) {
-      for (let i = 0; i < DAYS.length; i++) {
-        const idx = layout.hallStart + i
-        const text = cellText(row[idx])
-        if (isHallNoise(text)) continue
-        const parsed = parseVsCell(text)
-        if (parsed?.kind !== 'match') continue
-        const day = DAYS[i]
-        const { division, color } = styleFor(row[idx], parsed.home, parsed.away)
-        if (!overflowByDay.has(day)) overflowByDay.set(day, [])
-        overflowByDay.get(day).push({
-          kind: 'match',
-          day,
-          time: '12-1pm',
-          home: parsed.home,
-          away: parsed.away,
-          color,
-          division,
-        })
-      }
     }
   }
 
@@ -352,22 +317,6 @@ function parseSheetRows(rows, colorToDivision, teamLookup = {}) {
       if (hallState.has(`${day}|${venue}`)) continue
       const kind = day === 'wednesday' || day === 'friday' ? 'unavailable' : 'free'
       rememberHall(day, venue, { kind, day, venue })
-    }
-  }
-
-  for (const day of DAYS) {
-    for (const extra of overflowByDay.get(day) || []) {
-      const venue = ['hall_a', 'hall_b'].find((name) => {
-        const current = hallState.get(`${day}|${name}`)
-        return !current || current.kind === 'free'
-      })
-      if (!venue) {
-        warnings.push(
-          `No free hall slot on ${day} for ${extra.home} vs ${extra.away}`,
-        )
-        continue
-      }
-      rememberHall(day, venue, { ...extra, venue })
     }
   }
 

@@ -6,8 +6,6 @@ import { writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
-import { loadDivisionColors } from './division-colors.mjs'
-
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 const DEFAULT_SHEET_ID = '19BtON4CVCeKyevCYjbYeH58gZ9_lcoyEtK4fFoFrW3o'
@@ -35,19 +33,18 @@ function fetchDivisions(sheetId, sheetName) {
   }
   const payload = JSON.parse(result.stdout)
   if (payload.error) throw new Error(payload.error)
-  return payload.teams
+  return payload
 }
 
 function main() {
   const opts = parseArgs(process.argv)
-  const divisionColors = loadDivisionColors(opts.sheetId)
-  const raw = fetchDivisions(opts.sheetId, opts.sheetName)
+  const payload = fetchDivisions(opts.sheetId, opts.sheetName)
+  const raw = payload.teams
   const out = {}
-  for (const [name, division] of Object.entries(raw).sort(([a], [b]) => a.localeCompare(b))) {
-    const div = division === 'Mixed' ? 'Mixed Division' : division
+  for (const [name, info] of Object.entries(raw).sort(([a], [b]) => a.localeCompare(b))) {
     out[name] = {
-      division: div,
-      color: divisionColors[div] || divisionColors['Mixed Division'],
+      division: info.division,
+      color: info.color,
     }
   }
   const path = join(root, 'src/data/team-divisions.json')
