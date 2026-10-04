@@ -7,8 +7,7 @@ import json
 import sys
 from pathlib import Path
 
-TCD_SCRIPTS = Path(__file__).resolve().parents[2] / "tcd5aside" / "scripts"
-sys.path.insert(0, str(TCD_SCRIPTS))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from contact_info_layout import parse_contact_layout  # noqa: E402
 
