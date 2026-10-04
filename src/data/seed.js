@@ -11,7 +11,6 @@ const WEEKS = [
       { day: 'tuesday', time: '10-11am', venue: 'botany_bay', home: 'HurriKanes', away: 'River dodder rodent', color: '#B4A7D6', division: 'Division 6' },
       { day: 'wednesday', time: '10-11am', venue: 'botany_bay', home: 'Liampool', away: 'Pavaria', color: '#F9CB9C', division: 'Division 2' },
       { day: 'thursday', time: '10-11am', venue: 'botany_bay', home: 'Lawds and Bizches', away: 'Fiery Middle Aged Women', color: '#6AA84F', division: 'Mixed Division' },
-      { day: 'friday', time: '10-11am', venue: 'botany_bay', home: 'Ajaxidative Phosphorylation', away: 'Visiting Ballers', color: '#D5A6BD', division: 'Division 7' },
       { day: 'tuesday', time: '11-12pm', venue: 'botany_bay', home: 'The Fish Tank', away: 'Real Medrid', color: '#B6D7A8', division: 'Division 4' },
       { day: 'wednesday', time: '11-12pm', venue: 'botany_bay', home: 'Engibeering', away: 'Choose Football', color: '#EA9999', division: 'Division 1' },
       { day: 'thursday', time: '11-12pm', venue: 'botany_bay', home: 'git gud', away: 'Euro football studs', color: '#6AA84F', division: 'Mixed Division' },
@@ -34,6 +33,7 @@ const WEEKS = [
       { day: 'friday', time: '4-5pm', venue: 'botany_bay', home: 'Trin Tigers', away: 'Roman Empire', color: '#B4A7D6', division: 'Division 6' },
     ],
     slotOverrides: [
+      { day: 'friday', time: '10-11am', venue: 'botany_bay', status: 'free' },
       { day: 'friday', time: '12-1pm', venue: 'hall_a', status: 'unavailable' },
       { day: 'friday', time: '12-1pm', venue: 'hall_b', status: 'unavailable' },
       { day: 'friday', time: '2-3pm', venue: 'botany_bay', status: 'free' },
@@ -99,6 +99,7 @@ const WEEKS = [
       { day: 'thursday', time: '4-5pm', venue: 'botany_bay', home: 'Iteam', away: 'TBXI', color: '#A4C2F4', division: 'Division 5' },
       { day: 'friday', time: '4-5pm', venue: 'botany_bay', home: 'Himmy Saville', away: 'Carling F.C.', color: '#A4C2F4', division: 'Division 5' },
       { day: 'monday', time: '12-1pm', venue: 'hall_a', home: 'The Palpators 2.0', away: 'Mauled by the trinners', color: '#A4C2F4', division: 'Division 5' },
+      { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'Ajaxidative Phosphorylation', away: 'Visiting Ballers', color: '#D5A6BD', division: 'Division 7' },
     ],
     slotOverrides: [
       { day: 'friday', time: '12-1pm', venue: 'hall_a', status: 'unavailable' },
@@ -107,7 +108,6 @@ const WEEKS = [
       { day: 'monday', time: '11-12pm', venue: 'botany_bay', status: 'free' },
       { day: 'monday', time: '12-1pm', venue: 'hall_b', status: 'free' },
       { day: 'monday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
-      { day: 'thursday', time: '12-1pm', venue: 'hall_a', status: 'free' },
       { day: 'thursday', time: '12-1pm', venue: 'hall_b', status: 'free' },
       { day: 'thursday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
       { day: 'tuesday', time: '12-1pm', venue: 'hall_a', status: 'free' },
