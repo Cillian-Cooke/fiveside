@@ -1,5 +1,195 @@
 {
   "schema_version": 1,
-  "updated_at": null,
-  "results": []
+  "updated_at": "2026-10-06T10:55:39Z",
+  "results": [
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Buenos Aires ballers XI",
+      "away": "Pav Furniture",
+      "homeScore": 10,
+      "awayScore": 6
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "CSB FC",
+      "away": "Sools fc",
+      "homeScore": 7,
+      "awayScore": 9
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Chicken Chasers",
+      "away": "SpVgg F.K. Spartak Ussher 04",
+      "homeScore": 6,
+      "awayScore": 7
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Coolock says Goal",
+      "away": "TPSG",
+      "homeScore": 10,
+      "awayScore": 11
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "East Cavan Gaels",
+      "away": "Dropouts FC",
+      "homeScore": 17,
+      "awayScore": 11
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Egg Fried Reus",
+      "away": "Barely Athletic FC",
+      "homeScore": 12,
+      "awayScore": 10
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Engibeering",
+      "away": "Choose Football",
+      "homeScore": 9,
+      "awayScore": 6
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Goaldiggers fc",
+      "away": "Ateltico Unatletico",
+      "homeScore": 11,
+      "awayScore": 4
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Hangover97",
+      "away": "Lochbessmonster",
+      "homeScore": 8,
+      "awayScore": 7
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Hedley Burnley",
+      "away": "Navier Stokes",
+      "homeScore": 11,
+      "awayScore": 9
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "HurriKanes",
+      "away": "River dodder rodent",
+      "homeScore": 5,
+      "awayScore": 16
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Lawds and Bizches",
+      "away": "Fiery Middle Aged Women",
+      "homeScore": 9,
+      "awayScore": 15
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Liampool",
+      "away": "Pavaria",
+      "homeScore": 16,
+      "awayScore": 12
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Mountjoy FC",
+      "away": "Eng ballers",
+      "homeScore": 7,
+      "awayScore": 13
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "PBB FC",
+      "away": "Wings of a Sparrow",
+      "homeScore": 9,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Pavillionaires",
+      "away": "Integer Milan",
+      "homeScore": 4,
+      "awayScore": 7
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Ponzie Prowlers",
+      "away": "Strokes Academy",
+      "homeScore": 9,
+      "awayScore": 4
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "The BESS Around",
+      "away": "Lads on toure",
+      "homeScore": 20,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "The Fish Tank",
+      "away": "Real Medrid",
+      "homeScore": 5,
+      "awayScore": 18
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "The Screaming Goafers",
+      "away": "FC TRISS",
+      "homeScore": 6,
+      "awayScore": 12
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Trin Tigers",
+      "away": "Roman Empire",
+      "homeScore": 10,
+      "awayScore": 7
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Unathletic Bilbao",
+      "away": "Inter Milanagement",
+      "homeScore": 9,
+      "awayScore": 12
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "git gud",
+      "away": "Euro football studs",
+      "homeScore": 14,
+      "awayScore": 9
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "\u00d8 Zone",
+      "away": "Reels Betis",
+      "homeScore": 11,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "The Palpators 2.0",
+      "away": "Mauled by the trinners",
+      "homeScore": 5,
+      "awayScore": 6
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "The Stoppable Force",
+      "away": "Ateltico Unatletico",
+      "homeScore": 10,
+      "awayScore": 11
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Wings of a Sparrow",
+      "away": "Ctrl Alt Defeat",
+      "homeScore": 7,
+      "awayScore": 13
+    }
+  ]
 }
