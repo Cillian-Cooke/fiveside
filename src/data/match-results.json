@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-06T11:01:41Z",
+  "updated_at": "2026-10-06T11:06:24Z",
   "results": [
     {
       "weekStartsOn": "2026-09-28",
@@ -48,7 +48,7 @@
       "weekStartsOn": "2026-09-28",
       "home": "Engibeering",
       "away": "Choose Football",
-      "homeScore": 9,
+      "homeScore": 8,
       "awayScore": 6
     },
     {
