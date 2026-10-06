@@ -1,5 +1,6 @@
 import { seedWeeks } from '../data/seed.js'
 import { applyPitchSlotRules } from './fixtures.js'
+import { overlayMatchScores } from './match-results.js'
 import { currentWeekMonday, markCurrentWeeks, sortWeekEntries } from './weeks.js'
 
 let currentWeekCache
@@ -8,9 +9,10 @@ let allWeeksCache
 
 function asWeekEntry(item) {
   if (!item?.week) return null
+  const fixtures = applyPitchSlotRules(item.fixtures || [], item.week.id)
   return {
     week: item.week,
-    fixtures: applyPitchSlotRules(item.fixtures || [], item.week.id),
+    fixtures: overlayMatchScores(fixtures),
   }
 }
 

@@ -31,13 +31,18 @@ export default function Tables() {
   const tables = useMemo(() => buildLeagueTables(fixtures), [fixtures])
   const wantedDivision = divisionFromQuery(query)
 
+  const hasStandings = useMemo(() => {
+    for (const rows of tables.values()) {
+      if (rows.some((row) => row.played > 0)) return true
+    }
+    return false
+  }, [tables])
+
   const divisions = DIVISIONS.filter((division) => {
     if (league !== 'all' && division.name !== league) return false
     if (wantedDivision && division.name !== wantedDivision) return false
     return tables.has(division.name)
   })
-
-  const hasStandings = fixtures.length > 0
 
   return (
     <>
