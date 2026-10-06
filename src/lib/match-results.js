@@ -1,4 +1,5 @@
 import matchResults from '../data/match-results.json'
+import teamDivisions from '../data/team-divisions.json'
 
 function normalizeTeamKey(name) {
   return String(name || '')
@@ -24,9 +25,60 @@ function buildScoreIndex() {
 
 const scoreIndex = buildScoreIndex()
 
+function lookupTeamMeta(name) {
+  if (teamDivisions[name]) return teamDivisions[name]
+  const key = normalizeTeamKey(name)
+  for (const [team, meta] of Object.entries(teamDivisions)) {
+    if (normalizeTeamKey(team) === key) return meta
+  }
+  return { division: 'Unassigned', color: '#6AA84F' }
+}
+
+function resultAppliedToFixtures(row, fixtures) {
+  return fixtures.some(
+    (fixture) =>
+      fixture.status === 'match' &&
+      typeof fixture.homeScore === 'number' &&
+      typeof fixture.awayScore === 'number' &&
+      fixture.weekId === row.weekStartsOn &&
+      normalizeTeamKey(fixture.home) === normalizeTeamKey(row.home) &&
+      normalizeTeamKey(fixture.away) === normalizeTeamKey(row.away),
+  )
+}
+
+function syntheticFixturesFromResults(fixtures) {
+  const extras = []
+  for (const row of matchResults.results || []) {
+    if (resultAppliedToFixtures(row, fixtures)) continue
+    const homeMeta = lookupTeamMeta(row.home)
+    const awayMeta = lookupTeamMeta(row.away)
+    const division =
+      homeMeta.division === awayMeta.division
+        ? homeMeta.division
+        : homeMeta.division !== 'Unassigned'
+          ? homeMeta.division
+          : awayMeta.division
+    const color =
+      homeMeta.division === division ? homeMeta.color : awayMeta.color || homeMeta.color
+    extras.push({
+      id: `result-${resultKey(row.weekStartsOn, row.home, row.away)}`,
+      weekId: row.weekStartsOn,
+      status: 'match',
+      home: row.home,
+      away: row.away,
+      homeScore: row.homeScore,
+      awayScore: row.awayScore,
+      division,
+      color,
+      resultOnly: true,
+    })
+  }
+  return extras
+}
+
 export function overlayMatchScores(fixtures) {
   if (!scoreIndex.size) return fixtures
-  return fixtures.map((fixture) => {
+  const overlaid = fixtures.map((fixture) => {
     if (fixture.status !== 'match') return fixture
     const hit = scoreIndex.get(resultKey(fixture.weekId, fixture.home, fixture.away))
     if (!hit) return fixture
@@ -36,4 +88,7 @@ export function overlayMatchScores(fixtures) {
       awayScore: hit.awayScore,
     }
   })
+  const extras = syntheticFixturesFromResults(overlaid)
+  if (!extras.length) return overlaid
+  return [...overlaid, ...extras]
 }

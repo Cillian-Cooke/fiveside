@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-06T10:55:39Z",
+  "updated_at": "2026-10-06T11:01:41Z",
   "results": [
     {
       "weekStartsOn": "2026-09-28",
@@ -120,6 +120,20 @@
       "away": "Strokes Academy",
       "homeScore": 9,
       "awayScore": 4
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Real Medrid",
+      "away": "The Stoppable Force",
+      "homeScore": 9,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-09-28",
+      "home": "Shabadoo Balompi\u00e9 Calcio",
+      "away": "MAMAs Revenge",
+      "homeScore": 10,
+      "awayScore": 6
     },
     {
       "weekStartsOn": "2026-09-28",

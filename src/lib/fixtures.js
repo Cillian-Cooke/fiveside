@@ -1,4 +1,32 @@
 import { BAY_TIMES, DAYS, DIVISIONS, divisionColor } from '../constants.js'
+import teamDivisions from '../data/team-divisions.json'
+
+function normalizeTeamKey(name) {
+  return String(name || '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+}
+
+function teamDivisionMeta(name, fallbackDivision, fallbackColor) {
+  let meta = teamDivisions[name]
+  if (!meta) {
+    const key = normalizeTeamKey(name)
+    for (const [team, entry] of Object.entries(teamDivisions)) {
+      if (normalizeTeamKey(team) === key) {
+        meta = entry
+        break
+      }
+    }
+  }
+  if (meta?.division) {
+    return { division: meta.division, color: meta.color || fallbackColor }
+  }
+  return { division: fallbackDivision, color: fallbackColor }
+}
 
 const VENUE_ORDER = { botany_bay: 0, hall_a: 1, hall_b: 2 }
 
@@ -212,8 +240,10 @@ export function buildLeagueTables(fixtures) {
     if (typeof fixture.homeScore !== 'number' || typeof fixture.awayScore !== 'number') continue
 
     const color = canonicalMatchColor(fixture)
-    const home = rowFor(fixture.home, fixture.division, color)
-    const away = rowFor(fixture.away, fixture.division, color)
+    const homeMeta = teamDivisionMeta(fixture.home, fixture.division, color)
+    const awayMeta = teamDivisionMeta(fixture.away, fixture.division, color)
+    const home = rowFor(fixture.home, homeMeta.division, homeMeta.color)
+    const away = rowFor(fixture.away, awayMeta.division, awayMeta.color)
     home.played += 1
     away.played += 1
     home.gf += fixture.homeScore
