@@ -134,9 +134,9 @@ def parse_contact_layout(
                 division_colors[current_div] = current_color
             continue
         if team == "Mixed League":
-            current_div = "Mixed League"
+            current_div = "Mixed Division"
             current_color = _header_hex(grid, r) or "#93C47D"
-            division_colors["Mixed League"] = current_color
+            division_colors["Mixed Division"] = current_color
             continue
         if not current_div:
             continue

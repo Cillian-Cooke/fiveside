@@ -1,5 +1,6 @@
 import matchResults from '../data/match-results.json'
 import teamDivisions from '../data/team-divisions.json'
+import { canonicalDivision } from './fixtures.js'
 
 function normalizeTeamKey(name) {
   return String(name || '')
@@ -31,7 +32,18 @@ function lookupTeamMeta(name) {
   for (const [team, meta] of Object.entries(teamDivisions)) {
     if (normalizeTeamKey(team) === key) return meta
   }
-  return { division: 'Unassigned', color: '#6AA84F' }
+  return { division: 'Unassigned', color: '#93C47D' }
+}
+
+function inferResultDivision(homeMeta, awayMeta) {
+  const homeDiv = canonicalDivision(homeMeta.division)
+  const awayDiv = canonicalDivision(awayMeta.division)
+  if (homeDiv === 'Mixed Division' || awayDiv === 'Mixed Division') {
+    return 'Mixed Division'
+  }
+  if (homeDiv === awayDiv) return homeDiv
+  if (homeDiv !== 'Unassigned') return homeDiv
+  return awayDiv
 }
 
 function resultAppliedToFixtures(row, fixtures) {
@@ -52,12 +64,10 @@ function syntheticFixturesFromResults(fixtures) {
     if (resultAppliedToFixtures(row, fixtures)) continue
     const homeMeta = lookupTeamMeta(row.home)
     const awayMeta = lookupTeamMeta(row.away)
-    const division =
-      homeMeta.division === awayMeta.division
-        ? homeMeta.division
-        : homeMeta.division !== 'Unassigned'
-          ? homeMeta.division
-          : awayMeta.division
+    const division = inferResultDivision(
+      { division: canonicalDivision(homeMeta.division) },
+      { division: canonicalDivision(awayMeta.division) },
+    )
     const color =
       homeMeta.division === division ? homeMeta.color : awayMeta.color || homeMeta.color
     extras.push({

@@ -11,6 +11,11 @@ function normalizeTeamKey(name) {
     .trim()
 }
 
+export function canonicalDivision(name) {
+  if (name === 'Mixed League' || name === 'Mixed') return 'Mixed Division'
+  return name
+}
+
 function teamDivisionMeta(name, fallbackDivision, fallbackColor) {
   let meta = teamDivisions[name]
   if (!meta) {
@@ -23,9 +28,27 @@ function teamDivisionMeta(name, fallbackDivision, fallbackColor) {
     }
   }
   if (meta?.division) {
-    return { division: meta.division, color: meta.color || fallbackColor }
+    return {
+      division: canonicalDivision(meta.division),
+      color: meta.color || fallbackColor,
+    }
   }
-  return { division: fallbackDivision, color: fallbackColor }
+  return {
+    division: canonicalDivision(fallbackDivision),
+    color: fallbackColor,
+  }
+}
+
+/** Standings row division: mixed fixtures stay in Mixed Division for both clubs. */
+function standingsDivision(fixture, teamName, color) {
+  if (canonicalDivision(fixture.division) === 'Mixed Division') {
+    const meta = teamDivisionMeta(teamName, fixture.division, color)
+    return {
+      division: 'Mixed Division',
+      color: meta.color || divisionColor('Mixed Division'),
+    }
+  }
+  return teamDivisionMeta(teamName, fixture.division, color)
 }
 
 const VENUE_ORDER = { botany_bay: 0, hall_a: 1, hall_b: 2 }
@@ -240,8 +263,8 @@ export function buildLeagueTables(fixtures) {
     if (typeof fixture.homeScore !== 'number' || typeof fixture.awayScore !== 'number') continue
 
     const color = canonicalMatchColor(fixture)
-    const homeMeta = teamDivisionMeta(fixture.home, fixture.division, color)
-    const awayMeta = teamDivisionMeta(fixture.away, fixture.division, color)
+    const homeMeta = standingsDivision(fixture, fixture.home, color)
+    const awayMeta = standingsDivision(fixture, fixture.away, color)
     const home = rowFor(fixture.home, homeMeta.division, homeMeta.color)
     const away = rowFor(fixture.away, awayMeta.division, awayMeta.color)
     home.played += 1
