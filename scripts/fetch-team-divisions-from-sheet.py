@@ -15,6 +15,12 @@ DEFAULT_SHEET_ID = "19BtON4CVCeKyevCYjbYeH58gZ9_lcoyEtK4fFoFrW3o"
 DEFAULT_SHEET_NAME = "Contact Info"
 
 
+def canonical_division_label(division: str) -> str:
+    if division in ("Mixed League", "Mixed"):
+        return "Mixed Division"
+    return division
+
+
 def build_teams(
     contacts: list[dict], division_colors: dict[str, str]
 ) -> dict[str, dict[str, str]]:
@@ -23,11 +29,25 @@ def build_teams(
         name = row.get("team", "")
         if not name or name == "Mixed League":
             continue
-        if name in teams:
-            continue
         division = row.get("division", "")
         color = division_colors.get(division) or row.get("color") or ""
-        teams[name] = {"division": division, "color": color}
+        entry = {"division": division, "color": color}
+        if name not in teams:
+            teams[name] = entry
+            continue
+        existing = teams[name]
+        if existing.get("division") == division:
+            continue
+        by_div = dict(existing.get("byDivision") or {})
+        if not by_div:
+            first = canonical_division_label(existing["division"])
+            by_div[first] = {
+                "division": existing["division"],
+                "color": existing["color"],
+            }
+        label = canonical_division_label(division)
+        by_div[label] = {"division": division, "color": color}
+        teams[name] = {**existing, "byDivision": by_div}
     return teams
 
 

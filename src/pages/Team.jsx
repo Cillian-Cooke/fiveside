@@ -8,6 +8,7 @@ import {
   findTeamBySlug,
   pastGames,
   resultFor,
+  teamDisplayName,
   upcomingGames,
 } from '../lib/teams.js'
 import MatchCard from '../components/MatchCard.jsx'
@@ -40,7 +41,7 @@ export default function Team() {
   const roster = useMemo(() => {
     const merged = new Map()
     for (const side of uniqueTeams(weeks.flatMap((item) => item.fixtures))) {
-      merged.set(side.name, side)
+      merged.set(`${side.name}\0${side.division}`, side)
     }
     return [...merged.values()]
   }, [weeks])
@@ -52,7 +53,7 @@ export default function Team() {
     return weeks
       .filter((item) => String(item.week.startsOn || item.week.id) >= monday)
       .flatMap((item) =>
-        upcomingGames(team.name, item.fixtures).map((fixture) => ({
+        upcomingGames(team.name, item.fixtures, team.division).map((fixture) => ({
           ...fixture,
           weekLabel: item.week?.rangeLabel,
           startsOn: item.week?.startsOn,
@@ -71,7 +72,7 @@ export default function Team() {
           startsOn: item.week.startsOn,
         })),
       )
-    return pastGames(team.name, games)
+    return pastGames(team.name, games, team.division)
   }, [team, weeks, monday])
 
   function goBack() {
@@ -105,7 +106,7 @@ export default function Team() {
         ← Back
       </button>
       <p className="page-kicker">{team.division}</p>
-      <h1 className="page-title">{team.name}</h1>
+      <h1 className="page-title">{teamDisplayName(team.name, team.division)}</h1>
 
       <h2 className="section-title">Next game</h2>
       {next ? (
@@ -144,7 +145,7 @@ export default function Team() {
                 <span className={`result-pill result-${result}`}>{result}</span>
                 <div>
                   vs{' '}
-                  <TeamLink className="team-link" name={opponent}>
+                  <TeamLink className="team-link" name={opponent} division={fixture.division}>
                     {opponent}
                   </TeamLink>
                   <small>

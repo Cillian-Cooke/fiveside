@@ -4,7 +4,13 @@ import { DIVISIONS } from '../constants.js'
 import SearchBar from '../components/SearchBar.jsx'
 import LeagueFilters from '../components/LeagueFilters.jsx'
 import TeamLink from '../components/TeamLink.jsx'
-import { buildLeagueTables, contrastText, divisionFromQuery, teamMatchesQuery } from '../lib/fixtures.js'
+import {
+  buildLeagueTables,
+  contrastText,
+  divisionFromQuery,
+  teamMatchesQuery,
+  teamRowKey,
+} from '../lib/fixtures.js'
 import { loadPastWeeks, peekPastWeeks } from '../lib/weeks-data.js'
 import { readSnapshot, useStackPage } from '../lib/navStack.js'
 
@@ -31,9 +37,9 @@ export default function Tables() {
   const tables = useMemo(() => buildLeagueTables(fixtures), [fixtures])
   const wantedDivision = divisionFromQuery(query)
 
-  const hasStandings = useMemo(() => {
+  const hasTables = useMemo(() => {
     for (const rows of tables.values()) {
-      if (rows.some((row) => row.played > 0)) return true
+      if (rows.length > 0) return true
     }
     return false
   }, [tables])
@@ -50,10 +56,10 @@ export default function Tables() {
       <p className="week-range">Semester standings from played matches</p>
       {!ready ? (
         <p className="lede">Loading tables…</p>
-      ) : !hasStandings ? (
+      ) : !hasTables ? (
         <article className="placeholder-card">
           <h2>Coming soon</h2>
-          <p>League tables will appear here once match results are published.</p>
+          <p>League tables will appear here once teams are registered for the semester.</p>
         </article>
       ) : (
         <>
@@ -101,10 +107,10 @@ export default function Tables() {
                 </thead>
                 <tbody>
                   {rows.map((row, index) => (
-                    <tr key={row.name}>
+                    <tr key={teamRowKey(row.name, row.division)}>
                       <td className="pos">{index + 1}</td>
                       <td className="club">
-                        <TeamLink className="team-link" name={row.name} />
+                        <TeamLink className="team-link" name={row.name} division={row.division} />
                       </td>
                       <td>{row.played}</td>
                       <td>{row.won}</td>

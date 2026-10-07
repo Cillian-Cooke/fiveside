@@ -16,6 +16,26 @@ export function canonicalDivision(name) {
   return name
 }
 
+function metaFromEntry(meta, fallbackDivision, fallbackColor) {
+  const wanted = canonicalDivision(fallbackDivision)
+  if (meta?.byDivision && wanted) {
+    const variant = meta.byDivision[wanted]
+    if (variant?.division) {
+      return {
+        division: canonicalDivision(variant.division),
+        color: variant.color || meta.color || fallbackColor,
+      }
+    }
+  }
+  if (meta?.division) {
+    return {
+      division: canonicalDivision(meta.division),
+      color: meta.color || fallbackColor,
+    }
+  }
+  return null
+}
+
 function teamDivisionMeta(name, fallbackDivision, fallbackColor) {
   let meta = teamDivisions[name]
   if (!meta) {
@@ -27,16 +47,16 @@ function teamDivisionMeta(name, fallbackDivision, fallbackColor) {
       }
     }
   }
-  if (meta?.division) {
-    return {
-      division: canonicalDivision(meta.division),
-      color: meta.color || fallbackColor,
-    }
-  }
+  const resolved = metaFromEntry(meta, fallbackDivision, fallbackColor)
+  if (resolved) return resolved
   return {
     division: canonicalDivision(fallbackDivision),
     color: fallbackColor,
   }
+}
+
+export function teamRowKey(name, division) {
+  return `${name}\0${canonicalDivision(division || '')}`
 }
 
 /** Standings row division: mixed fixtures stay in Mixed Division for both clubs. */
@@ -157,17 +177,22 @@ export function uniqueTeams(fixtures) {
   const teams = new Map()
   for (const fixture of fixtures) {
     if (fixture.status !== 'match') continue
+    const color = canonicalMatchColor(fixture)
     for (const name of [fixture.home, fixture.away]) {
-      if (!teams.has(name)) {
-        teams.set(name, {
+      const meta = standingsDivision(fixture, name, color)
+      const key = teamRowKey(name, meta.division)
+      if (!teams.has(key)) {
+        teams.set(key, {
           name,
-          division: fixture.division,
-          color: canonicalMatchColor(fixture),
+          division: meta.division,
+          color: meta.color || color,
         })
       }
     }
   }
-  return [...teams.values()].sort((a, b) => a.name.localeCompare(b.name))
+  return [...teams.values()].sort(
+    (a, b) => a.division.localeCompare(b.division) || a.name.localeCompare(b.name),
+  )
 }
 
 const NUMBER_WORDS = {
@@ -250,17 +275,48 @@ function emptyRow(name, division, color) {
   }
 }
 
+function fixturePairKey(fixture) {
+  const a = normalizeTeamKey(fixture.home)
+  const b = normalizeTeamKey(fixture.away)
+  const [left, right] = a < b ? [a, b] : [b, a]
+  return `${fixture.weekId}|${left}|${right}`
+}
+
+function seedRosterRows(rowFor) {
+  for (const [name, meta] of Object.entries(teamDivisions)) {
+    if (meta?.byDivision) {
+      for (const variant of Object.values(meta.byDivision)) {
+        const division = canonicalDivision(variant.division)
+        const color = variant.color || meta.color || divisionColor(division)
+        rowFor(name, division, color)
+      }
+      continue
+    }
+    const division = canonicalDivision(meta?.division)
+    if (!division) continue
+    const color = meta.color || divisionColor(division)
+    rowFor(name, division, color)
+  }
+}
+
 export function buildLeagueTables(fixtures) {
   const rows = new Map()
+  const countedFixtures = new Set()
 
   const rowFor = (name, division, color) => {
-    if (!rows.has(name)) rows.set(name, emptyRow(name, division, color))
-    return rows.get(name)
+    const key = teamRowKey(name, division)
+    if (!rows.has(key)) rows.set(key, emptyRow(name, division, color))
+    return rows.get(key)
   }
+
+  seedRosterRows(rowFor)
 
   for (const fixture of fixtures) {
     if (fixture.status !== 'match') continue
     if (typeof fixture.homeScore !== 'number' || typeof fixture.awayScore !== 'number') continue
+    const dedupeKey = fixturePairKey(fixture)
+    if (countedFixtures.has(dedupeKey)) continue
+    countedFixtures.add(dedupeKey)
 
     const color = canonicalMatchColor(fixture)
     const homeMeta = standingsDivision(fixture, fixture.home, color)

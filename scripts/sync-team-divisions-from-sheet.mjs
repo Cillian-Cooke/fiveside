@@ -45,6 +45,7 @@ function main() {
     out[name] = {
       division: info.division,
       color: info.color,
+      ...(info.byDivision ? { byDivision: info.byDivision } : {}),
     }
   }
   const path = join(root, 'src/data/team-divisions.json')

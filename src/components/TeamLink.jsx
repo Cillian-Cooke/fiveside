@@ -1,17 +1,17 @@
 import { Link, useLocation } from 'react-router-dom'
 import { freezeSnapshot } from '../lib/navStack.js'
-import { teamSlug } from '../lib/teams.js'
+import { teamDisplayName, teamSlug } from '../lib/teams.js'
 
-export default function TeamLink({ name, className, children }) {
+export default function TeamLink({ name, division, className, children }) {
   const location = useLocation()
 
   return (
     <Link
       className={className}
-      to={`/teams/${teamSlug(name)}`}
+      to={`/teams/${teamSlug(name, division)}`}
       onClick={() => freezeSnapshot(location.key)}
     >
-      {children ?? name}
+      {children ?? teamDisplayName(name, division)}
     </Link>
   )
 }

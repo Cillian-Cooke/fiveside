@@ -1,5 +1,6 @@
 /**
- * Build team → { division, color } from src/data/seed.js for sheet sync lookups.
+ * Build team → { division, color, byDivision? } from src/data/seed.js for sheet sync lookups.
+ * Duplicate names (same team in Div 3 + Mixed) are keyed by fixture division/colour, not captain.
  */
 import { readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -7,6 +8,11 @@ import { dirname, join } from 'node:path'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const seedText = readFileSync(join(root, 'src/data/seed.js'), 'utf8')
+
+function canonicalDivision(name) {
+  if (name === 'Mixed League' || name === 'Mixed') return 'Mixed Division'
+  return name
+}
 
 const teams = new Map()
 const blockRe = /\{[^{}]*day:\s*'[^']+'[^{}]*\}/gs
@@ -18,10 +24,23 @@ for (const block of seedText.match(blockRe) || []) {
   if (!division) continue
   for (const name of [home, away]) {
     if (!name) continue
+    const label = canonicalDivision(division)
+    const variant = { division, color: color || '' }
     const prev = teams.get(name)
-    if (!prev || prev.division === division) {
-      teams.set(name, { division, color: color || prev?.color })
+    if (!prev) {
+      teams.set(name, { ...variant })
+      continue
     }
+    if (canonicalDivision(prev.division) === label) continue
+    const byDiv = { ...(prev.byDivision || {}) }
+    if (!prev.byDivision) {
+      byDiv[canonicalDivision(prev.division)] = {
+        division: prev.division,
+        color: prev.color,
+      }
+    }
+    byDiv[label] = variant
+    teams.set(name, { ...prev, byDivision: byDiv })
   }
 }
 

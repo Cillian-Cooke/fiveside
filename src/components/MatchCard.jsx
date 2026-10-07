@@ -1,6 +1,7 @@
 import { VENUE_LABEL } from '../constants.js'
 import { canonicalMatchColor, contrastText } from '../lib/fixtures.js'
 import TeamLink from './TeamLink.jsx'
+import { teamDisplayName } from '../lib/teams.js'
 
 export default function MatchCard({ fixture, compact = false, blank = false }) {
   if (blank) {
@@ -45,12 +46,12 @@ export default function MatchCard({ fixture, compact = false, blank = false }) {
         <span>{fixture.division}</span>
       </div>
       <div className="teams">
-        <TeamLink className="team-name team-link" name={fixture.home}>
-          {fixture.home}
+        <TeamLink className="team-name team-link" name={fixture.home} division={fixture.division}>
+          {teamDisplayName(fixture.home, fixture.division)}
         </TeamLink>
         <div className="vs">v</div>
-        <TeamLink className="team-name team-link" name={fixture.away}>
-          {fixture.away}
+        <TeamLink className="team-name team-link" name={fixture.away} division={fixture.division}>
+          {teamDisplayName(fixture.away, fixture.division)}
         </TeamLink>
       </div>
       {hasScore ? (

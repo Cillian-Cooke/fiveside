@@ -65,7 +65,17 @@
   },
   "FC TRISS": {
     "division": "Division 3",
-    "color": "#FFE599"
+    "color": "#FFE599",
+    "byDivision": {
+      "Division 3": {
+        "division": "Division 3",
+        "color": "#FFE599"
+      },
+      "Mixed Division": {
+        "division": "Mixed Division",
+        "color": "#93C47D"
+      }
+    }
   },
   "Fiery Middle Aged Women": {
     "division": "Mixed Division",

@@ -156,6 +156,11 @@ function loadTeamLookup() {
   }
 }
 
+function canonicalDivision(name) {
+  if (name === 'Mixed League' || name === 'Mixed') return 'Mixed Division'
+  return name
+}
+
 function lookupTeam(lookup, name) {
   if (!name) return null
   if (lookup[name]) return lookup[name]
@@ -166,10 +171,44 @@ function lookupTeam(lookup, name) {
   return null
 }
 
-function divisionFromTeams(lookup, home, away) {
-  const homeInfo = lookupTeam(lookup, home)
-  const awayInfo = lookupTeam(lookup, away)
-  if (homeInfo && awayInfo && homeInfo.division === awayInfo.division) return homeInfo
+function teamVariant(info, divisionHint) {
+  if (!info) return null
+  const wanted = canonicalDivision(divisionHint)
+  if (info.byDivision && wanted && info.byDivision[wanted]) {
+    const v = info.byDivision[wanted]
+    return { division: v.division, color: v.color }
+  }
+  return { division: info.division, color: info.color }
+}
+
+/** Pick league from Contact Info / sheet colours; use opponent division when names collide. */
+function divisionFromTeams(lookup, home, away, divisionHint = null) {
+  if (divisionHint) {
+    const homeInfo = teamVariant(lookupTeam(lookup, home), divisionHint)
+    const awayInfo = teamVariant(lookupTeam(lookup, away), divisionHint)
+    if (
+      homeInfo &&
+      awayInfo &&
+      canonicalDivision(homeInfo.division) === canonicalDivision(awayInfo.division)
+    ) {
+      return homeInfo
+    }
+    if (homeInfo && canonicalDivision(homeInfo.division) === canonicalDivision(divisionHint)) {
+      return homeInfo
+    }
+    if (awayInfo && canonicalDivision(awayInfo.division) === canonicalDivision(divisionHint)) {
+      return awayInfo
+    }
+  }
+
+  const homeRaw = lookupTeam(lookup, home)
+  const awayRaw = lookupTeam(lookup, away)
+  const homeInfo = teamVariant(homeRaw, awayRaw?.division)
+  const awayInfo = teamVariant(awayRaw, homeRaw?.division)
+
+  if (homeInfo && awayInfo && canonicalDivision(homeInfo.division) === canonicalDivision(awayInfo.division)) {
+    return homeInfo
+  }
   if (homeInfo && awayInfo) return null
   return homeInfo || awayInfo || null
 }
