@@ -6,18 +6,19 @@ import {
   TIME_SHORT,
   VENUE_LABEL,
 } from '../constants.js'
-import { baySlot, hallSlot, slotFill } from '../lib/fixtures.js'
+import { baySlot, contrastText, hallSlot, slotFill } from '../lib/fixtures.js'
 
 function Cell({ fixture, selected, onSelect, query, league }) {
   const fill = slotFill(fixture, query, league)
   const booked = fixture?.status === 'match'
   const isFree = fixture?.status === 'free'
+  const textColor = booked ? contrastText(fill) : isFree ? '#5a6573' : undefined
 
   return (
     <button
       type="button"
       className={selected ? 'cal-cell is-on' : 'cal-cell'}
-      style={{ background: fill, color: isFree ? '#5a6573' : undefined }}
+      style={{ background: fill, color: textColor }}
       aria-pressed={selected}
       aria-label={
         booked
@@ -28,7 +29,15 @@ function Cell({ fixture, selected, onSelect, query, league }) {
       }
       onClick={onSelect}
     >
-      {isFree ? 'Free' : null}
+      {booked ? (
+        <span className="cal-match">
+          <span className="cal-team">{fixture.home}</span>
+          <span className="cal-vs">v</span>
+          <span className="cal-team">{fixture.away}</span>
+        </span>
+      ) : isFree ? (
+        'Free'
+      ) : null}
     </button>
   )
 }
