@@ -11,6 +11,10 @@
     "division": "Division 1",
     "color": "#EA9999"
   },
+  "Botany Baes": {
+    "division": "Mixed Division",
+    "color": "#93C47D"
+  },
   "Buenos Aires ballers XI": {
     "division": "Division 3",
     "color": "#FFE599"
@@ -220,6 +224,10 @@
   "TBXI": {
     "division": "Division 5",
     "color": "#A4C2F4"
+  },
+  "The Athletics": {
+    "division": "Mixed Division",
+    "color": "#93C47D"
   },
   "The BESS Around": {
     "division": "Division 2",
