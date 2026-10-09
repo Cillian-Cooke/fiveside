@@ -55,7 +55,7 @@ export default function Team() {
       .flatMap((item) =>
         upcomingGames(team.name, item.fixtures, team.division).map((fixture) => ({
           ...fixture,
-          weekLabel: item.week?.rangeLabel,
+          weekLabel: item.week?.label || item.week?.rangeLabel,
           startsOn: item.week?.startsOn,
         })),
       )
@@ -68,7 +68,7 @@ export default function Team() {
       .flatMap((item) =>
         item.fixtures.map((fixture) => ({
           ...fixture,
-          weekLabel: item.week.rangeLabel,
+          weekLabel: item.week.label || item.week.rangeLabel,
           startsOn: item.week.startsOn,
         })),
       )

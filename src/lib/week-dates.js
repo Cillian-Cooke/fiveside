@@ -55,6 +55,29 @@ export function formatWeekRange(startsOn) {
   return `${fmt(start)} – ${fmt(end)}`
 }
 
+/** First populated league week (28 Sep – 2 Oct). */
+export const SEASON_START = '2026-09-28'
+
+export function weekNumberFromTab(tab) {
+  const match = String(tab || '').match(/week\s+(\d+)/i)
+  if (!match) return null
+  const number = Number(match[1])
+  return Number.isFinite(number) && number > 0 ? number : null
+}
+
+export function weekNumberFromStartsOn(startsOn, seasonStart = SEASON_START) {
+  const [year, month, day] = String(startsOn).split('-').map(Number)
+  const [startYear, startMonth, startDay] = String(seasonStart).split('-').map(Number)
+  const diff =
+    Date.UTC(year, month - 1, day) - Date.UTC(startYear, startMonth - 1, startDay)
+  return Math.round(diff / (7 * 24 * 60 * 60 * 1000)) + 1
+}
+
+export function formatWeekName(weekNumber) {
+  if (!weekNumber || weekNumber < 1) return null
+  return `Week ${weekNumber}`
+}
+
 export function shiftStartsOn(startsOn, weeks) {
   const [year, month, day] = String(startsOn).split('-').map(Number)
   return isoFromUtc(year, month, day + weeks * 7)

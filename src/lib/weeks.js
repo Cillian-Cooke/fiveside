@@ -1,6 +1,13 @@
 import { buildEmptyWeekFixtures } from '../data/seed.js'
 import { applyPitchSlotRules } from './fixtures.js'
-import { currentWeekMonday, formatWeekRange, shiftStartsOn } from './week-dates.js'
+import {
+  currentWeekMonday,
+  formatWeekName,
+  formatWeekRange,
+  shiftStartsOn,
+  weekNumberFromStartsOn,
+  weekNumberFromTab,
+} from './week-dates.js'
 
 export { currentWeekMonday, formatWeekRange, shiftStartsOn }
 
@@ -13,13 +20,15 @@ export function sortWeekEntries(entries) {
 export function makeEmptyWeek(startsOn) {
   const rangeLabel = formatWeekRange(startsOn)
   const monday = currentWeekMonday()
+  const weekNumber = weekNumberFromStartsOn(startsOn)
   return {
     week: {
       id: startsOn,
-      label: startsOn === monday ? 'Current week' : rangeLabel,
+      label: formatWeekName(weekNumber) || rangeLabel,
       rangeLabel,
       startsOn,
       isCurrent: startsOn === monday,
+      weekNumber,
       placeholder: true,
     },
     fixtures: applyPitchSlotRules(buildEmptyWeekFixtures(startsOn), startsOn),
@@ -31,12 +40,17 @@ export function markCurrentWeeks(entries, now = new Date()) {
   return sortWeekEntries(entries).map((entry) => {
     const startsOn = entry.week.startsOn || entry.week.id
     const isCurrent = startsOn === monday
+    const weekNumber =
+      entry.week.weekNumber ||
+      weekNumberFromTab(entry.week.tab) ||
+      weekNumberFromStartsOn(startsOn)
     return {
       ...entry,
       week: {
         ...entry.week,
         isCurrent,
-        label: isCurrent ? 'Current week' : entry.week.rangeLabel || formatWeekRange(startsOn),
+        weekNumber,
+        label: formatWeekName(weekNumber) || entry.week.rangeLabel || formatWeekRange(startsOn),
       },
     }
   })

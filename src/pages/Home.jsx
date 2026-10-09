@@ -61,7 +61,7 @@ export default function Home() {
 
   return (
     <FixturesBoard
-      title={entry.week.isCurrent ? 'Current week' : 'Fixtures'}
+      title={entry.week.label}
       rangeLabel={entry.week.rangeLabel}
       fixtures={entry.fixtures}
       weekId={entry.week.id}

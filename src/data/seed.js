@@ -1,4 +1,10 @@
-import { currentWeekMonday, formatWeekRange } from '../lib/week-dates.js'
+import {
+  currentWeekMonday,
+  formatWeekName,
+  formatWeekRange,
+  weekNumberFromStartsOn,
+  weekNumberFromTab,
+} from '../lib/week-dates.js'
 
 /* SHEET-WEEKS:START */
 const WEEKS = [
@@ -562,13 +568,15 @@ export const seedWeeks = [...WEEKS]
     const startsOn = entry.startsOn
     const isCurrent = startsOn === currentWeekMonday()
     const rangeLabel = formatWeekRange(startsOn)
+    const weekNumber = weekNumberFromTab(entry.tab) || weekNumberFromStartsOn(startsOn)
     return {
       week: {
         id: startsOn,
-        label: isCurrent ? 'Current week' : rangeLabel,
+        label: formatWeekName(weekNumber) || rangeLabel,
         rangeLabel,
         startsOn,
         isCurrent,
+        weekNumber,
         tab: entry.tab,
       },
       fixtures: buildFixtures(startsOn, entry.matches, entry.slotOverrides),
@@ -581,7 +589,7 @@ const currentEntry =
 
 export const seedWeek = currentEntry?.week || {
   id: monday,
-  label: 'Current week',
+  label: formatWeekName(weekNumberFromStartsOn(monday)) || 'Week 1',
   rangeLabel: formatWeekRange(monday),
   startsOn: monday,
   isCurrent: true,

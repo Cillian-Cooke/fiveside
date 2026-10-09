@@ -249,7 +249,10 @@ export default function FixturesBoard({
         ) : (
           <span className="week-pager-btn is-ghost" />
         )}
-        {rangeLabel ? <p className="week-range">{rangeLabel}</p> : <span />}
+        <p className="week-range">
+          <span className="week-number">{title}</span>
+          {rangeLabel ? <span className="week-dates">{rangeLabel}</span> : null}
+        </p>
         {canPage ? (
           <button
             type="button"
