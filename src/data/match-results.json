@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-06T16:55:00Z",
+  "updated_at": "2026-10-09T16:06:55Z",
   "results": [
     {
       "weekStartsOn": "2026-09-28",
@@ -123,7 +123,7 @@
     },
     {
       "weekStartsOn": "2026-09-28",
-      "home": "Real Medrid",
+      "home": "Real MAldrid",
       "away": "The Stoppable Force",
       "homeScore": 9,
       "awayScore": 8
@@ -186,6 +186,146 @@
     },
     {
       "weekStartsOn": "2026-10-05",
+      "home": "Choose Football",
+      "away": "Pavillionaires",
+      "homeScore": 4,
+      "awayScore": 11
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Ctrl Alt Defeat",
+      "away": "Hack Tuah",
+      "homeScore": 10,
+      "awayScore": 16
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Dropouts FC",
+      "away": "Hedley Burnley",
+      "homeScore": 5,
+      "awayScore": 7
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Euro football studs",
+      "away": "FC TRISS",
+      "homeScore": 3,
+      "awayScore": 9
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "FC TRISS",
+      "away": "Lionel MSISS",
+      "homeScore": 6,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Integer Milan",
+      "away": "Mountjoy FC",
+      "homeScore": 13,
+      "awayScore": 10
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Iteam",
+      "away": "TBXI",
+      "homeScore": 6,
+      "awayScore": 15
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Lochbessmonster",
+      "away": "Buenos Aires ballers XI",
+      "homeScore": 7,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Pavaria",
+      "away": "East Cavan Gaels",
+      "homeScore": 25,
+      "awayScore": 9
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Real MAldrid",
+      "away": "Ponzie Prowlers",
+      "homeScore": 20,
+      "awayScore": 15
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Real Medrid",
+      "away": "Reels Betis",
+      "homeScore": 9,
+      "awayScore": 6
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "River dodder rodent",
+      "away": "PBB FC",
+      "homeScore": 13,
+      "awayScore": 5
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Shabadoo Balompi\u00e9 Calcio",
+      "away": "The Screaming Goafers",
+      "homeScore": 4,
+      "awayScore": 6
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Sools fc",
+      "away": "Unathletic Bilbao",
+      "homeScore": 10,
+      "awayScore": 6
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "SpVgg F.K. Spartak Ussher 04",
+      "away": "Himmy Saville",
+      "homeScore": 12,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "Strokes Academy",
+      "away": "Ajaxidative Phosphorylation",
+      "homeScore": 9,
+      "awayScore": 18
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "TPSG",
+      "away": "Hangover97",
+      "homeScore": 10,
+      "awayScore": 12
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "The BESS Around",
+      "away": "Liampool",
+      "homeScore": 8,
+      "awayScore": 11
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "The Fish Tank",
+      "away": "CSB FC",
+      "homeScore": 0,
+      "awayScore": 6
+    },
+    {
+      "weekStartsOn": "2026-10-05",
+      "home": "The Palpators 2.0",
+      "away": "Iteam",
+      "homeScore": 9,
+      "awayScore": 15
+    },
+    {
+      "weekStartsOn": "2026-10-05",
       "home": "The Palpators 2.0",
       "away": "Mauled by the trinners",
       "homeScore": 5,
@@ -200,45 +340,17 @@
     },
     {
       "weekStartsOn": "2026-10-05",
-      "home": "Wings of a Sparrow",
-      "away": "Ctrl Alt Defeat",
-      "homeScore": 7,
-      "awayScore": 13
-    },
-    {
-      "weekStartsOn": "2026-10-05",
-      "home": "Integer Milan",
-      "away": "Mountjoy FC",
-      "homeScore": 13,
-      "awayScore": 10
-    },
-    {
-      "weekStartsOn": "2026-10-05",
-      "home": "The Screaming Goafers",
-      "away": "Shabadoo Balompi\u00e9 Calcio",
-      "homeScore": 6,
-      "awayScore": 4
-    },
-    {
-      "weekStartsOn": "2026-10-05",
-      "home": "Iteam",
-      "away": "The Palpators 2.0",
-      "homeScore": 15,
-      "awayScore": 9
-    },
-    {
-      "weekStartsOn": "2026-10-05",
-      "home": "Lionel MSISS",
-      "away": "FC TRISS",
-      "homeScore": 8,
+      "home": "Visiting Ballers",
+      "away": "Goaldiggers fc",
+      "homeScore": 10,
       "awayScore": 6
     },
     {
       "weekStartsOn": "2026-10-05",
-      "home": "FC TRISS",
-      "away": "Euro football studs",
-      "homeScore": 9,
-      "awayScore": 3
+      "home": "Wings of a Sparrow",
+      "away": "Ctrl Alt Defeat",
+      "homeScore": 7,
+      "awayScore": 13
     }
   ]
 }
