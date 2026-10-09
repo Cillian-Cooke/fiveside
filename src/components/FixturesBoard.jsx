@@ -187,7 +187,7 @@ function useWeekSwipe(onPrev, onNext) {
       origin.current = null
       if (!swiping.current) return
       swiping.current = false
-      if (Math.abs(dx) < 56 || Math.abs(dx) < Math.abs(dy) * 1.15) return
+      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.15) return
       suppressClick.current = true
       if (dx < 0) onNext?.()
       else onPrev?.()
@@ -236,7 +236,33 @@ export default function FixturesBoard({
   return (
     <>
       <h1 className="page-title">{title}</h1>
-      {rangeLabel ? <p className="week-range">{rangeLabel}</p> : null}
+      <div className="week-pager">
+        {canPage ? (
+          <button
+            type="button"
+            className="week-pager-btn"
+            aria-label="Previous week"
+            onClick={onPrevWeek}
+          >
+            ‹
+          </button>
+        ) : (
+          <span className="week-pager-btn is-ghost" />
+        )}
+        {rangeLabel ? <p className="week-range">{rangeLabel}</p> : <span />}
+        {canPage ? (
+          <button
+            type="button"
+            className="week-pager-btn"
+            aria-label="Next week"
+            onClick={onNextWeek}
+          >
+            ›
+          </button>
+        ) : (
+          <span className="week-pager-btn is-ghost" />
+        )}
+      </div>
 
       <SearchBar
         value={query}
@@ -251,7 +277,7 @@ export default function FixturesBoard({
         {canPage ? (
           <button
             type="button"
-            className="week-arrow week-arrow-prev desktop-only"
+            className="week-arrow week-arrow-prev"
             aria-label="Previous week"
             onClick={onPrevWeek}
           >
@@ -289,7 +315,7 @@ export default function FixturesBoard({
         {canPage ? (
           <button
             type="button"
-            className="week-arrow week-arrow-next desktop-only"
+            className="week-arrow week-arrow-next"
             aria-label="Next week"
             onClick={onNextWeek}
           >

@@ -161,27 +161,78 @@ a {
   line-height: 1.15;
 }
 
-.week-range {
+.week-pager {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 8px;
   margin: 0 0 16px;
+}
+
+.week-range {
+  margin: 0;
   color: var(--muted);
   font-size: 1.1rem;
   font-weight: 700;
+  text-align: center;
 }
 
-.week-stage-main {
-  min-width: 0;
-  touch-action: pan-y;
-}
-
-.week-arrow {
-  width: 44px;
-  height: 88px;
+.week-pager-btn {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 4px;
   background: #fff;
   color: var(--header);
-  font-size: 2.2rem;
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.week-pager-btn.is-ghost {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.week-pager-btn:hover,
+.week-pager-btn:focus-visible {
+  border-color: var(--header);
+  background: var(--header);
+  color: #fff;
+}
+
+.week-stage {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  align-items: start;
+  gap: 0;
+  margin-inline: -16px;
+}
+
+.week-stage-main {
+  min-width: 0;
+  touch-action: pan-x pan-y;
+}
+
+.week-arrow {
+  display: grid;
+  place-items: center;
+  position: sticky;
+  top: 96px;
+  z-index: 2;
+  width: 36px;
+  min-height: 88px;
+  height: 100%;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: #fff;
+  color: var(--header);
+  font-size: 1.8rem;
   font-weight: 400;
   line-height: 1;
   cursor: pointer;
@@ -385,8 +436,7 @@ a {
   display: grid;
   grid-template-columns: 40px repeat(5, minmax(0, 1fr));
   gap: 5px;
-  margin-inline: -16px;
-  padding: 8px 0;
+  padding: 8px 2px;
   border: 1px solid var(--line);
   border-left: 0;
   border-right: 0;
@@ -777,15 +827,16 @@ a {
   }
 
   .week-stage {
-    display: grid;
+    margin-inline: 0;
     grid-template-columns: 44px minmax(0, 1fr) 44px;
-    align-items: start;
     gap: 10px;
   }
 
-  .week-arrow.desktop-only {
-    display: grid;
-    place-items: center;
+  .week-arrow {
+    width: 44px;
+    height: 88px;
+    min-height: 88px;
+    border-radius: 4px;
     align-self: center;
   }
 

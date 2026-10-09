@@ -67,30 +67,70 @@ export function mondayOnOrBefore(iso) {
   return isoFromUtc(year, month, day - offset)
 }
 
-/** Read a Monday from tab names like "Week 1 28th" or "Week 2 5th". */
-export function mondayFromTabName(name, now = new Date()) {
-  const match = String(name).match(/(\d{1,2})(?:st|nd|rd|th)/i)
+const MONTH_LOOKUP = Object.fromEntries(
+  MONTHS.flatMap((name, index) => {
+    const short = name.slice(0, 3).toLowerCase()
+    const full = name.toLowerCase()
+    const entries = [
+      [short, index + 1],
+      [full, index + 1],
+    ]
+    if (short === 'sep') entries.push(['sept', 9])
+    return entries
+  }),
+)
+
+/** Read a Monday from tab names like "Week 1 28th", "Week 2 5th", or "Week 5 2nd Nov". */
+export function mondayFromTabName(name, now = new Date(), afterMonday = null) {
+  const text = String(name)
+  const match = text.match(/(\d{1,2})(?:st|nd|rd|th)/i)
   if (!match) return null
   const dayNum = Number(match[1])
+  const monthMatch = text.match(
+    /\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/i,
+  )
   const { year, month, day } = dublinParts(now)
   const todayUtc = Date.UTC(year, month - 1, day)
+  const monthHint = monthMatch
+    ? MONTH_LOOKUP[monthMatch[1].slice(0, 3).toLowerCase()] || MONTH_LOOKUP[monthMatch[1].toLowerCase()]
+    : null
+
+  const seen = new Set()
   const candidates = []
-  for (const delta of [-1, 0, 1]) {
-    let nextYear = year
-    let nextMonth = month + delta
-    if (nextMonth < 1) {
-      nextMonth += 12
-      nextYear -= 1
-    } else if (nextMonth > 12) {
-      nextMonth -= 12
-      nextYear += 1
-    }
+  const addMonth = (nextYear, nextMonth) => {
+    const key = `${nextYear}-${nextMonth}`
+    if (seen.has(key)) return
+    seen.add(key)
     const lastDay = new Date(Date.UTC(nextYear, nextMonth, 0)).getUTCDate()
-    if (dayNum > lastDay) continue
+    if (dayNum > lastDay) return
     const utc = Date.UTC(nextYear, nextMonth - 1, dayNum)
-    candidates.push({ iso: isoFromUtc(nextYear, nextMonth, dayNum), dist: Math.abs(utc - todayUtc) })
+    candidates.push({
+      iso: mondayOnOrBefore(isoFromUtc(nextYear, nextMonth, dayNum)),
+      dist: Math.abs(utc - todayUtc),
+    })
   }
+
+  if (monthHint) {
+    for (const nextYear of [year - 1, year, year + 1]) addMonth(nextYear, monthHint)
+  } else {
+    for (let delta = -2; delta <= 10; delta++) {
+      let nextYear = year
+      let nextMonth = month + delta
+      while (nextMonth < 1) {
+        nextMonth += 12
+        nextYear -= 1
+      }
+      while (nextMonth > 12) {
+        nextMonth -= 12
+        nextYear += 1
+      }
+      addMonth(nextYear, nextMonth)
+    }
+  }
+
   if (!candidates.length) return null
-  candidates.sort((a, b) => a.dist - b.dist)
-  return mondayOnOrBefore(candidates[0].iso)
+  const later = afterMonday ? candidates.filter((item) => item.iso > afterMonday) : []
+  const pool = later.length ? later : candidates
+  pool.sort((a, b) => (later.length ? a.iso.localeCompare(b.iso) : a.dist - b.dist))
+  return pool[0].iso
 }
