@@ -128,7 +128,6 @@ const WEEKS = [
     startsOn: '2026-10-12',
     tab: 'Week 3 12th',
     matches: [
-      { day: 'monday', time: '9-10am', venue: 'botany_bay', home: 'Pavillionaires', away: 'Egg Fried Reus', color: '#EA9999', division: 'Division 1' },
       { day: 'tuesday', time: '9-10am', venue: 'botany_bay', home: 'Visiting Ballers', away: 'Strokes Academy', color: '#D5A6BD', division: 'Division 7' },
       { day: 'thursday', time: '9-10am', venue: 'botany_bay', home: 'Inter Milanagement', away: 'Sools fc', color: '#B6D7A8', division: 'Division 4' },
       { day: 'tuesday', time: '10-11am', venue: 'botany_bay', home: 'East Cavan Gaels', away: 'The BESS Around', color: '#F9CB9C', division: 'Division 2' },
@@ -173,6 +172,7 @@ const WEEKS = [
       { day: 'monday', time: '10-11am', venue: 'botany_bay', status: 'free' },
       { day: 'monday', time: '12-1pm', venue: 'botany_bay', status: 'free' },
       { day: 'monday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
+      { day: 'monday', time: '9-10am', venue: 'botany_bay', status: 'free' },
       { day: 'thursday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
       { day: 'tuesday', time: '12-1pm', venue: 'botany_bay', status: 'free' },
       { day: 'tuesday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
