@@ -200,6 +200,7 @@ const WEEKS = [
       { day: 'monday', time: '3-4pm', venue: 'botany_bay', home: 'River dodder rodent', away: 'Ctrl Alt Defeat', color: '#B4A7D6', division: 'Division 6' },
       { day: 'tuesday', time: '3-4pm', venue: 'botany_bay', home: 'TPSG', away: 'Buenos Aires ballers XI', color: '#FFE599', division: 'Division 3' },
       { day: 'thursday', time: '3-4pm', venue: 'botany_bay', home: 'Real Medrid', away: 'CSB FC', color: '#B6D7A8', division: 'Division 4' },
+      { day: 'friday', time: '3-4pm', venue: 'botany_bay', home: 'Inter Milanagement', away: 'Sools fc', color: '#B6D7A8', division: 'Division 4' },
       { day: 'monday', time: '4-5pm', venue: 'botany_bay', home: 'Eng ballers', away: 'Pavillionaires', color: '#EA9999', division: 'Division 1' },
       { day: 'tuesday', time: '4-5pm', venue: 'botany_bay', home: 'Strokes Academy', away: 'Goaldiggers fc', color: '#D5A6BD', division: 'Division 7' },
       { day: 'thursday', time: '4-5pm', venue: 'botany_bay', home: 'Sools fc', away: 'Ø Zone', color: '#B6D7A8', division: 'Division 4' },
@@ -209,7 +210,6 @@ const WEEKS = [
     slotOverrides: [
       { day: 'friday', time: '12-1pm', venue: 'hall_a', status: 'unavailable' },
       { day: 'friday', time: '12-1pm', venue: 'hall_b', status: 'unavailable' },
-      { day: 'friday', time: '3-4pm', venue: 'botany_bay', status: 'free' },
       { day: 'friday', time: '4-5pm', venue: 'botany_bay', status: 'free' },
       { day: 'friday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
       { day: 'monday', time: '12-1pm', venue: 'hall_a', status: 'free' },
