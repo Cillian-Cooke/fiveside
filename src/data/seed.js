@@ -179,6 +179,7 @@ const WEEKS = [
     tab: 'Week 4 19th',
     matches: [
       { day: 'monday', time: '9-10am', venue: 'botany_bay', home: 'Lionel MSISS', away: 'Coolock says Goal', color: '#FFE599', division: 'Division 3' },
+      { day: 'tuesday', time: '9-10am', venue: 'botany_bay', home: 'Carling F.C.', away: 'Chicken Chasers', color: '#A4C2F4', division: 'Division 5' },
       { day: 'thursday', time: '9-10am', venue: 'botany_bay', home: 'git gud', away: 'MAMAs Revenge', color: '#6AA84F', division: 'Mixed Division' },
       { day: 'friday', time: '9-10am', venue: 'botany_bay', home: 'The Stoppable Force', away: 'Ponzie Prowlers', color: '#D5A6BD', division: 'Division 7' },
       { day: 'monday', time: '10-11am', venue: 'botany_bay', home: 'TBXI', away: 'Himmy Saville', color: '#A4C2F4', division: 'Division 5' },
@@ -219,7 +220,6 @@ const WEEKS = [
       { day: 'thursday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
       { day: 'tuesday', time: '12-1pm', venue: 'hall_a', status: 'free' },
       { day: 'tuesday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
-      { day: 'tuesday', time: '9-10am', venue: 'botany_bay', status: 'free' },
       { day: 'wednesday', time: '12-1pm', venue: 'hall_a', status: 'unavailable' },
       { day: 'wednesday', time: '12-1pm', venue: 'hall_b', status: 'unavailable' },
     ],
