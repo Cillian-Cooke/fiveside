@@ -344,7 +344,7 @@ const WEEKS = [
     startsOn: '2026-11-23',
     tab: 'READING WEEK',
     matches: [
-
+      { day: 'wednesday', time: '4-5pm', venue: 'botany_bay', home: 'Iteam', away: 'Carling F.C.', color: '#A4C2F4', division: 'Division 5' },
     ],
     slotOverrides: [
       { day: 'friday', time: '10-11am', venue: 'botany_bay', status: 'free' },
@@ -386,7 +386,6 @@ const WEEKS = [
       { day: 'wednesday', time: '12-1pm', venue: 'hall_b', status: 'unavailable' },
       { day: 'wednesday', time: '2-3pm', venue: 'botany_bay', status: 'free' },
       { day: 'wednesday', time: '3-4pm', venue: 'botany_bay', status: 'free' },
-      { day: 'wednesday', time: '4-5pm', venue: 'botany_bay', status: 'free' },
       { day: 'wednesday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
       { day: 'wednesday', time: '9-10am', venue: 'botany_bay', status: 'free' },
     ],
