@@ -302,7 +302,7 @@ const WEEKS = [
       { day: 'thursday', time: '10-11am', venue: 'botany_bay', home: 'The Palpators 2.0', away: 'SpVgg F.K. Spartak Ussher 04', color: '#A4C2F4', division: 'Division 5' },
       { day: 'friday', time: '10-11am', venue: 'botany_bay', home: 'Navier Stokes', away: 'East Cavan Gaels', color: '#F9CB9C', division: 'Division 2' },
       { day: 'monday', time: '11-12pm', venue: 'botany_bay', home: 'Pavaria', away: 'Hedley Burnley', color: '#F9CB9C', division: 'Division 2' },
-      { day: 'tuesday', time: '11-12pm', venue: 'botany_bay', home: 'Egg Fried Reus', away: 'Integer Milan', color: '#EA9999', division: 'Division 1' },
+      { day: 'tuesday', time: '11-12pm', venue: 'botany_bay', home: 'Pavillionaires', away: 'Egg Fried Reus', color: '#EA9999', division: 'Division 1' },
       { day: 'thursday', time: '11-12pm', venue: 'botany_bay', home: 'git gud', away: 'MAMAs Revenge', color: '#6AA84F', division: 'Mixed Division' },
       { day: 'friday', time: '11-12pm', venue: 'botany_bay', home: 'Reels Betis', away: 'Unathletic Bilbao', color: '#B6D7A8', division: 'Division 4' },
       { day: 'monday', time: '12-1pm', venue: 'botany_bay', home: 'Hack Tuah', away: 'PBB FC', color: '#B4A7D6', division: 'Division 6' },
