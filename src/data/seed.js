@@ -321,10 +321,10 @@ const WEEKS = [
       { day: 'thursday', time: '4-5pm', venue: 'botany_bay', home: 'Sools fc', away: 'Ø Zone', color: '#B6D7A8', division: 'Division 4' },
       { day: 'friday', time: '4-5pm', venue: 'botany_bay', home: 'Roman Empire', away: 'Hack Tuah', color: '#B4A7D6', division: 'Division 6' },
       { day: 'tuesday', time: '12-1pm', venue: 'hall_a', home: 'Roman Empire', away: 'HurriKanes', color: '#B4A7D6', division: 'Division 6' },
-      { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'Real MAldrid', away: 'Visiting Ballers', color: '#D5A6BD', division: 'Division 7' },
+      { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'Lionel MSISS', away: 'Pav Furniture', color: '#FFE599', division: 'Division 3' },
       { day: 'monday', time: '12-1pm', venue: 'hall_b', home: 'Lawds and Bizches', away: 'Botany Baes', color: '#6AA84F', division: 'Mixed Division' },
       { day: 'tuesday', time: '12-1pm', venue: 'hall_b', home: 'The Screaming Goafers', away: 'The Athletics', color: '#6AA84F', division: 'Mixed Division' },
-      { day: 'thursday', time: '12-1pm', venue: 'hall_b', home: 'Lionel MSISS', away: 'Pav Furniture', color: '#FFE599', division: 'Division 3' },
+      { day: 'thursday', time: '12-1pm', venue: 'hall_b', home: 'Sools fc', away: 'Unathletic Bilbao', color: '#B6D7A8', division: 'Division 4' },
     ],
     slotOverrides: [
       { day: 'friday', time: '12-1pm', venue: 'hall_a', status: 'unavailable' },
