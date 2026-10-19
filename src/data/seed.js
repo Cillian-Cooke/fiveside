@@ -325,7 +325,7 @@ const WEEKS = [
       { day: 'wednesday', time: '4-5pm', venue: 'botany_bay', home: 'Egg Fried Reus', away: 'Engibeering', color: '#EA9999', division: 'Division 1' },
       { day: 'thursday', time: '4-5pm', venue: 'botany_bay', home: 'Sools fc', away: 'Ø Zone', color: '#B6D7A8', division: 'Division 4' },
       { day: 'friday', time: '4-5pm', venue: 'botany_bay', home: 'Roman Empire', away: 'Hack Tuah', color: '#B4A7D6', division: 'Division 6' },
-      { day: 'tuesday', time: '12-1pm', venue: 'hall_a', home: 'Roman Empire', away: 'HurriKanes', color: '#B4A7D6', division: 'Division 6' },
+      { day: 'tuesday', time: '12-1pm', venue: 'hall_a', home: 'HurriKanes', away: 'Hack Tuah', color: '#B4A7D6', division: 'Division 6' },
       { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'Choose Football', away: 'Mountjoy FC', color: '#EA9999', division: 'Division 1' },
       { day: 'tuesday', time: '12-1pm', venue: 'hall_b', home: 'The Screaming Goafers', away: 'The Athletics', color: '#6AA84F', division: 'Mixed Division' },
       { day: 'thursday', time: '12-1pm', venue: 'hall_b', home: 'TPSG', away: 'Buenos Aires ballers XI', color: '#FFE599', division: 'Division 3' },
