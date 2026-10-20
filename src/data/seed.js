@@ -327,7 +327,6 @@ const WEEKS = [
       { day: 'friday', time: '4-5pm', venue: 'botany_bay', home: 'Roman Empire', away: 'Hack Tuah', color: '#B4A7D6', division: 'Division 6' },
       { day: 'tuesday', time: '12-1pm', venue: 'hall_a', home: 'HurriKanes', away: 'Hack Tuah', color: '#B4A7D6', division: 'Division 6' },
       { day: 'thursday', time: '12-1pm', venue: 'hall_a', home: 'Choose Football', away: 'Mountjoy FC', color: '#EA9999', division: 'Division 1' },
-      { day: 'tuesday', time: '12-1pm', venue: 'hall_b', home: 'The Screaming Goafers', away: 'The Athletics', color: '#6AA84F', division: 'Mixed Division' },
       { day: 'thursday', time: '12-1pm', venue: 'hall_b', home: 'TPSG', away: 'Buenos Aires ballers XI', color: '#FFE599', division: 'Division 3' },
     ],
     slotOverrides: [
@@ -341,6 +340,7 @@ const WEEKS = [
       { day: 'monday', time: '9-10am', venue: 'botany_bay', status: 'free' },
       { day: 'thursday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
       { day: 'tuesday', time: '12-1pm', venue: 'botany_bay', status: 'free' },
+      { day: 'tuesday', time: '12-1pm', venue: 'hall_b', status: 'free' },
       { day: 'tuesday', time: '3-4pm', venue: 'botany_bay', status: 'free' },
       { day: 'tuesday', time: '8-9am', venue: 'botany_bay', status: 'unavailable' },
       { day: 'wednesday', time: '12-1pm', venue: 'hall_a', status: 'unavailable' },
