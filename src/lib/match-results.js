@@ -1,6 +1,5 @@
-import matchResults from '../data/match-results.json'
-import teamDivisions from '../data/team-divisions.json'
-import { canonicalDivision } from './fixtures.js'
+import matchResults from '../data/match-results.json' with { type: 'json' }
+import { canonicalDivision, getTeamDirectory } from './fixtures.js'
 
 function normalizeTeamKey(name) {
   return String(name || '')
@@ -55,6 +54,7 @@ function scoresForFixture(fixtureHome, fixtureAway, row, swap) {
 }
 
 function lookupTeamMeta(name, fallbackDivision) {
+  const teamDivisions = getTeamDirectory()
   let meta = teamDivisions[name]
   if (!meta) {
     const key = normalizeTeamKey(name)

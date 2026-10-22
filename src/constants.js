@@ -1,4 +1,20 @@
-import divisionColors from './data/division-colors.json'
+import bundledDivisionColors from './data/division-colors.json' with { type: 'json' }
+
+let divisionColors = bundledDivisionColors
+
+/** Legend colours from the sheet replace the bundled palette once fixtures load. */
+export function setDivisionColors(next) {
+  if (next && Object.keys(next).length) {
+    divisionColors = { ...bundledDivisionColors, ...next }
+  }
+}
+
+export function divisionPalette() {
+  return DIVISION_ORDER.filter((name) => divisionColors[name]).map((name) => ({
+    name,
+    color: divisionColors[name],
+  }))
+}
 
 export const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
@@ -68,6 +84,14 @@ export const DIVISIONS = DIVISION_ORDER.map((name) => ({
 
 export function divisionColor(name) {
   return divisionColors[name] || divisionColors['Mixed Division']
+}
+
+/** Text label so a division is never identified by colour alone. */
+export function divisionLabel(name, { short = false } = {}) {
+  if (name === 'Mixed Division') return short ? 'Mixed' : 'Mixed Division'
+  const match = String(name || '').match(/Division\s+(\d+)/i)
+  if (match) return short ? `Div ${match[1]}` : `Division ${match[1]}`
+  return name || ''
 }
 
 export const NAV = [

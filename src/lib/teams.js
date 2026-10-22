@@ -1,22 +1,13 @@
-import { canonicalDivision } from './fixtures.js'
-import teamDivisions from '../data/team-divisions.json'
+import { canonicalDivision, getTeamDirectory } from './fixtures.js'
+import { normalizeTeamKey } from './names.js'
 
 function teamMeta(name) {
+  const teamDivisions = getTeamDirectory()
   let meta = teamDivisions[name]
   if (meta) return meta
-  const key = String(name || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim()
+  const key = normalizeTeamKey(name)
   for (const [team, entry] of Object.entries(teamDivisions)) {
-    if (
-      String(team)
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, ' ')
-        .trim() === key
-    ) {
-      return entry
-    }
+    if (normalizeTeamKey(team) === key) return entry
   }
   return null
 }

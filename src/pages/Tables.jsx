@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { DIVISIONS } from '../constants.js'
+import { divisionPalette } from '../constants.js'
 import SearchBar from '../components/SearchBar.jsx'
 import LeagueFilters from '../components/LeagueFilters.jsx'
 import TeamLink from '../components/TeamLink.jsx'
@@ -11,26 +11,20 @@ import {
   teamMatchesQuery,
   teamRowKey,
 } from '../lib/fixtures.js'
-import { loadPastWeeks, peekPastWeeks } from '../lib/weeks-data.js'
+import { useSchedule } from '../lib/useSchedule.jsx'
 import { readSnapshot, useStackPage } from '../lib/navStack.js'
 
 export default function Tables() {
   const location = useLocation()
   const snap = readSnapshot(location.key)
-  const cached = peekPastWeeks()
-  const [fixtures, setFixtures] = useState(() =>
-    cached ? cached.flatMap((item) => item.fixtures) : [],
+  const { status, weeks } = useSchedule()
+  const ready = status === 'ready'
+  const fixtures = useMemo(
+    () => weeks.flatMap((item) => item.fixtures),
+    [weeks],
   )
-  const [ready, setReady] = useState(() => cached !== undefined)
   const [query, setQuery] = useState(snap?.query ?? '')
   const [league, setLeague] = useState(snap?.league ?? 'all')
-
-  useEffect(() => {
-    loadPastWeeks().then((weeks) => {
-      setFixtures(weeks.flatMap((item) => item.fixtures))
-      setReady(true)
-    })
-  }, [])
 
   useStackPage({ query, league }, ready)
 
@@ -44,7 +38,7 @@ export default function Tables() {
     return false
   }, [tables])
 
-  const divisions = DIVISIONS.filter((division) => {
+  const divisions = divisionPalette().filter((division) => {
     if (league !== 'all' && division.name !== league) return false
     if (wantedDivision && division.name !== wantedDivision) return false
     return tables.has(division.name)

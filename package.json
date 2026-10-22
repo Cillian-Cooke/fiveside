@@ -5,11 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "node scripts/share-metadata.mjs && vite build",
-    "share:meta": "node scripts/share-metadata.mjs",
+    "build": "vite build",
     "preview": "vite preview --host",
-    "sync:teams": "node scripts/sync-team-divisions-from-sheet.mjs",
-    "sync:sheet": "node scripts/sync-fixtures-from-sheet.mjs"
+    "test": "node --test",
+    "seed:refresh": "node scripts/refresh-seed.mjs"
   },
   "dependencies": {
     "react": "^19.1.0",
@@ -18,7 +17,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.0",
-    "sharp": "^0.34.5",
     "vite": "^7.1.0"
   }
 }

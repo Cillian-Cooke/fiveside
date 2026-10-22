@@ -55,8 +55,88 @@ export function formatWeekRange(startsOn) {
   return `${fmt(start)} – ${fmt(end)}`
 }
 
-/** First populated league week (28 Sep – 2 Oct). */
+/** Monday of Week 1. Later tabs are this date plus seven days each, in sheet order. */
 export const SEASON_START = '2026-09-28'
+
+export function isReadingTab(name) {
+  return /reading/i.test(String(name || ''))
+}
+
+/** Fixture tabs only. Contact Info and other sheets are not weeks. */
+export function isScheduleTab(name) {
+  return /week|reading/i.test(String(name || ''))
+}
+
+/**
+ * Dates come from tab order, not from names like "Week 5 2nd Nov".
+ * Reading week still occupies a Monday so the following round stays on the right week.
+ */
+export function assignTabDates(tabNames, seasonStart = SEASON_START) {
+  const dated = []
+  let startsOn = seasonStart
+  for (const tab of tabNames) {
+    if (!isScheduleTab(tab)) continue
+    const reading = isReadingTab(tab)
+    dated.push({
+      tab,
+      startsOn,
+      reading,
+      weekNumber: reading ? null : weekNumberFromTab(tab),
+    })
+    startsOn = shiftStartsOn(startsOn, 1)
+  }
+  return dated
+}
+
+const WEEKDAY_NAME = {
+  Mon: 'monday',
+  Tue: 'tuesday',
+  Wed: 'wednesday',
+  Thu: 'thursday',
+  Fri: 'friday',
+  Sat: 'saturday',
+  Sun: 'sunday',
+}
+
+export function dublinToday(now = new Date()) {
+  const parts = dublinParts(now)
+  return {
+    ...parts,
+    iso: isoFromUtc(parts.year, parts.month, parts.day),
+    dayName: WEEKDAY_NAME[parts.weekday] || null,
+  }
+}
+
+/** Mon–Fri range, compact when both days share a month: "19–23 Oct". */
+export function formatCompactRange(startsOn) {
+  const [year, month, day] = String(startsOn).split('-').map(Number)
+  const start = new Date(Date.UTC(year, month - 1, day))
+  const end = new Date(Date.UTC(year, month - 1, day + 4))
+  const startMonth = MONTHS[start.getUTCMonth()]
+  const endMonth = MONTHS[end.getUTCMonth()]
+  if (startMonth === endMonth) {
+    return `${start.getUTCDate()}–${end.getUTCDate()} ${endMonth}`
+  }
+  return `${start.getUTCDate()} ${startMonth}–${end.getUTCDate()} ${endMonth}`
+}
+
+export function formatUpdatedAt(iso) {
+  if (!iso) return ''
+  const formatted = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/Dublin',
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(iso))
+  return formatted.replace(',', ' ·')
+}
+
+export function formatPickerLabel(week) {
+  const range = formatCompactRange(week.startsOn)
+  if (week.reading) return `Reading week · ${range}`
+  return `Week ${week.weekNumber} · ${range}`
+}
 
 export function weekNumberFromTab(tab) {
   const match = String(tab || '').match(/week\s+(\d+)/i)
@@ -65,95 +145,7 @@ export function weekNumberFromTab(tab) {
   return Number.isFinite(number) && number > 0 ? number : null
 }
 
-export function weekNumberFromStartsOn(startsOn, seasonStart = SEASON_START) {
-  const [year, month, day] = String(startsOn).split('-').map(Number)
-  const [startYear, startMonth, startDay] = String(seasonStart).split('-').map(Number)
-  const diff =
-    Date.UTC(year, month - 1, day) - Date.UTC(startYear, startMonth - 1, startDay)
-  return Math.round(diff / (7 * 24 * 60 * 60 * 1000)) + 1
-}
-
-export function formatWeekName(weekNumber) {
-  if (!weekNumber || weekNumber < 1) return null
-  return `Week ${weekNumber}`
-}
-
 export function shiftStartsOn(startsOn, weeks) {
   const [year, month, day] = String(startsOn).split('-').map(Number)
   return isoFromUtc(year, month, day + weeks * 7)
-}
-
-export function mondayOnOrBefore(iso) {
-  const [year, month, day] = String(iso).split('-').map(Number)
-  const dow = new Date(Date.UTC(year, month - 1, day)).getUTCDay()
-  const offset = (dow + 6) % 7
-  return isoFromUtc(year, month, day - offset)
-}
-
-const MONTH_LOOKUP = Object.fromEntries(
-  MONTHS.flatMap((name, index) => {
-    const short = name.slice(0, 3).toLowerCase()
-    const full = name.toLowerCase()
-    const entries = [
-      [short, index + 1],
-      [full, index + 1],
-    ]
-    if (short === 'sep') entries.push(['sept', 9])
-    return entries
-  }),
-)
-
-/** Read a Monday from tab names like "Week 1 28th", "Week 2 5th", or "Week 5 2nd Nov". */
-export function mondayFromTabName(name, now = new Date(), afterMonday = null) {
-  const text = String(name)
-  const match = text.match(/(\d{1,2})(?:st|nd|rd|th)/i)
-  if (!match) return null
-  const dayNum = Number(match[1])
-  const monthMatch = text.match(
-    /\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/i,
-  )
-  const { year, month, day } = dublinParts(now)
-  const todayUtc = Date.UTC(year, month - 1, day)
-  const monthHint = monthMatch
-    ? MONTH_LOOKUP[monthMatch[1].slice(0, 3).toLowerCase()] || MONTH_LOOKUP[monthMatch[1].toLowerCase()]
-    : null
-
-  const seen = new Set()
-  const candidates = []
-  const addMonth = (nextYear, nextMonth) => {
-    const key = `${nextYear}-${nextMonth}`
-    if (seen.has(key)) return
-    seen.add(key)
-    const lastDay = new Date(Date.UTC(nextYear, nextMonth, 0)).getUTCDate()
-    if (dayNum > lastDay) return
-    const utc = Date.UTC(nextYear, nextMonth - 1, dayNum)
-    candidates.push({
-      iso: mondayOnOrBefore(isoFromUtc(nextYear, nextMonth, dayNum)),
-      dist: Math.abs(utc - todayUtc),
-    })
-  }
-
-  if (monthHint) {
-    for (const nextYear of [year - 1, year, year + 1]) addMonth(nextYear, monthHint)
-  } else {
-    for (let delta = -2; delta <= 10; delta++) {
-      let nextYear = year
-      let nextMonth = month + delta
-      while (nextMonth < 1) {
-        nextMonth += 12
-        nextYear -= 1
-      }
-      while (nextMonth > 12) {
-        nextMonth -= 12
-        nextYear += 1
-      }
-      addMonth(nextYear, nextMonth)
-    }
-  }
-
-  if (!candidates.length) return null
-  const later = afterMonday ? candidates.filter((item) => item.iso > afterMonday) : []
-  const pool = later.length ? later : candidates
-  pool.sort((a, b) => (later.length ? a.iso.localeCompare(b.iso) : a.dist - b.dist))
-  return pool[0].iso
 }

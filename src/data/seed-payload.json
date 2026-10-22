@@ -1,0 +1,3747 @@
+{
+  "legend": {
+    "Division 1": "#EA9999",
+    "Division 4": "#B6D7A8",
+    "Division 7": "#D5A6BD",
+    "Division 2": "#F9CB9C",
+    "Division 5": "#A4C2F4",
+    "Mixed Division": "#6AA84F",
+    "Division 3": "#FFE599",
+    "Division 6": "#B4A7D6"
+  },
+  "teams": {
+    "Egg Fried Reus": {
+      "division": "Division 1",
+      "color": "#EA9999"
+    },
+    "Integer Milan": {
+      "division": "Division 1",
+      "color": "#EA9999"
+    },
+    "Mountjoy FC": {
+      "division": "Division 1",
+      "color": "#EA9999"
+    },
+    "Eng ballers": {
+      "division": "Division 1",
+      "color": "#EA9999"
+    },
+    "Choose Football": {
+      "division": "Division 1",
+      "color": "#EA9999"
+    },
+    "Pavillionaires": {
+      "division": "Division 1",
+      "color": "#EA9999"
+    },
+    "Engibeering": {
+      "division": "Division 1",
+      "color": "#EA9999"
+    },
+    "Barely Athletic FC": {
+      "division": "Division 1",
+      "color": "#EA9999"
+    },
+    "Pavaria": {
+      "division": "Division 2",
+      "color": "#F9CB9C"
+    },
+    "Hedley Burnley": {
+      "division": "Division 2",
+      "color": "#F9CB9C"
+    },
+    "Liampool": {
+      "division": "Division 2",
+      "color": "#F9CB9C"
+    },
+    "Lads on toure": {
+      "division": "Division 2",
+      "color": "#F9CB9C"
+    },
+    "Dropouts FC": {
+      "division": "Division 2",
+      "color": "#F9CB9C"
+    },
+    "East Cavan Gaels": {
+      "division": "Division 2",
+      "color": "#F9CB9C"
+    },
+    "The BESS Around": {
+      "division": "Division 2",
+      "color": "#F9CB9C"
+    },
+    "Navier Stokes": {
+      "division": "Division 2",
+      "color": "#F9CB9C"
+    },
+    "Buenos Aires ballers XI": {
+      "division": "Division 3",
+      "color": "#FFE599"
+    },
+    "Hangover97": {
+      "division": "Division 3",
+      "color": "#FFE599"
+    },
+    "Coolock says Goal": {
+      "division": "Division 3",
+      "color": "#FFE599"
+    },
+    "Pav Furniture": {
+      "division": "Division 3",
+      "color": "#FFE599"
+    },
+    "Lionel MSISS": {
+      "division": "Division 3",
+      "color": "#FFE599"
+    },
+    "Lochbessmonster": {
+      "division": "Division 3",
+      "color": "#FFE599"
+    },
+    "FC TRISS": {
+      "division": "Division 3",
+      "color": "#FFE599",
+      "byDivision": {
+        "Division 3": {
+          "division": "Division 3",
+          "color": "#FFE599"
+        },
+        "Mixed Division": {
+          "division": "Mixed Division",
+          "color": "#6AA84F"
+        }
+      }
+    },
+    "TPSG": {
+      "division": "Division 3",
+      "color": "#FFE599"
+    },
+    "CSB FC": {
+      "division": "Division 4",
+      "color": "#B6D7A8"
+    },
+    "Inter Milanagement": {
+      "division": "Division 4",
+      "color": "#B6D7A8"
+    },
+    "Ø Zone": {
+      "division": "Division 4",
+      "color": "#B6D7A8"
+    },
+    "Real Medrid": {
+      "division": "Division 4",
+      "color": "#B6D7A8"
+    },
+    "Sools fc": {
+      "division": "Division 4",
+      "color": "#B6D7A8"
+    },
+    "The Fish Tank": {
+      "division": "Division 4",
+      "color": "#B6D7A8"
+    },
+    "Unathletic Bilbao": {
+      "division": "Division 4",
+      "color": "#B6D7A8"
+    },
+    "Reels Betis": {
+      "division": "Division 4",
+      "color": "#B6D7A8"
+    },
+    "Carling F.C.": {
+      "division": "Division 5",
+      "color": "#A4C2F4"
+    },
+    "Chicken Chasers": {
+      "division": "Division 5",
+      "color": "#A4C2F4"
+    },
+    "Himmy Saville": {
+      "division": "Division 5",
+      "color": "#A4C2F4"
+    },
+    "Iteam": {
+      "division": "Division 5",
+      "color": "#A4C2F4"
+    },
+    "Mauled by the trinners": {
+      "division": "Division 5",
+      "color": "#A4C2F4"
+    },
+    "SpVgg F.K. Spartak Ussher 04": {
+      "division": "Division 5",
+      "color": "#A4C2F4"
+    },
+    "TBXI": {
+      "division": "Division 5",
+      "color": "#A4C2F4"
+    },
+    "The Palpators 2.0": {
+      "division": "Division 5",
+      "color": "#A4C2F4"
+    },
+    "Wings of a Sparrow": {
+      "division": "Division 6",
+      "color": "#B4A7D6"
+    },
+    "HurriKanes": {
+      "division": "Division 6",
+      "color": "#B4A7D6"
+    },
+    "Ctrl Alt Defeat": {
+      "division": "Division 6",
+      "color": "#B4A7D6"
+    },
+    "River dodder rodent": {
+      "division": "Division 6",
+      "color": "#B4A7D6"
+    },
+    "Trin Tigers": {
+      "division": "Division 6",
+      "color": "#B4A7D6"
+    },
+    "Hack Tuah": {
+      "division": "Division 6",
+      "color": "#B4A7D6"
+    },
+    "Roman Empire": {
+      "division": "Division 6",
+      "color": "#B4A7D6"
+    },
+    "PBB FC": {
+      "division": "Division 6",
+      "color": "#B4A7D6"
+    },
+    "Ajaxidative Phosphorylation": {
+      "division": "Division 7",
+      "color": "#D5A6BD"
+    },
+    "Goaldiggers fc": {
+      "division": "Division 7",
+      "color": "#D5A6BD"
+    },
+    "Real MAldrid": {
+      "division": "Division 7",
+      "color": "#D5A6BD"
+    },
+    "Ponzie Prowlers": {
+      "division": "Division 7",
+      "color": "#D5A6BD"
+    },
+    "Strokes Academy": {
+      "division": "Division 7",
+      "color": "#D5A6BD"
+    },
+    "The Stoppable Force": {
+      "division": "Division 7",
+      "color": "#D5A6BD"
+    },
+    "Ateltico Unatletico": {
+      "division": "Division 7",
+      "color": "#D5A6BD"
+    },
+    "Visiting Ballers": {
+      "division": "Division 7",
+      "color": "#D5A6BD"
+    },
+    "Euro football studs": {
+      "division": "Mixed Division",
+      "color": "#6AA84F"
+    },
+    "Shabadoo Balompié Calcio": {
+      "division": "Mixed Division",
+      "color": "#6AA84F"
+    },
+    "Lawds and Bizches": {
+      "division": "Mixed Division",
+      "color": "#6AA84F"
+    },
+    "MAMAs Revenge": {
+      "division": "Mixed Division",
+      "color": "#6AA84F"
+    },
+    "Fiery Middle Aged Women": {
+      "division": "Mixed Division",
+      "color": "#6AA84F"
+    },
+    "The Screaming Goafers": {
+      "division": "Mixed Division",
+      "color": "#6AA84F"
+    },
+    "git gud": {
+      "division": "Mixed Division",
+      "color": "#6AA84F"
+    },
+    "Botany Baes": {
+      "division": "Mixed Division",
+      "color": "#6AA84F"
+    },
+    "The Athletics": {
+      "division": "Mixed Division",
+      "color": "#6AA84F"
+    }
+  },
+  "weeks": [
+    {
+      "tab": "Week 1 28th",
+      "startsOn": "2026-09-28",
+      "weekNumber": 1,
+      "reading": false,
+      "matches": [
+        {
+          "day": "tuesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "East Cavan Gaels",
+          "away": "Dropouts FC",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "monday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Pavillionaires",
+          "away": "Integer Milan",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "tuesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "HurriKanes",
+          "away": "River dodder rodent",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "wednesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Liampool",
+          "away": "Pavaria",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "thursday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Lawds and Bizches",
+          "away": "Fiery Middle Aged Women",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "tuesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "The Fish Tank",
+          "away": "Real Medrid",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "wednesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Engibeering",
+          "away": "Choose Football",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "thursday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "git gud",
+          "away": "Euro football studs",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "friday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "The BESS Around",
+          "away": "Lads on toure",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "PBB FC",
+          "away": "Wings of a Sparrow",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Hangover97",
+          "away": "Lochbessmonster",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Hedley Burnley",
+          "away": "Navier Stokes",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "The Screaming Goafers",
+          "away": "FC TRISS",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Ponzie Prowlers",
+          "away": "Strokes Academy",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "wednesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Goaldiggers fc",
+          "away": "Ateltico Unatletico",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Ø Zone",
+          "away": "Reels Betis",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "tuesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Unathletic Bilbao",
+          "away": "Inter Milanagement",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "wednesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Real MAldrid",
+          "away": "The Stoppable Force",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "CSB FC",
+          "away": "Sools fc",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "friday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Chicken Chasers",
+          "away": "SpVgg F.K. Spartak Ussher 04",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "monday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Egg Fried Reus",
+          "away": "Barely Athletic FC",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "tuesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Buenos Aires ballers XI",
+          "away": "Pav Furniture",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "wednesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Coolock says Goal",
+          "away": "TPSG",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "thursday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Mountjoy FC",
+          "away": "Eng ballers",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "friday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Trin Tigers",
+          "away": "Roman Empire",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        }
+      ],
+      "slotOverrides": [
+        {
+          "day": "monday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "thursday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "tuesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "free"
+        }
+      ],
+      "rescheduled": [],
+      "dayNotes": {}
+    },
+    {
+      "tab": "Week 2 5th",
+      "startsOn": "2026-10-05",
+      "weekNumber": 2,
+      "reading": false,
+      "matches": [
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "home": "The Palpators 2.0",
+          "away": "Mauled by the trinners",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "home": "Lochbessmonster",
+          "away": "Buenos Aires ballers XI",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "home": "Ajaxidative Phosphorylation",
+          "away": "Visiting Ballers",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "tuesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "The Stoppable Force",
+          "away": "Ateltico Unatletico",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Choose Football",
+          "away": "Pavillionaires",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "friday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "River dodder rodent",
+          "away": "PBB FC",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "home": "FC TRISS",
+          "away": "Lionel MSISS",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "home": "Lads on toure",
+          "away": "Navier Stokes",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "thursday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Roman Empire",
+          "away": "Hack Tuah",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "tuesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Euro football studs",
+          "away": "FC TRISS",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "wednesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "The BESS Around",
+          "away": "Liampool",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "thursday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "The Fish Tank",
+          "away": "CSB FC",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "friday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Strokes Academy",
+          "away": "Ajaxidative Phosphorylation",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "The Palpators 2.0",
+          "away": "Iteam",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Real MAldrid",
+          "away": "Ponzie Prowlers",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Dropouts FC",
+          "away": "Hedley Burnley",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "monday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Wings of a Sparrow",
+          "away": "Ctrl Alt Defeat",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "wednesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "TPSG",
+          "away": "Hangover97",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "thursday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Ctrl Alt Defeat",
+          "away": "Hack Tuah",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "friday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "SpVgg F.K. Spartak Ussher 04",
+          "away": "Himmy Saville",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "tuesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Shabadoo Balompié Calcio",
+          "away": "The Screaming Goafers",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "wednesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Visiting Ballers",
+          "away": "Goaldiggers fc",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Real Medrid",
+          "away": "Reels Betis",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "friday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Barely Athletic FC",
+          "away": "Eng ballers",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "tuesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Integer Milan",
+          "away": "Mountjoy FC",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "wednesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Pavaria",
+          "away": "East Cavan Gaels",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "thursday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Iteam",
+          "away": "TBXI",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        }
+      ],
+      "slotOverrides": [
+        {
+          "day": "monday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "tuesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "tuesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "status": "free"
+        }
+      ],
+      "rescheduled": [],
+      "dayNotes": {}
+    },
+    {
+      "tab": "Week 3 12th",
+      "startsOn": "2026-10-12",
+      "weekNumber": 3,
+      "reading": false,
+      "matches": [
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "home": "Trin Tigers",
+          "away": "HurriKanes",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "home": "Dropouts FC",
+          "away": "Pavaria",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "home": "Ponzie Prowlers",
+          "away": "Ateltico Unatletico",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "tuesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Visiting Ballers",
+          "away": "Strokes Academy",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Inter Milanagement",
+          "away": "Ø Zone",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "friday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Integer Milan",
+          "away": "Choose Football",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "home": "Fiery Middle Aged Women",
+          "away": "MAMAs Revenge",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "home": "Ajaxidative Phosphorylation",
+          "away": "Visiting Ballers",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "tuesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "East Cavan Gaels",
+          "away": "The BESS Around",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "thursday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Coolock says Goal",
+          "away": "Pav Furniture",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "friday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "SpVgg F.K. Spartak Ussher 04",
+          "away": "TBXI",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "monday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Euro football studs",
+          "away": "Shabadoo Balompié Calcio",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "tuesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Engibeering",
+          "away": "Eng ballers",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "thursday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "git gud",
+          "away": "Fiery Middle Aged Women",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "friday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "PBB FC",
+          "away": "Trin Tigers",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Chicken Chasers",
+          "away": "The Palpators 2.0",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Liampool",
+          "away": "Navier Stokes",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "monday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Goaldiggers fc",
+          "away": "The Stoppable Force",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "CSB FC",
+          "away": "Reels Betis",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "friday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "The Screaming Goafers",
+          "away": "git gud",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "monday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Unathletic Bilbao",
+          "away": "The Fish Tank",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "tuesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Wings of a Sparrow",
+          "away": "River dodder rodent",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "thursday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Ø Zone",
+          "away": "Real Medrid",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "friday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Ajaxidative Phosphorylation",
+          "away": "Real MAldrid",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "monday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Ctrl Alt Defeat",
+          "away": "Roman Empire",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "tuesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Himmy Saville",
+          "away": "Mauled by the trinners",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "friday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "TBXI",
+          "away": "Chicken Chasers",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        }
+      ],
+      "slotOverrides": [
+        {
+          "day": "monday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "tuesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        }
+      ],
+      "rescheduled": [
+        {
+          "home": "Choose Football",
+          "away": "Mountjoy FC",
+          "division": "Division 1",
+          "color": "#EA9999"
+        },
+        {
+          "home": "Egg Fried Reus",
+          "away": "Engibeering",
+          "division": "Division 1",
+          "color": "#EA9999"
+        },
+        {
+          "home": "Mountjoy FC",
+          "away": "Barely Athletic FC",
+          "division": "Division 1",
+          "color": "#EA9999"
+        },
+        {
+          "home": "Pavillionaires",
+          "away": "Egg Fried Reus",
+          "division": "Division 1",
+          "color": "#EA9999"
+        },
+        {
+          "home": "Hedley Burnley",
+          "away": "Lads on toure",
+          "division": "Division 2",
+          "color": "#F9CB9C"
+        },
+        {
+          "home": "Lads on toure",
+          "away": "Navier Stokes",
+          "division": "Division 2",
+          "color": "#F9CB9C"
+        },
+        {
+          "home": "Lads on toure",
+          "away": "Liampool",
+          "division": "Division 2",
+          "color": "#F9CB9C"
+        },
+        {
+          "home": "Pavaria",
+          "away": "Hedley Burnley",
+          "division": "Division 2",
+          "color": "#F9CB9C"
+        },
+        {
+          "home": "Buenos Aires ballers XI",
+          "away": "Lionel MSISS",
+          "division": "Division 3",
+          "color": "#FFE599"
+        },
+        {
+          "home": "FC TRISS",
+          "away": "Lochbessmonster",
+          "division": "Division 3",
+          "color": "#FFE599"
+        },
+        {
+          "home": "FC TRISS",
+          "away": "Coolock says Goal",
+          "division": "Division 3",
+          "color": "#FFE599"
+        },
+        {
+          "home": "Hangover97",
+          "away": "FC TRISS",
+          "division": "Division 3",
+          "color": "#FFE599"
+        },
+        {
+          "home": "Lionel MSISS",
+          "away": "Pav Furniture",
+          "division": "Division 3",
+          "color": "#FFE599"
+        },
+        {
+          "home": "Lochbessmonster",
+          "away": "TPSG",
+          "division": "Division 3",
+          "color": "#FFE599"
+        },
+        {
+          "home": "Inter Milanagement",
+          "away": "Sools fc",
+          "division": "Division 4",
+          "color": "#B6D7A8"
+        },
+        {
+          "home": "Inter Milanagement",
+          "away": "Ø Zone",
+          "division": "Division 4",
+          "color": "#B6D7A8"
+        },
+        {
+          "home": "Sools fc",
+          "away": "Unathletic Bilbao",
+          "division": "Division 4",
+          "color": "#B6D7A8"
+        },
+        {
+          "home": "Himmy Saville",
+          "away": "Carling F.C.",
+          "division": "Division 5",
+          "color": "#A4C2F4"
+        },
+        {
+          "home": "Mauled by the trinners",
+          "away": "Carling F.C.",
+          "division": "Division 5",
+          "color": "#A4C2F4"
+        },
+        {
+          "home": "HurriKanes",
+          "away": "Hack Tuah",
+          "division": "Division 6",
+          "color": "#B4A7D6"
+        },
+        {
+          "home": "Trin Tigers",
+          "away": "HurriKanes",
+          "division": "Division 6",
+          "color": "#B4A7D6"
+        },
+        {
+          "home": "Real MAldrid",
+          "away": "Visiting Ballers",
+          "division": "Division 7",
+          "color": "#D5A6BD"
+        },
+        {
+          "home": "Botany Baes",
+          "away": "The Athletics",
+          "division": "Mixed Division",
+          "color": "#6AA84F"
+        },
+        {
+          "home": "FC TRISS",
+          "away": "Lawds and Bizches",
+          "division": "Mixed Division",
+          "color": "#6AA84F"
+        },
+        {
+          "home": "git gud",
+          "away": "Lawds and Bizches",
+          "division": "Mixed Division",
+          "color": "#6AA84F"
+        },
+        {
+          "home": "MAMAs Revenge",
+          "away": "The Screaming Goafers",
+          "division": "Mixed Division",
+          "color": "#6AA84F"
+        },
+        {
+          "home": "Shabadoo Balompié Calcio",
+          "away": "FC TRISS",
+          "division": "Mixed Division",
+          "color": "#6AA84F"
+        }
+      ],
+      "dayNotes": {
+        "wednesday": "All games cancelled on Wednesday due to strikes"
+      }
+    },
+    {
+      "tab": "Week 4 19th",
+      "startsOn": "2026-10-19",
+      "weekNumber": 4,
+      "reading": false,
+      "matches": [
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "home": "HurriKanes",
+          "away": "Hack Tuah",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "home": "Choose Football",
+          "away": "Mountjoy FC",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "tuesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Carling F.C.",
+          "away": "Chicken Chasers",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "wednesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Real MAldrid",
+          "away": "Visiting Ballers",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Trin Tigers",
+          "away": "Wings of a Sparrow",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "friday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "The Stoppable Force",
+          "away": "Ponzie Prowlers",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "home": "TPSG",
+          "away": "Buenos Aires ballers XI",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "monday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Lionel MSISS",
+          "away": "Coolock says Goal",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "tuesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Euro football studs",
+          "away": "Lawds and Bizches",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "wednesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Himmy Saville",
+          "away": "Carling F.C.",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "thursday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "The Palpators 2.0",
+          "away": "SpVgg F.K. Spartak Ussher 04",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "friday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Navier Stokes",
+          "away": "East Cavan Gaels",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "monday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Pavaria",
+          "away": "Hedley Burnley",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "tuesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Pavillionaires",
+          "away": "Egg Fried Reus",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "wednesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Strokes Academy",
+          "away": "Goaldiggers fc",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "git gud",
+          "away": "MAMAs Revenge",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "friday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Reels Betis",
+          "away": "Unathletic Bilbao",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Hack Tuah",
+          "away": "PBB FC",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "The Stoppable Force",
+          "away": "Ponzie Prowlers",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Fiery Middle Aged Women",
+          "away": "Botany Baes",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "The BESS Around",
+          "away": "Dropouts FC",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "monday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Lawds and Bizches",
+          "away": "Botany Baes",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "tuesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Mauled by the trinners",
+          "away": "Iteam",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "wednesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "FC TRISS",
+          "away": "Coolock says Goal",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "thursday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "The Fish Tank",
+          "away": "Inter Milanagement",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "friday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Ateltico Unatletico",
+          "away": "Ajaxidative Phosphorylation",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "wednesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Pav Furniture",
+          "away": "Hangover97",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "thursday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Real Medrid",
+          "away": "CSB FC",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "friday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Inter Milanagement",
+          "away": "Sools fc",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "monday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Eng ballers",
+          "away": "Pavillionaires",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "tuesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Barely Athletic FC",
+          "away": "Engibeering",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "wednesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Egg Fried Reus",
+          "away": "Engibeering",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "friday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Roman Empire",
+          "away": "Hack Tuah",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        }
+      ],
+      "slotOverrides": [
+        {
+          "day": "monday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "tuesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "thursday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "status": "free"
+        }
+      ],
+      "rescheduled": [
+        {
+          "home": "Egg Fried Reus",
+          "away": "Integer Milan",
+          "division": "Division 1",
+          "color": "#EA9999"
+        },
+        {
+          "home": "Mountjoy FC",
+          "away": "Barely Athletic FC",
+          "division": "Division 1",
+          "color": "#EA9999"
+        },
+        {
+          "home": "Pavillionaires",
+          "away": "Egg Fried Reus",
+          "division": "Division 1",
+          "color": "#EA9999"
+        },
+        {
+          "home": "Hedley Burnley",
+          "away": "Lads on toure",
+          "division": "Division 2",
+          "color": "#F9CB9C"
+        },
+        {
+          "home": "Lads on toure",
+          "away": "Navier Stokes",
+          "division": "Division 2",
+          "color": "#F9CB9C"
+        },
+        {
+          "home": "Lads on toure",
+          "away": "Liampool",
+          "division": "Division 2",
+          "color": "#F9CB9C"
+        },
+        {
+          "home": "Buenos Aires ballers XI",
+          "away": "Lionel MSISS",
+          "division": "Division 3",
+          "color": "#FFE599"
+        },
+        {
+          "home": "FC TRISS",
+          "away": "Lochbessmonster",
+          "division": "Division 3",
+          "color": "#FFE599"
+        },
+        {
+          "home": "Hangover97",
+          "away": "FC TRISS",
+          "division": "Division 3",
+          "color": "#FFE599"
+        },
+        {
+          "home": "Lionel MSISS",
+          "away": "Pav Furniture",
+          "division": "Division 3",
+          "color": "#FFE599"
+        },
+        {
+          "home": "Lochbessmonster",
+          "away": "TPSG",
+          "division": "Division 3",
+          "color": "#FFE599"
+        },
+        {
+          "home": "Inter Milanagement",
+          "away": "Sools fc",
+          "division": "Division 4",
+          "color": "#B6D7A8"
+        },
+        {
+          "home": "Inter Milanagement",
+          "away": "Ø Zone",
+          "division": "Division 4",
+          "color": "#B6D7A8"
+        },
+        {
+          "home": "Sools fc",
+          "away": "Unathletic Bilbao",
+          "division": "Division 4",
+          "color": "#B6D7A8"
+        },
+        {
+          "home": "Sools fc",
+          "away": "Ø Zone",
+          "division": "Division 4",
+          "color": "#B6D7A8"
+        },
+        {
+          "home": "Mauled by the trinners",
+          "away": "Carling F.C.",
+          "division": "Division 5",
+          "color": "#A4C2F4"
+        },
+        {
+          "home": "TBXI",
+          "away": "Himmy Saville",
+          "division": "Division 5",
+          "color": "#A4C2F4"
+        },
+        {
+          "home": "River dodder rodent",
+          "away": "Ctrl Alt Defeat",
+          "division": "Division 6",
+          "color": "#B4A7D6"
+        },
+        {
+          "home": "Roman Empire",
+          "away": "HurriKanes",
+          "division": "Division 6",
+          "color": "#B4A7D6"
+        },
+        {
+          "home": "Trin Tigers",
+          "away": "HurriKanes",
+          "division": "Division 6",
+          "color": "#B4A7D6"
+        },
+        {
+          "home": "Botany Baes",
+          "away": "The Athletics",
+          "division": "Mixed Division",
+          "color": "#6AA84F"
+        },
+        {
+          "home": "FC TRISS",
+          "away": "Lawds and Bizches",
+          "division": "Mixed Division",
+          "color": "#6AA84F"
+        },
+        {
+          "home": "git gud",
+          "away": "Lawds and Bizches",
+          "division": "Mixed Division",
+          "color": "#6AA84F"
+        },
+        {
+          "home": "MAMAs Revenge",
+          "away": "The Screaming Goafers",
+          "division": "Mixed Division",
+          "color": "#6AA84F"
+        },
+        {
+          "home": "Shabadoo Balompié Calcio",
+          "away": "FC TRISS",
+          "division": "Mixed Division",
+          "color": "#6AA84F"
+        },
+        {
+          "home": "The Screaming Goafers",
+          "away": "The Athletics",
+          "division": "Mixed Division",
+          "color": "#6AA84F"
+        }
+      ],
+      "dayNotes": {}
+    },
+    {
+      "tab": "READING WEEK",
+      "startsOn": "2026-10-26",
+      "weekNumber": null,
+      "reading": true,
+      "matches": [
+        {
+          "day": "wednesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Iteam",
+          "away": "Carling F.C.",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        }
+      ],
+      "slotOverrides": [
+        {
+          "day": "monday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "thursday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "thursday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "thursday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "thursday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "thursday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "monday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "thursday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "status": "free"
+        }
+      ],
+      "rescheduled": [],
+      "dayNotes": {}
+    },
+    {
+      "tab": "Week 5 2nd Nov",
+      "startsOn": "2026-11-02",
+      "weekNumber": 5,
+      "reading": false,
+      "matches": [
+        {
+          "day": "monday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Euro football studs",
+          "away": "MAMAs Revenge",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "tuesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Wings of a Sparrow",
+          "away": "Hack Tuah",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "wednesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "FC TRISS",
+          "away": "Fiery Middle Aged Women",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "thursday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Dropouts FC",
+          "away": "Navier Stokes",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "friday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Sools fc",
+          "away": "The Fish Tank",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "home": "git gud",
+          "away": "The Athletics",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "home": "Shabadoo Balompié Calcio",
+          "away": "Botany Baes",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "monday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Strokes Academy",
+          "away": "Real MAldrid",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "tuesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Ponzie Prowlers",
+          "away": "Goaldiggers fc",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "wednesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Hedley Burnley",
+          "away": "Botany Baes",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "thursday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "PBB FC",
+          "away": "Roman Empire",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "friday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Inter Milanagement",
+          "away": "Reels Betis",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "monday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "TPSG",
+          "away": "FC TRISS",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "tuesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Iteam",
+          "away": "Himmy Saville",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "wednesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Pavillionaires",
+          "away": "Barely Athletic FC",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "thursday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Visiting Ballers",
+          "away": "Ateltico Unatletico",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "friday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Ajaxidative Phosphorylation",
+          "away": "The Stoppable Force",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Hangover97",
+          "away": "Lionel MSISS",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Chicken Chasers",
+          "away": "Mauled by the trinners",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "River dodder rodent",
+          "away": "Trin Tigers",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Pavaria",
+          "away": "The BESS Around",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Lochbessmonster",
+          "away": "Pav Furniture",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "monday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "TBXI",
+          "away": "The Palpators 2.0",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "tuesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Engibeering",
+          "away": "Mountjoy FC",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "wednesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "SpVgg F.K. Spartak Ussher 04",
+          "away": "Carling F.C.",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "thursday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Liampool",
+          "away": "Hedley Burnley",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "monday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Integer Milan",
+          "away": "Eng ballers",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "tuesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "HurriKanes",
+          "away": "Ctrl Alt Defeat",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "wednesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "CSB FC",
+          "away": "Ø Zone",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "thursday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Unathletic Bilbao",
+          "away": "Real Medrid",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "monday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Shabadoo Balompié Calcio",
+          "away": "Lawds and Bizches",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "tuesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Coolock says Goal",
+          "away": "Buenos Aires ballers XI",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "wednesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "East Cavan Gaels",
+          "away": "Lads on toure",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "thursday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Choose Football",
+          "away": "Egg Fried Reus",
+          "color": "#EA9999",
+          "division": "Division 1"
+        }
+      ],
+      "slotOverrides": [
+        {
+          "day": "monday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "status": "free"
+        }
+      ],
+      "rescheduled": [],
+      "dayNotes": {}
+    },
+    {
+      "tab": "Week 6 9th",
+      "startsOn": "2026-11-09",
+      "weekNumber": 6,
+      "reading": false,
+      "matches": [
+        {
+          "day": "monday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Liampool",
+          "away": "East Cavan Gaels",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "tuesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "CSB FC",
+          "away": "Unathletic Bilbao",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "wednesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Iteam",
+          "away": "Chicken Chasers",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "thursday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Ctrl Alt Defeat",
+          "away": "Trin Tigers",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "friday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Engibeering",
+          "away": "Pavillionaires",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "home": "Euro football studs",
+          "away": "Fiery Middle Aged Women",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "monday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Ponzie Prowlers",
+          "away": "Ajaxidative Phosphorylation",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "tuesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Hack Tuah",
+          "away": "River dodder rodent",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "wednesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Goaldiggers fc",
+          "away": "Real MAldrid",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Shabadoo Balompié Calcio",
+          "away": "git gud",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "friday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Pav Furniture",
+          "away": "TPSG",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "monday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Lads on toure",
+          "away": "Dropouts FC",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "tuesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Mountjoy FC",
+          "away": "Egg Fried Reus",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "wednesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Buenos Aires ballers XI",
+          "away": "FC TRISS",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "thursday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Ø Zone",
+          "away": "The Fish Tank",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "friday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Lawds and Bizches",
+          "away": "The Screaming Goafers",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Reels Betis",
+          "away": "Sools fc",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Carling F.C.",
+          "away": "TBXI",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Eng ballers",
+          "away": "Choose Football",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Mauled by the trinners",
+          "away": "SpVgg F.K. Spartak Ussher 04",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "The Stoppable Force",
+          "away": "Visiting Ballers",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "monday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Navier Stokes",
+          "away": "Pavaria",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "tuesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Roman Empire",
+          "away": "Wings of a Sparrow",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "wednesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Hedley Burnley",
+          "away": "The BESS Around",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "thursday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Barely Athletic FC",
+          "away": "Integer Milan",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "monday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Lionel MSISS",
+          "away": "Lochbessmonster",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "tuesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "MAMAs Revenge",
+          "away": "Botany Baes",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "wednesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Ateltico Unatletico",
+          "away": "Strokes Academy",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Real Medrid",
+          "away": "Inter Milanagement",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "monday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "HurriKanes",
+          "away": "PBB FC",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "tuesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Himmy Saville",
+          "away": "The Palpators 2.0",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "wednesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Coolock says Goal",
+          "away": "Hangover97",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "thursday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Botany Baes",
+          "away": "FC TRISS",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        }
+      ],
+      "slotOverrides": [
+        {
+          "day": "monday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "status": "free"
+        }
+      ],
+      "rescheduled": [],
+      "dayNotes": {}
+    },
+    {
+      "tab": "Week 7 16th",
+      "startsOn": "2026-11-16",
+      "weekNumber": 7,
+      "reading": false,
+      "matches": [
+        {
+          "day": "monday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Unathletic Bilbao",
+          "away": "Ø Zone",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "tuesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Pavaria",
+          "away": "Lads on toure",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "wednesday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "The Fish Tank",
+          "away": "Reels Betis",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "thursday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "Egg Fried Reus",
+          "away": "Eng ballers",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "friday",
+          "time": "9-10am",
+          "venue": "botany_bay",
+          "home": "The Palpators 2.0",
+          "away": "Carling F.C.",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "home": "FC TRISS",
+          "away": "The Athletics",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "home": "git gud",
+          "away": "Botany Baes",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "monday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Lochbessmonster",
+          "away": "Coolock says Goal",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "tuesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "East Cavan Gaels",
+          "away": "Hedley Burnley",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "wednesday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Pavillionaires",
+          "away": "Mountjoy FC",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "thursday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Chicken Chasers",
+          "away": "Himmy Saville",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "friday",
+          "time": "10-11am",
+          "venue": "botany_bay",
+          "home": "Lawds and Bizches",
+          "away": "The Athletics",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "monday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Ajaxidative Phosphorylation",
+          "away": "Goaldiggers fc",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "tuesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Visiting Ballers",
+          "away": "Ponzie Prowlers",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "wednesday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Dropouts FC",
+          "away": "Liampool",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "thursday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "Choose Football",
+          "away": "Barely Athletic FC",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "friday",
+          "time": "11-12pm",
+          "venue": "botany_bay",
+          "home": "TPSG",
+          "away": "Lionel MSISS",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Wings of a Sparrow",
+          "away": "HurriKanes",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "The Screaming Goafers",
+          "away": "Euro football studs",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "The BESS Around",
+          "away": "Navier Stokes",
+          "color": "#F9CB9C",
+          "division": "Division 2"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "TBXI",
+          "away": "Mauled by the trinners",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "botany_bay",
+          "home": "Integer Milan",
+          "away": "Engibeering",
+          "color": "#EA9999",
+          "division": "Division 1"
+        },
+        {
+          "day": "monday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "PBB FC",
+          "away": "Ctrl Alt Defeat",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "tuesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "SpVgg F.K. Spartak Ussher 04",
+          "away": "Iteam",
+          "color": "#A4C2F4",
+          "division": "Division 5"
+        },
+        {
+          "day": "wednesday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "Real MAldrid",
+          "away": "Ateltico Unatletico",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "thursday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "home": "MAMAs Revenge",
+          "away": "FC TRISS",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "monday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Hangover97",
+          "away": "Buenos Aires ballers XI",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "tuesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "FC TRISS",
+          "away": "Pav Furniture",
+          "color": "#FFE599",
+          "division": "Division 3"
+        },
+        {
+          "day": "wednesday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "River dodder rodent",
+          "away": "Roman Empire",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        },
+        {
+          "day": "thursday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "home": "Sools fc",
+          "away": "Real Medrid",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "monday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Inter Milanagement",
+          "away": "CSB FC",
+          "color": "#B6D7A8",
+          "division": "Division 4"
+        },
+        {
+          "day": "tuesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Strokes Academy",
+          "away": "The Stoppable Force",
+          "color": "#D5A6BD",
+          "division": "Division 7"
+        },
+        {
+          "day": "wednesday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Shabadoo Balompié Calcio",
+          "away": "Fiery Middle Aged Women",
+          "color": "#6AA84F",
+          "division": "Mixed Division"
+        },
+        {
+          "day": "thursday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "home": "Trin Tigers",
+          "away": "Hack Tuah",
+          "color": "#B4A7D6",
+          "division": "Division 6"
+        }
+      ],
+      "slotOverrides": [
+        {
+          "day": "monday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "tuesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "8-9am",
+          "venue": "botany_bay",
+          "status": "unavailable"
+        },
+        {
+          "day": "monday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "tuesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_a",
+          "status": "unavailable"
+        },
+        {
+          "day": "wednesday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "thursday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "12-1pm",
+          "venue": "hall_b",
+          "status": "unavailable"
+        },
+        {
+          "day": "friday",
+          "time": "2-3pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "3-4pm",
+          "venue": "botany_bay",
+          "status": "free"
+        },
+        {
+          "day": "friday",
+          "time": "4-5pm",
+          "venue": "botany_bay",
+          "status": "free"
+        }
+      ],
+      "rescheduled": [],
+      "dayNotes": {}
+    }
+  ],
+  "updatedAt": "2026-10-22T15:18:20.970Z"
+}

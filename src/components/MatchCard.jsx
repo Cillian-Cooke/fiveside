@@ -1,4 +1,4 @@
-import { VENUE_LABEL } from '../constants.js'
+import { VENUE_LABEL, divisionLabel } from '../constants.js'
 import { canonicalMatchColor, contrastText } from '../lib/fixtures.js'
 import TeamLink from './TeamLink.jsx'
 import { teamDisplayName } from '../lib/teams.js'
@@ -42,8 +42,8 @@ export default function MatchCard({ fixture, compact = false, blank = false }) {
       style={{ background: color, color: text }}
     >
       <div className="card-meta">
-        <span>{VENUE_LABEL[fixture.venue]}</span>
-        <span>{fixture.division}</span>
+        <span>{fixture.venue ? VENUE_LABEL[fixture.venue] : 'No slot yet'}</span>
+        <span className="division-label">{divisionLabel(fixture.division, { short: compact })}</span>
       </div>
       <div className="teams">
         <TeamLink className="team-name team-link" name={fixture.home} division={fixture.division}>

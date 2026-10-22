@@ -1,14 +1,16 @@
 import { BAY_TIMES, DAYS, DIVISIONS, divisionColor } from '../constants.js'
-import teamDivisions from '../data/team-divisions.json'
+import bundledTeams from '../data/team-divisions.json' with { type: 'json' }
+import { normalizeTeamKey } from './names.js'
 
-function normalizeTeamKey(name) {
-  return String(name || '')
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/&/g, ' and ')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim()
+let teamDivisions = bundledTeams
+
+/** Contact Info from the live sheet replaces the bundled roster once it loads. */
+export function setTeamDirectory(teams) {
+  teamDivisions = teams && Object.keys(teams).length ? teams : bundledTeams
+}
+
+export function getTeamDirectory() {
+  return teamDivisions
 }
 
 export function canonicalDivision(name) {

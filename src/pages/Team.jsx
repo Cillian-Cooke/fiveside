@@ -1,9 +1,10 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
-import { useNavigate, useNavigationType, useParams } from 'react-router-dom'
+import { useLayoutEffect, useMemo } from 'react'
+import { Link, useNavigate, useNavigationType, useParams } from 'react-router-dom'
 import { DAY_LONG, VENUE_LABEL } from '../constants.js'
 import { uniqueTeams } from '../lib/fixtures.js'
-import { loadAllWeeks } from '../lib/weeks-data.js'
-import { currentWeekMonday } from '../lib/weeks.js'
+import { useSchedule } from '../lib/useSchedule.jsx'
+import { weekPath } from '../lib/schedule.js'
+import { currentWeekMonday } from '../lib/week-dates.js'
 import {
   findTeamBySlug,
   pastGames,
@@ -19,15 +20,8 @@ export default function Team() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const navType = useNavigationType()
-  const [weeks, setWeeks] = useState([])
-  const [ready, setReady] = useState(false)
-
-  useEffect(() => {
-    loadAllWeeks().then((list) => {
-      setWeeks(list)
-      setReady(true)
-    })
-  }, [])
+  const { status, weeks } = useSchedule()
+  const ready = status === 'ready'
 
   useLayoutEffect(() => {
     if (navType === 'POP') return
@@ -57,9 +51,27 @@ export default function Team() {
           ...fixture,
           weekLabel: item.week?.label || item.week?.rangeLabel,
           startsOn: item.week?.startsOn,
+          routeId: item.week?.routeId,
         })),
       )
   }, [team, weeks, monday])
+
+  const rescheduled = useMemo(() => {
+    if (!team) return []
+    return weeks.flatMap((item) =>
+      (item.rescheduled || [])
+        .filter(
+          (game) =>
+            (game.home === team.name || game.away === team.name) &&
+            game.division === team.division,
+        )
+        .map((game) => ({
+          ...game,
+          weekLabel: item.week.label,
+          routeId: item.week.routeId,
+        })),
+    )
+  }, [team, weeks])
 
   const history = useMemo(() => {
     if (!team) return []
@@ -112,7 +124,17 @@ export default function Team() {
       {next ? (
         <div className="next-game">
           <p className="week-range">
-            {DAY_LONG[next.day]} · {next.time} · {VENUE_LABEL[next.venue]}
+            {next.weekLabel ? `${next.weekLabel} · ` : ''}
+            {DAY_LONG[next.day]} · {next.time}
+            {next.venue ? ` · ${VENUE_LABEL[next.venue]}` : ''}
+            {next.routeId ? (
+              <>
+                {' · '}
+                <Link to={weekPath({ routeId: next.routeId })}>
+                  Fixtures
+                </Link>
+              </>
+            ) : null}
           </p>
           <MatchCard fixture={next} />
         </div>
@@ -127,6 +149,15 @@ export default function Team() {
         <>
           <h2 className="section-title">Also coming up</h2>
           {upcoming.slice(1).map((fixture) => (
+            <MatchCard key={fixture.id} fixture={fixture} />
+          ))}
+        </>
+      ) : null}
+
+      {rescheduled.length ? (
+        <>
+          <h2 className="section-title">To be rescheduled</h2>
+          {rescheduled.map((fixture) => (
             <MatchCard key={fixture.id} fixture={fixture} />
           ))}
         </>

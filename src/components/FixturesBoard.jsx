@@ -1,9 +1,10 @@
-import { useMemo, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   BAY_TIMES,
   DAYS,
   DAY_LONG,
+  DAY_SHORT,
   HALL_VENUES,
   TIME_SHORT,
   VENUE_LABEL,
@@ -16,7 +17,6 @@ import {
 } from '../lib/fixtures.js'
 import MatchCard from './MatchCard.jsx'
 import Legend from './Legend.jsx'
-import WeekCalendar from './WeekCalendar.jsx'
 import SearchBar from './SearchBar.jsx'
 import LeagueFilters from './LeagueFilters.jsx'
 import { readSnapshot, useStackPage } from '../lib/navStack.js'
@@ -38,17 +38,31 @@ function keepSlot(fixture, query, league, searching) {
   return isMatchVisible(fixture, query, league)
 }
 
-function DayDetails({ fixtures, day, query, league, searching }) {
+export function RescheduledList({ games }) {
+  if (!games?.length) return null
+  return (
+    <section className="rescheduled" aria-label="To be rescheduled">
+      <h2 className="section-title">To be rescheduled</h2>
+      <p className="lede">Catch-up games from the sheet that don’t have a slot yet.</p>
+      {games.map((game) => (
+        <MatchCard key={game.id} fixture={game} />
+      ))}
+    </section>
+  )
+}
+
+function DayDetails({ fixtures, day, query, league, searching, note }) {
   const slots = fixturesForDay(fixtures, day)
   const visible = slots.filter((fixture) => keepSlot(fixture, query, league, searching))
-  const groups = groupByTime(visible)
   const closed = !searching && slots.length > 0 && slots.every((slot) => slot.status === 'unavailable')
+  const listed = searching ? visible : visible.filter((fixture) => fixture.status !== 'unavailable')
+  const groups = groupByTime(listed)
 
   if (closed) {
     return (
       <article className="placeholder-card">
         <h2>{DAY_LONG[day]} is closed</h2>
-        <p>No matches this day.</p>
+        <p>{note || 'No matches this day.'}</p>
       </article>
     )
   }
@@ -65,6 +79,7 @@ function DayDetails({ fixtures, day, query, league, searching }) {
   return (
     <>
       <h2 className="details-title">{DAY_LONG[day]}</h2>
+      {note ? <p className="day-note">{note}</p> : null}
       {groups.map((group) => (
         <section className="slot-group" key={group.time}>
           <h3 className="slot-time">{group.time}</h3>
@@ -206,126 +221,80 @@ function useWeekSwipe(onPrev, onNext) {
 }
 
 export default function FixturesBoard({
-  title = 'Current week',
-  rangeLabel,
   fixtures,
+  rescheduled = [],
+  dayNotes = {},
   showLeagueFilters = false,
   searchPlaceholder,
   weekId,
+  initialDay = 'monday',
+  todayName = null,
   onPrevWeek,
   onNextWeek,
+  rescheduledOnly = false,
 }) {
   const location = useLocation()
   const snap = readSnapshot(location.key)
-  const todayIndex = useMemo(() => {
-    const weekday = new Date().getDay()
-    if (weekday >= 1 && weekday <= 5) return weekday - 1
-    return 0
-  }, [])
-  const [day, setDay] = useState(
-    DAYS.includes(snap?.day) ? snap.day : (DAYS[todayIndex] ?? 'monday'),
-  )
+  const [day, setDay] = useState(DAYS.includes(snap?.day) ? snap.day : initialDay)
   const [query, setQuery] = useState(snap?.query ?? '')
   const [league, setLeague] = useState(snap?.league ?? 'all')
   const searching = query.trim().length > 0 || league !== 'all'
   const swipe = useWeekSwipe(onPrevWeek, onNextWeek)
-  const canPage = Boolean(onPrevWeek && onNextWeek)
 
   useStackPage({ day, query, league, weekId }, true)
 
+  if (rescheduledOnly) return <RescheduledList games={rescheduled} />
+
   return (
     <>
-      <h1 className="page-title">{title}</h1>
-      <div className="week-pager">
-        {canPage ? (
-          <button
-            type="button"
-            className="week-pager-btn"
-            aria-label="Previous week"
-            onClick={onPrevWeek}
-          >
-            ‹
-          </button>
-        ) : (
-          <span className="week-pager-btn is-ghost" />
-        )}
-        <p className="week-range">
-          <span className="week-number">{title}</span>
-          {rangeLabel ? <span className="week-dates">{rangeLabel}</span> : null}
-        </p>
-        {canPage ? (
-          <button
-            type="button"
-            className="week-pager-btn"
-            aria-label="Next week"
-            onClick={onNextWeek}
-          >
-            ›
-          </button>
-        ) : (
-          <span className="week-pager-btn is-ghost" />
-        )}
+      <SearchBar value={query} onChange={setQuery} placeholder={searchPlaceholder} />
+      {showLeagueFilters ? <LeagueFilters value={league} onChange={setLeague} /> : null}
+
+      <div className="desktop-only day-notes">
+        {Object.entries(dayNotes).map(([name, note]) => (
+          <p className="day-note" key={name}>
+            {DAY_LONG[name]}: {note}
+          </p>
+        ))}
       </div>
 
-      <SearchBar
-        value={query}
-        onChange={setQuery}
-        placeholder={searchPlaceholder}
-      />
-      {showLeagueFilters ? (
-        <LeagueFilters value={league} onChange={setLeague} />
-      ) : null}
-
-      <div className="week-stage">
-        {canPage ? (
+      <div className="mobile-only day-picker" role="tablist" aria-label="Day">
+        {DAYS.map((name) => (
           <button
+            key={name}
             type="button"
-            className="week-arrow week-arrow-prev"
-            aria-label="Previous week"
-            onClick={onPrevWeek}
+            role="tab"
+            id={`day-tab-${name}`}
+            className={name === day ? 'day-btn active' : 'day-btn'}
+            aria-selected={name === day}
+            onClick={() => setDay(name)}
           >
-            ‹
+            {DAY_SHORT[name]}
+            {name === todayName ? <small>Today</small> : null}
           </button>
-        ) : null}
+        ))}
+      </div>
 
-        <div className="week-stage-main" {...(canPage ? swipe : {})}>
-          <WeekCalendar
+      <div {...swipe}>
+        <div
+          className="mobile-only day-details"
+          role="tabpanel"
+          aria-labelledby={`day-tab-${day}`}
+        >
+          <DayDetails
             fixtures={fixtures}
-            selectedDay={day}
-            onSelectDay={setDay}
-            query={query}
-            league={league}
-          />
-
-          <div className="mobile-only day-details">
-            <DayDetails
-              fixtures={fixtures}
-              day={day}
-              query={query}
-              league={league}
-              searching={searching}
-            />
-          </div>
-
-          <DesktopGrid
-            fixtures={fixtures}
+            day={day}
             query={query}
             league={league}
             searching={searching}
+            note={dayNotes[day]}
           />
         </div>
 
-        {canPage ? (
-          <button
-            type="button"
-            className="week-arrow week-arrow-next"
-            aria-label="Next week"
-            onClick={onNextWeek}
-          >
-            ›
-          </button>
-        ) : null}
+        <DesktopGrid fixtures={fixtures} query={query} league={league} searching={searching} />
       </div>
+
+      <RescheduledList games={rescheduled} />
       <Legend />
     </>
   )

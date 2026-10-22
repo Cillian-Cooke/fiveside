@@ -62,25 +62,34 @@ a {
   line-height: 0.9;
 }
 
-.login-btn {
-  flex-shrink: 0;
-  min-height: 42px;
-  padding: 10px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  border-radius: 2px;
-  background: transparent;
-  color: #fff;
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 .brand-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+}
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.site-header a:focus-visible,
+.site-header button:focus-visible {
+  outline-color: #fff;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .semester {
@@ -159,6 +168,157 @@ a {
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.15;
+}
+
+.week-nav-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0 16px;
+}
+
+.week-nav {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.week-select-title {
+  margin: 0;
+  min-width: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.week-select-title label {
+  display: block;
+}
+
+.week-select-title select {
+  width: 100%;
+  min-height: 52px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--ink);
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: clamp(1.05rem, 3.6vw, 1.45rem);
+  font-weight: 700;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+}
+
+.week-nav-btn {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--header);
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.week-nav-btn:hover,
+.week-nav-btn:focus-visible {
+  border-color: var(--header);
+  background: var(--header);
+  color: #fff;
+}
+
+.week-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  background: #fff;
+  color: var(--header);
+}
+
+.this-week {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  margin-top: 10px;
+  padding: 6px 14px;
+  border: 1px solid var(--header);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--header);
+  font-size: 0.92rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.this-week:hover,
+.this-week:focus-visible {
+  background: var(--header);
+  color: #fff;
+}
+
+.between-note,
+.day-note,
+.sheet-stamp {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.sheet-stamp {
+  margin-top: 18px;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.banner {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.banner-error {
+  background: #f4cccc;
+  border: 1px solid #e6b8b8;
+  color: #5c1a1a;
+}
+
+.loading-state p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.loading-block {
+  height: 72px;
+  margin: 0 0 10px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #ececeb 0%, #f7f7f6 50%, #ececeb 100%);
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.2s ease-in-out infinite;
+}
+
+.loading-block.short {
+  width: 55%;
+  height: 36px;
+}
+
+@keyframes loading-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-block {
+    animation: none;
+  }
 }
 
 .week-pager {
@@ -421,8 +581,12 @@ a {
 }
 
 .day-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   min-height: 56px;
-  padding: 10px 4px;
+  padding: 8px 4px;
   border: 1px solid var(--line);
   border-radius: 4px;
   background: #fff;
@@ -430,6 +594,13 @@ a {
   box-shadow: none;
   font-size: 1.05rem;
   font-weight: 800;
+}
+
+.day-btn small {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .day-btn.active {
