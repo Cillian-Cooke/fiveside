@@ -43,17 +43,11 @@ export default function MatchCard({ fixture, compact = false, blank = false, pla
 
   if (fixture.status === 'unavailable') {
     return (
-      <article className={`match-card unavailable ${compact ? 'grid-slot' : ''}`}>
-        <p className="closed-copy">
-          {compact ? (
-            <>
-              <span className="mobile-only">Off</span>
-              <span className="desktop-only">Unavailable</span>
-            </>
-          ) : (
-            'Unavailable'
-          )}
-        </p>
+      <article
+        className={`match-card unavailable ${compact ? 'grid-slot' : ''}`}
+        aria-label={compact ? 'Unavailable' : undefined}
+      >
+        {compact ? null : <p className="closed-copy">Unavailable</p>}
       </article>
     )
   }

@@ -1016,10 +1016,16 @@ input:focus-visible {
   font-size: 0.55rem;
 }
 
-.grid-slot .free-copy,
-.grid-slot .closed-copy {
+.grid-slot.free {
+  align-items: center;
+  text-align: center;
+}
+
+.grid-slot .free-copy {
+  width: 100%;
   margin: 0;
   font-size: 0.62rem;
+  text-align: center;
 }
 
 .venue-note {
@@ -1374,10 +1380,10 @@ input:focus-visible {
     font-size: 0.7rem;
   }
 
-  .grid-slot .free-copy,
-  .grid-slot .closed-copy {
+  .grid-slot .free-copy {
     margin: 0;
     font-size: 1rem;
+    text-align: center;
   }
 
   .hall-row .grid-slot {
