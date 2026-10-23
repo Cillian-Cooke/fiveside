@@ -59,12 +59,16 @@ export function formatWeekRange(startsOn) {
 export const SEASON_START = '2026-09-28'
 
 export function isReadingTab(name) {
-  return /reading/i.test(String(name || ''))
+  return /^reading(\s+week)?\b/i.test(String(name || '').trim())
 }
 
-/** Fixture tabs only. Contact Info and other sheets are not weeks. */
+/**
+ * Fixture tabs only. A tab counts when it starts with "Week 4" or "Reading week".
+ * Names that merely contain those words, such as "Midweek" or "Week notes", do not.
+ */
 export function isScheduleTab(name) {
-  return /week|reading/i.test(String(name || ''))
+  const text = String(name || '').trim()
+  return /^week\s+\d+\b/i.test(text) || isReadingTab(text)
 }
 
 /**

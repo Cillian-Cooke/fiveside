@@ -2,6 +2,7 @@ import { applyPitchSlotRules } from './fixtures.js'
 import { overlayMatchScores } from './match-results.js'
 import { buildFixtures } from './build-fixtures.js'
 import {
+  currentWeekMonday,
   dublinToday,
   formatCompactRange,
   formatPickerLabel,
@@ -43,6 +44,11 @@ export function selectOpenWeek(weeks, now = new Date()) {
     if (next) return { week: next, between: true, finished: containing }
   }
   return { week: containing, between: false, finished: null }
+}
+
+/** Monday the team page treats as the start of what is coming up. Weekends follow the next round. */
+export function teamHorizon(open) {
+  return open?.week?.startsOn || currentWeekMonday()
 }
 
 export function betweenNote(open) {

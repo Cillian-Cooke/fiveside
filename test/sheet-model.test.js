@@ -57,6 +57,22 @@ test('bundled fallback and the sheet snapshot agree on the current week', () => 
   assert.equal(chicken.color, '#A4C2F4')
   assert.ok(payload.weeks[2].rescheduled.length > 0)
   assert.ok(payload.weeks[3].rescheduled.length > 0)
+  const reading = payload.weeks.find((week) => week.reading)
+  assert.equal(reading.matches.length, 1)
+  assert.equal(reading.matches[0].home, 'Iteam')
+  assert.equal(reading.matches[0].away, 'Carling F.C.')
+  for (const week of payload.weeks) {
+    const booked = new Set(
+      week.matches.map((match) => [match.home, match.away].sort().join('|')),
+    )
+    for (const game of week.rescheduled) {
+      assert.equal(
+        booked.has([game.home, game.away].sort().join('|')),
+        false,
+        `${week.tab} lists ${game.home} vs ${game.away} in a slot and as catch-up`,
+      )
+    }
+  }
   assert.match(payload.weeks[2].dayNotes.wednesday, /Wednesday/)
   assert.equal(
     payload.weeks.some((week) => week.matches.some((match) => /zubi|soso/i.test(match.home))),

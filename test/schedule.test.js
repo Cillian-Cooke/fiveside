@@ -4,7 +4,7 @@ import {
   assignTabDates,
   formatPickerLabel,
 } from '../src/lib/week-dates.js'
-import { betweenNote, initialDay, selectOpenWeek } from '../src/lib/schedule.js'
+import { betweenNote, initialDay, selectOpenWeek, teamHorizon } from '../src/lib/schedule.js'
 import { isGrey, nearestDivision } from '../src/lib/sheet-model.js'
 
 const TABS = [
@@ -46,6 +46,25 @@ test('tab order sets Mondays, and reading week keeps the following round in 2026
   assert.equal(formatPickerLabel(dated[4]), 'Reading week · 26–30 Oct')
 })
 
+test('a tab name has to be a numbered week or reading week', () => {
+  const dated = assignTabDates([
+    'Contact Info',
+    'Week notes',
+    'Midweek fixtures',
+    'Week 1 28th',
+    'READING WEEK',
+    'Week 2 5th',
+  ])
+  assert.deepEqual(
+    dated.map((week) => [week.tab, week.startsOn, week.reading]),
+    [
+      ['Week 1 28th', '2026-09-28', false],
+      ['READING WEEK', '2026-10-05', true],
+      ['Week 2 5th', '2026-10-12', false],
+    ],
+  )
+})
+
 test('nearby division shades map to that tab legend, and grey does not', () => {
   assert.equal(nearestDivision('#9FC5E8', LEGEND).division, 'Division 5')
   assert.equal(nearestDivision('#9FC5E8', LEGEND).color, '#A4C2F4')
@@ -77,6 +96,9 @@ test('22 Oct 2026 opens Week 4, and the weekend opens the next round', () => {
   const readingMonday = selectOpenWeek(weeks, new Date('2026-10-26T12:00:00Z'))
   assert.equal(readingMonday.week.reading, true)
   assert.equal(readingMonday.between, false)
+
+  assert.equal(teamHorizon(saturday), '2026-10-26')
+  assert.equal(teamHorizon(thursday), '2026-10-19')
 })
 
 test('mobile day jumps to today, or the next day that has a game', () => {

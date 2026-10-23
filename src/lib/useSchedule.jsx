@@ -15,7 +15,7 @@ function applyPayload(payload) {
 async function fetchPayload() {
   const response = await fetch('/api/fixtures', {
     headers: { accept: 'application/json' },
-    signal: AbortSignal.timeout(8000),
+    signal: AbortSignal.timeout(12000),
   })
   if (!response.ok) throw new Error(`Could not load the sheet (${response.status})`)
   const payload = await response.json()

@@ -297,7 +297,9 @@ export function parseFixtureTab(rows, dated, tabLegend, mergedLegend, teams) {
     }
   }
 
-  const seenPairs = new Set()
+  const pairKey = (home, away) =>
+    [normalizeTeamKey(home), normalizeTeamKey(away)].sort().join('|')
+  const seenPairs = new Set(matches.map((match) => pairKey(match.home, match.away)))
   if (layout.hallStart != null) {
     for (const row of rows) {
       const time = parseTimeLabel(row[layout.timeCol]?.text)
@@ -312,7 +314,7 @@ export function parseFixtureTab(rows, dated, tabLegend, mergedLegend, teams) {
         if (parsed?.kind !== 'match') continue
         const home = nameOf(parsed.home)
         const away = nameOf(parsed.away)
-        const pair = [normalizeTeamKey(home), normalizeTeamKey(away)].sort().join('|')
+        const pair = pairKey(home, away)
         if (seenPairs.has(pair)) continue
         seenPairs.add(pair)
         const { division, color } = paint(cell, home, away)

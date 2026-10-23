@@ -56,6 +56,9 @@ export default function WeekPage() {
 
   const stamp = formatUpdatedAt(updatedAt)
   const showBetween = Boolean(between) && entry.week.isCurrent
+  const listed = entry.fixtures.some((fixture) => fixture.status === 'match')
+  const catchup = Boolean(entry.rescheduled?.length)
+  const readingQuiet = entry.week.reading && !listed && !catchup
 
   return (
     <>
@@ -71,38 +74,34 @@ export default function WeekPage() {
         onSelect={(routeId) => navigate(`/week/${routeId}`)}
       />
       {showBetween ? <p className="between-note">{between}</p> : null}
-      {entry.week.reading ? (
+      {readingQuiet ? (
         <article className="placeholder-card">
           <h2>Reading week – no league games</h2>
           <p>No fixtures at Botany Bay or the halls this week. League games resume afterwards.</p>
         </article>
       ) : (
-        <FixturesBoard
-          key={entry.week.id}
-          fixtures={entry.fixtures}
-          rescheduled={entry.rescheduled}
-          dayNotes={entry.week.dayNotes}
-          weekId={entry.week.id}
-          initialDay={initialDay(entry.week, entry.fixtures)}
-          todayName={
-            dublinToday().iso >= entry.week.startsOn &&
-            dublinToday().iso < shiftStartsOn(entry.week.startsOn, 1)
-              ? dublinToday().dayName
-              : null
-          }
-          onPrevWeek={prev ? () => navigate(weekPath(prev.week)) : null}
-          onNextWeek={next ? () => navigate(weekPath(next.week)) : null}
-        />
+        <>
+          {entry.week.reading ? (
+            <p className="between-note">Reading week. These games are still on the sheet.</p>
+          ) : null}
+          <FixturesBoard
+            key={entry.week.id}
+            fixtures={entry.fixtures}
+            rescheduled={entry.rescheduled}
+            dayNotes={entry.week.dayNotes}
+            weekId={entry.week.id}
+            initialDay={initialDay(entry.week, entry.fixtures)}
+            todayName={
+              dublinToday().iso >= entry.week.startsOn &&
+              dublinToday().iso < shiftStartsOn(entry.week.startsOn, 1)
+                ? dublinToday().dayName
+                : null
+            }
+            onPrevWeek={prev ? () => navigate(weekPath(prev.week)) : null}
+            onNextWeek={next ? () => navigate(weekPath(next.week)) : null}
+          />
+        </>
       )}
-      {entry.week.reading && entry.rescheduled?.length ? (
-        <FixturesBoard
-          fixtures={[]}
-          rescheduled={entry.rescheduled}
-          weekId={entry.week.id}
-          initialDay="monday"
-          rescheduledOnly
-        />
-      ) : null}
       <p className="sheet-stamp">
         {source === 'seed' ? 'Saved copy' : 'Sheet'}
         {stamp ? ` · ${stamp}` : ''}

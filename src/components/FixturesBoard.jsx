@@ -51,6 +51,45 @@ export function RescheduledList({ games }) {
   )
 }
 
+function WeekSearch({ fixtures, rescheduled, query, league }) {
+  const matches = (fixtures || []).filter(
+    (fixture) => fixture.day && isMatchVisible(fixture, query, league),
+  )
+  const catchup = (rescheduled || []).filter((game) => isMatchVisible(game, query, league))
+  if (!matches.length && !catchup.length) {
+    return (
+      <article className="placeholder-card">
+        <h2>No matches</h2>
+        <p>Nothing this week for that search.</p>
+      </article>
+    )
+  }
+
+  return (
+    <>
+      {DAYS.map((day) => {
+        const slots = matches.filter((fixture) => fixture.day === day)
+        if (!slots.length) return null
+        const groups = groupByTime(slots)
+        return (
+          <section key={day}>
+            <h2 className="details-title">{DAY_LONG[day]}</h2>
+            {groups.map((group) => (
+              <section className="slot-group" key={group.time}>
+                <h3 className="slot-time">{TIME_SHORT[group.time] || group.time}</h3>
+                {group.slots.map((fixture) => (
+                  <MatchCard key={fixture.id} fixture={fixture} />
+                ))}
+              </section>
+            ))}
+          </section>
+        )
+      })}
+      <RescheduledList games={catchup} />
+    </>
+  )
+}
+
 function DayDetails({ fixtures, day, query, league, searching, note }) {
   const slots = fixturesForDay(fixtures, day)
   const visible = slots.filter((fixture) => keepSlot(fixture, query, league, searching))
@@ -225,7 +264,7 @@ export default function FixturesBoard({
   rescheduled = [],
   dayNotes = {},
   showLeagueFilters = false,
-  searchPlaceholder,
+  searchPlaceholder = 'Search a team or division…',
   weekId,
   initialDay = 'monday',
   todayName = null,
@@ -240,6 +279,14 @@ export default function FixturesBoard({
   const [league, setLeague] = useState(snap?.league ?? 'all')
   const searching = query.trim().length > 0 || league !== 'all'
   const swipe = useWeekSwipe(onPrevWeek, onNextWeek)
+  const visibleRescheduled = searching
+    ? rescheduled.filter((game) => isMatchVisible(game, query, league))
+    : rescheduled
+  const playedWithoutSlot = (fixtures || []).filter((fixture) => {
+    if (!fixture.resultOnly) return false
+    if (!searching) return true
+    return isMatchVisible(fixture, query, league)
+  })
 
   useStackPage({ day, query, league, weekId }, true)
 
@@ -258,43 +305,72 @@ export default function FixturesBoard({
         ))}
       </div>
 
-      <div className="mobile-only day-picker" role="tablist" aria-label="Day">
-        {DAYS.map((name) => (
-          <button
-            key={name}
-            type="button"
-            role="tab"
-            id={`day-tab-${name}`}
-            className={name === day ? 'day-btn active' : 'day-btn'}
-            aria-selected={name === day}
-            onClick={() => setDay(name)}
-          >
-            {DAY_SHORT[name]}
-            {name === todayName ? <small>Today</small> : null}
-          </button>
-        ))}
-      </div>
+      {searching ? null : (
+        <div className="mobile-only day-picker" role="tablist" aria-label="Day">
+          {DAYS.map((name) => (
+            <button
+              key={name}
+              type="button"
+              role="tab"
+              id={`day-tab-${name}`}
+              className={name === day ? 'day-btn active' : 'day-btn'}
+              aria-selected={name === day}
+              onClick={() => setDay(name)}
+            >
+              {DAY_SHORT[name]}
+              {name === todayName ? <small>Today</small> : null}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div {...swipe}>
-        <div
-          className="mobile-only day-details"
-          role="tabpanel"
-          aria-labelledby={`day-tab-${day}`}
-        >
-          <DayDetails
-            fixtures={fixtures}
-            day={day}
-            query={query}
-            league={league}
-            searching={searching}
-            note={dayNotes[day]}
-          />
-        </div>
+        {searching ? (
+          <div className="mobile-only day-details">
+            <WeekSearch
+              fixtures={fixtures}
+              rescheduled={rescheduled}
+              query={query}
+              league={league}
+            />
+          </div>
+        ) : (
+          <div
+            className="mobile-only day-details"
+            role="tabpanel"
+            aria-labelledby={`day-tab-${day}`}
+          >
+            <DayDetails
+              fixtures={fixtures}
+              day={day}
+              query={query}
+              league={league}
+              searching={searching}
+              note={dayNotes[day]}
+            />
+          </div>
+        )}
 
         <DesktopGrid fixtures={fixtures} query={query} league={league} searching={searching} />
       </div>
 
-      <RescheduledList games={rescheduled} />
+      {playedWithoutSlot.length ? (
+        <section className="rescheduled" aria-label="Played, not on the timetable">
+          <h2 className="section-title">Played, not on the timetable</h2>
+          <p className="lede">These results are in, and this week’s grid has no slot for them.</p>
+          {playedWithoutSlot.map((fixture) => (
+            <MatchCard key={fixture.id} fixture={fixture} />
+          ))}
+        </section>
+      ) : null}
+
+      {searching ? (
+        <div className="desktop-only">
+          <RescheduledList games={visibleRescheduled} />
+        </div>
+      ) : (
+        <RescheduledList games={rescheduled} />
+      )}
       <Legend />
     </>
   )

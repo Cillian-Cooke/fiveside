@@ -3,8 +3,7 @@ import { Link, useNavigate, useNavigationType, useParams } from 'react-router-do
 import { DAY_LONG, VENUE_LABEL } from '../constants.js'
 import { uniqueTeams } from '../lib/fixtures.js'
 import { useSchedule } from '../lib/useSchedule.jsx'
-import { weekPath } from '../lib/schedule.js'
-import { currentWeekMonday } from '../lib/week-dates.js'
+import { teamHorizon, weekPath } from '../lib/schedule.js'
 import {
   findTeamBySlug,
   pastGames,
@@ -16,11 +15,18 @@ import MatchCard from '../components/MatchCard.jsx'
 import TeamLink from '../components/TeamLink.jsx'
 import { useStackPage } from '../lib/navStack.js'
 
+function playedWhen(fixture) {
+  const parts = [fixture.weekLabel]
+  if (DAY_LONG[fixture.day]) parts.push(DAY_LONG[fixture.day])
+  if (fixture.time) parts.push(fixture.time)
+  return parts.filter(Boolean).join(' · ')
+}
+
 export default function Team() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const navType = useNavigationType()
-  const { status, weeks } = useSchedule()
+  const { status, weeks, open } = useSchedule()
   const ready = status === 'ready'
 
   useLayoutEffect(() => {
@@ -30,7 +36,7 @@ export default function Team() {
 
   useStackPage(null, ready)
 
-  const monday = currentWeekMonday()
+  const horizon = teamHorizon(open)
 
   const roster = useMemo(() => {
     const merged = new Map()
@@ -45,7 +51,7 @@ export default function Team() {
   const upcoming = useMemo(() => {
     if (!team) return []
     return weeks
-      .filter((item) => String(item.week.startsOn || item.week.id) >= monday)
+      .filter((item) => String(item.week.startsOn || item.week.id) >= horizon)
       .flatMap((item) =>
         upcomingGames(team.name, item.fixtures, team.division).map((fixture) => ({
           ...fixture,
@@ -54,7 +60,7 @@ export default function Team() {
           routeId: item.week?.routeId,
         })),
       )
-  }, [team, weeks, monday])
+  }, [team, weeks, horizon])
 
   const rescheduled = useMemo(() => {
     if (!team) return []
@@ -76,7 +82,7 @@ export default function Team() {
   const history = useMemo(() => {
     if (!team) return []
     const games = weeks
-      .filter((item) => String(item.week.startsOn || item.week.id) < monday)
+      .filter((item) => String(item.week.startsOn || item.week.id) < horizon)
       .flatMap((item) =>
         item.fixtures.map((fixture) => ({
           ...fixture,
@@ -85,7 +91,7 @@ export default function Team() {
         })),
       )
     return pastGames(team.name, games, team.division)
-  }, [team, weeks, monday])
+  }, [team, weeks, horizon])
 
   function goBack() {
     if ((window.history.state?.idx ?? 0) > 0) {
@@ -179,9 +185,7 @@ export default function Team() {
                   <TeamLink className="team-link" name={opponent} division={fixture.division}>
                     {opponent}
                   </TeamLink>
-                  <small>
-                    {fixture.weekLabel} · {DAY_LONG[fixture.day]} · {fixture.time}
-                  </small>
+                  <small>{playedWhen(fixture)}</small>
                 </div>
                 <strong>
                   {scored}–{conceded}

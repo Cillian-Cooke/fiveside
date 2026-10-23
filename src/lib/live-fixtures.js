@@ -5,16 +5,22 @@ export const SHEET_ID = '19BtON4CVCeKyevCYjbYeH58gZ9_lcoyEtK4fFoFrW3o'
 
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=xlsx`
 const MEMORY_TTL_MS = 60_000
+const SHEET_TIMEOUT_MS = 8_000
 
 let cached = null
 let cachedAt = 0
 
-export async function loadLiveFixtures({ now = new Date(), fetchImpl = fetch } = {}) {
+export async function loadLiveFixtures({
+  now = new Date(),
+  fetchImpl = fetch,
+  timeoutMs = SHEET_TIMEOUT_MS,
+} = {}) {
   if (cached && now.getTime() - cachedAt < MEMORY_TTL_MS) return cached
 
   const response = await fetchImpl(SHEET_URL, {
     headers: { 'user-agent': 'fiveside/1.0 (fixtures)' },
     redirect: 'follow',
+    signal: AbortSignal.timeout(timeoutMs),
   })
   if (!response.ok) {
     throw new Error(`Sheet export failed (${response.status})`)
