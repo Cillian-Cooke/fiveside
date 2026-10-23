@@ -1,9 +1,27 @@
 import { VENUE_LABEL, divisionLabel } from '../constants.js'
 import { canonicalMatchColor, contrastText } from '../lib/fixtures.js'
 import TeamLink from './TeamLink.jsx'
-import { teamDisplayName } from '../lib/teams.js'
+import { teamDisplayName, teamShortName } from '../lib/teams.js'
 
-export default function MatchCard({ fixture, compact = false, blank = false }) {
+function TeamName({ name, division, compact, plain }) {
+  const full = teamDisplayName(name, division)
+  const body = compact ? (
+    <>
+      <span className="team-short">{teamShortName(name)}</span>
+      <span className="team-full">{full}</span>
+    </>
+  ) : (
+    full
+  )
+  if (plain) return <span className="team-name">{body}</span>
+  return (
+    <TeamLink className="team-name team-link" name={name} division={division}>
+      {body}
+    </TeamLink>
+  )
+}
+
+export default function MatchCard({ fixture, compact = false, blank = false, plain = false }) {
   if (blank) {
     return (
       <article
@@ -26,7 +44,16 @@ export default function MatchCard({ fixture, compact = false, blank = false }) {
   if (fixture.status === 'unavailable') {
     return (
       <article className={`match-card unavailable ${compact ? 'grid-slot' : ''}`}>
-        <p className="closed-copy">Unavailable</p>
+        <p className="closed-copy">
+          {compact ? (
+            <>
+              <span className="mobile-only">Off</span>
+              <span className="desktop-only">Unavailable</span>
+            </>
+          ) : (
+            'Unavailable'
+          )}
+        </p>
       </article>
     )
   }
@@ -42,17 +69,15 @@ export default function MatchCard({ fixture, compact = false, blank = false }) {
       style={{ background: color, color: text }}
     >
       <div className="card-meta">
-        <span>{fixture.venue ? VENUE_LABEL[fixture.venue] : 'No slot yet'}</span>
+        {compact ? null : (
+          <span>{fixture.venue ? VENUE_LABEL[fixture.venue] : 'No slot yet'}</span>
+        )}
         <span className="division-label">{divisionLabel(fixture.division, { short: compact })}</span>
       </div>
       <div className="teams">
-        <TeamLink className="team-name team-link" name={fixture.home} division={fixture.division}>
-          {teamDisplayName(fixture.home, fixture.division)}
-        </TeamLink>
+        <TeamName name={fixture.home} division={fixture.division} compact={compact} plain={plain} />
         <div className="vs">v</div>
-        <TeamLink className="team-name team-link" name={fixture.away} division={fixture.division}>
-          {teamDisplayName(fixture.away, fixture.division)}
-        </TeamLink>
+        <TeamName name={fixture.away} division={fixture.division} compact={compact} plain={plain} />
       </div>
       {hasScore ? (
         <p className="score">

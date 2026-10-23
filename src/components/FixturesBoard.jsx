@@ -51,45 +51,6 @@ export function RescheduledList({ games }) {
   )
 }
 
-function WeekSearch({ fixtures, rescheduled, query, league }) {
-  const matches = (fixtures || []).filter(
-    (fixture) => fixture.day && isMatchVisible(fixture, query, league),
-  )
-  const catchup = (rescheduled || []).filter((game) => isMatchVisible(game, query, league))
-  if (!matches.length && !catchup.length) {
-    return (
-      <article className="placeholder-card">
-        <h2>No matches</h2>
-        <p>Nothing this week for that search.</p>
-      </article>
-    )
-  }
-
-  return (
-    <>
-      {DAYS.map((day) => {
-        const slots = matches.filter((fixture) => fixture.day === day)
-        if (!slots.length) return null
-        const groups = groupByTime(slots)
-        return (
-          <section key={day}>
-            <h2 className="details-title">{DAY_LONG[day]}</h2>
-            {groups.map((group) => (
-              <section className="slot-group" key={group.time}>
-                <h3 className="slot-time">{TIME_SHORT[group.time] || group.time}</h3>
-                {group.slots.map((fixture) => (
-                  <MatchCard key={fixture.id} fixture={fixture} />
-                ))}
-              </section>
-            ))}
-          </section>
-        )
-      })}
-      <RescheduledList games={catchup} />
-    </>
-  )
-}
-
 function DayDetails({ fixtures, day, query, league, searching, note }) {
   const slots = fixturesForDay(fixtures, day)
   const visible = slots.filter((fixture) => keepSlot(fixture, query, league, searching))
@@ -137,9 +98,55 @@ function slotIsBlank(fixture, query, league, searching) {
   return !isMatchVisible(fixture, query, league)
 }
 
-function DesktopGrid({ fixtures, query, league, searching }) {
+function slotLabel(fixture, day) {
+  const when = DAY_LONG[day]
+  if (!fixture || fixture.status === 'unavailable') return `${when}, unavailable`
+  if (fixture.status === 'free') return `${when}, free slot`
+  return `${when}, ${fixture.home} versus ${fixture.away}`
+}
+
+function DayHeading({ day, selectedDay, todayName, onSelectDay }) {
+  const selected = day === selectedDay
   return (
-    <div className="desktop-only">
+    <th className={selected ? 'is-on' : undefined}>
+      <button
+        type="button"
+        className="day-col-btn"
+        aria-pressed={selected}
+        onClick={() => onSelectDay(day)}
+      >
+        <span className="day-short">{DAY_SHORT[day]}</span>
+        <span className="day-long">{DAY_LONG[day]}</span>
+        {day === todayName ? <small>Today</small> : null}
+      </button>
+    </th>
+  )
+}
+
+function GridCell({ fixture, day, selectedDay, onSelectDay, query, league, searching }) {
+  const selected = day === selectedDay
+  const blank = slotIsBlank(fixture, query, league, searching)
+  return (
+    <td className={selected ? 'is-on' : undefined}>
+      <button
+        type="button"
+        className="slot-select mobile-only"
+        aria-pressed={selected}
+        aria-label={slotLabel(fixture, day)}
+        onClick={() => onSelectDay(day)}
+      >
+        <MatchCard fixture={fixture} compact plain blank={blank} />
+      </button>
+      <div className="desktop-only">
+        <MatchCard fixture={fixture} compact blank={blank} />
+      </div>
+    </td>
+  )
+}
+
+function DesktopGrid({ fixtures, query, league, searching, selectedDay, todayName, onSelectDay }) {
+  return (
+    <div className="fixture-grids">
       <div className="grid-wrap">
         <h2 className="grid-title">Botany Bay</h2>
         <table className="timetable">
@@ -147,7 +154,13 @@ function DesktopGrid({ fixtures, query, league, searching }) {
             <tr>
               <th className="time-cell" />
               {DAYS.map((day) => (
-                <th key={day}>{DAY_LONG[day]}</th>
+                <DayHeading
+                  key={day}
+                  day={day}
+                  selectedDay={selectedDay}
+                  todayName={todayName}
+                  onSelectDay={onSelectDay}
+                />
               ))}
             </tr>
           </thead>
@@ -155,18 +168,18 @@ function DesktopGrid({ fixtures, query, league, searching }) {
             {BAY_TIMES.map((time) => (
               <tr key={time}>
                 <th className="time-cell">{TIME_SHORT[time]}</th>
-                {DAYS.map((day) => {
-                  const bay = baySlot(fixtures, day, time)
-                  return (
-                    <td key={day}>
-                      <MatchCard
-                        fixture={bay}
-                        compact
-                        blank={slotIsBlank(bay, query, league, searching)}
-                      />
-                    </td>
-                  )
-                })}
+                {DAYS.map((day) => (
+                  <GridCell
+                    key={day}
+                    fixture={baySlot(fixtures, day, time)}
+                    day={day}
+                    selectedDay={selectedDay}
+                    onSelectDay={onSelectDay}
+                    query={query}
+                    league={league}
+                    searching={searching}
+                  />
+                ))}
               </tr>
             ))}
           </tbody>
@@ -180,7 +193,13 @@ function DesktopGrid({ fixtures, query, league, searching }) {
             <tr>
               <th className="time-cell" />
               {DAYS.map((day) => (
-                <th key={day}>{DAY_LONG[day]}</th>
+                <DayHeading
+                  key={day}
+                  day={day}
+                  selectedDay={selectedDay}
+                  todayName={todayName}
+                  onSelectDay={onSelectDay}
+                />
               ))}
             </tr>
           </thead>
@@ -194,14 +213,31 @@ function DesktopGrid({ fixtures, query, league, searching }) {
                 {DAYS.map((day) => {
                   const halls = hallCellFixtures(fixtures, day, venue)
                   return (
-                    <td key={day}>
+                    <td key={day} className={day === selectedDay ? 'is-on' : undefined}>
                       {halls.map((hall) => (
-                        <MatchCard
-                          key={hall.id}
-                          fixture={hall}
-                          compact
-                          blank={slotIsBlank(hall, query, league, searching)}
-                        />
+                        <span key={hall.id} className="hall-slot">
+                          <button
+                            type="button"
+                            className="slot-select mobile-only"
+                            aria-pressed={day === selectedDay}
+                            aria-label={slotLabel(hall, day)}
+                            onClick={() => onSelectDay(day)}
+                          >
+                            <MatchCard
+                              fixture={hall}
+                              compact
+                              plain
+                              blank={slotIsBlank(hall, query, league, searching)}
+                            />
+                          </button>
+                          <span className="desktop-only">
+                            <MatchCard
+                              fixture={hall}
+                              compact
+                              blank={slotIsBlank(hall, query, league, searching)}
+                            />
+                          </span>
+                        </span>
                       ))}
                     </td>
                   )
@@ -297,7 +333,7 @@ export default function FixturesBoard({
       <SearchBar value={query} onChange={setQuery} placeholder={searchPlaceholder} />
       {showLeagueFilters ? <LeagueFilters value={league} onChange={setLeague} /> : null}
 
-      <div className="desktop-only day-notes">
+      <div className="day-notes">
         {Object.entries(dayNotes).map(([name, note]) => (
           <p className="day-note" key={name}>
             {DAY_LONG[name]}: {note}
@@ -305,53 +341,27 @@ export default function FixturesBoard({
         ))}
       </div>
 
-      {searching ? null : (
-        <div className="mobile-only day-picker" role="tablist" aria-label="Day">
-          {DAYS.map((name) => (
-            <button
-              key={name}
-              type="button"
-              role="tab"
-              id={`day-tab-${name}`}
-              className={name === day ? 'day-btn active' : 'day-btn'}
-              aria-selected={name === day}
-              onClick={() => setDay(name)}
-            >
-              {DAY_SHORT[name]}
-              {name === todayName ? <small>Today</small> : null}
-            </button>
-          ))}
-        </div>
-      )}
+      <DesktopGrid
+        fixtures={fixtures}
+        query={query}
+        league={league}
+        searching={searching}
+        selectedDay={day}
+        todayName={todayName}
+        onSelectDay={setDay}
+      />
 
       <div {...swipe}>
-        {searching ? (
-          <div className="mobile-only day-details">
-            <WeekSearch
-              fixtures={fixtures}
-              rescheduled={rescheduled}
-              query={query}
-              league={league}
-            />
-          </div>
-        ) : (
-          <div
-            className="mobile-only day-details"
-            role="tabpanel"
-            aria-labelledby={`day-tab-${day}`}
-          >
-            <DayDetails
-              fixtures={fixtures}
-              day={day}
-              query={query}
-              league={league}
-              searching={searching}
-              note={dayNotes[day]}
-            />
-          </div>
-        )}
-
-        <DesktopGrid fixtures={fixtures} query={query} league={league} searching={searching} />
+        <div className="mobile-only day-details" aria-label={DAY_LONG[day]}>
+          <DayDetails
+            fixtures={fixtures}
+            day={day}
+            query={query}
+            league={league}
+            searching={searching}
+            note={dayNotes[day]}
+          />
+        </div>
       </div>
 
       {playedWithoutSlot.length ? (

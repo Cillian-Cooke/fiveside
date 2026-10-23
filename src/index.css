@@ -831,6 +831,197 @@ input:focus-visible {
   display: none;
 }
 
+.fixture-grids {
+  display: block;
+}
+
+.grid-wrap {
+  overflow-x: hidden;
+  overflow-y: visible;
+  margin: 0 0 4px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: none;
+}
+
+.grid-title {
+  margin: 0;
+  padding: 4px 8px 0;
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.hall-time-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.hall-time-cell small {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.timetable {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+.timetable th,
+.timetable td {
+  vertical-align: top;
+  text-align: left;
+}
+
+.timetable th {
+  padding: 2px 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.time-cell,
+.timetable th:first-child {
+  width: 28px;
+  padding: 2px;
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1.1;
+  white-space: normal;
+  text-align: center;
+}
+
+.timetable td {
+  height: auto;
+  min-height: 0;
+}
+
+.day-col-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 22px;
+  padding: 4px 0;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 800;
+  line-height: 1.05;
+  cursor: pointer;
+}
+
+.day-col-btn .day-long {
+  display: none;
+}
+
+.day-col-btn small {
+  display: block;
+  width: 4px;
+  height: 4px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: currentColor;
+  font-size: 0;
+  line-height: 0;
+  overflow: hidden;
+}
+
+.timetable th.is-on .day-col-btn {
+  background: var(--header);
+  color: #fff;
+}
+
+.slot-select {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.timetable td.is-on .grid-slot {
+  box-shadow: inset 0 0 0 2px var(--header);
+}
+
+.grid-slot {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  height: auto;
+  min-height: 38px;
+  margin: 0;
+  padding: 2px 1px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.timetable td .grid-slot:last-child {
+  margin-bottom: 0;
+}
+
+.grid-slot .card-meta {
+  display: none;
+}
+
+.grid-slot .teams {
+  align-items: center;
+  gap: 0;
+  min-height: 0;
+  text-align: center;
+}
+
+.grid-slot .team-name {
+  display: block;
+  max-width: 100%;
+  font-size: 0.6rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.grid-slot .team-full {
+  display: none;
+}
+
+.grid-slot .team-short {
+  display: block;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.grid-slot .score {
+  margin: 1px 0 0;
+  font-size: 0.58rem;
+  text-align: center;
+}
+
+.grid-slot .vs {
+  font-size: 0.55rem;
+}
+
+.grid-slot .free-copy,
+.grid-slot .closed-copy {
+  margin: 0;
+  font-size: 0.62rem;
+}
+
 .venue-note {
   display: flex;
   flex-wrap: wrap;
@@ -1034,6 +1225,7 @@ input:focus-visible {
   .grid-wrap {
     overflow-x: auto;
     overflow-y: visible;
+    margin: 0 0 16px;
     border: 1px solid var(--line);
     border-radius: 4px;
     background: #fff;
@@ -1119,6 +1311,8 @@ input:focus-visible {
   }
 
   .grid-slot .card-meta {
+    display: flex;
+    justify-content: center;
     margin-bottom: 4px;
     font-size: 0.72rem;
   }
@@ -1128,11 +1322,52 @@ input:focus-visible {
     min-height: 0;
   }
 
+  .day-col-btn {
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 1.05rem;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .day-col-btn .day-short,
+  .day-col-btn small {
+    display: none;
+  }
+
+  .day-col-btn .day-long {
+    display: inline;
+  }
+
+  .timetable th.is-on .day-col-btn {
+    background: transparent;
+    color: inherit;
+  }
+
+  .timetable td.is-on .grid-slot {
+    box-shadow: none;
+  }
+
+  .slot-select.mobile-only {
+    display: none;
+  }
+
   .grid-slot .team-name {
     display: inline;
-    font-size: 1.08rem;
+    font-size: 1.02rem;
     font-weight: 800;
     line-height: 1.15;
+    letter-spacing: 0;
+  }
+
+  .grid-slot .team-short {
+    display: none;
+  }
+
+  .grid-slot .team-full {
+    display: inline;
   }
 
   .grid-slot .vs {

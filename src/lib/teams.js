@@ -12,6 +12,101 @@ function teamMeta(name) {
   return null
 }
 
+const SHORT_STOP = new Set([
+  'the',
+  'a',
+  'an',
+  'of',
+  'and',
+  'by',
+  'on',
+  'to',
+  'at',
+  'for',
+  'fc',
+  'f',
+  'c',
+  'k',
+  'fk',
+])
+
+function significantWords(name) {
+  return String(name || '')
+    .replace(/\u00a0/g, ' ')
+    .normalize('NFKD')
+    .replace(/\p{M}/gu, '')
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter(Boolean)
+    .filter((word) => !SHORT_STOP.has(word.toLowerCase()))
+}
+
+function takesFor(words) {
+  if (words.length === 1) {
+    return [Math.min(words[0].length, words[0].length <= 5 ? words[0].length : 3)]
+  }
+  return words.map((word) => (word.length <= 2 || /^\d+$/.test(word) ? word.length : 1))
+}
+
+function labelFrom(words, takes) {
+  return words
+    .map((word, index) => {
+      const count = Math.min(takes[index], word.length)
+      return word.slice(0, count).toLocaleUpperCase('en')
+    })
+    .join('')
+}
+
+function buildShortNames(names) {
+  const entries = names.map((name) => {
+    const words = significantWords(name)
+    const takes = words.length ? takesFor(words) : []
+    return { name, words, takes }
+  })
+
+  const labelOf = (entry) => (entry.words.length ? labelFrom(entry.words, entry.takes) : String(entry.name || '').slice(0, 4).toLocaleUpperCase('en'))
+
+  let guard = 0
+  while (guard < 40) {
+    guard += 1
+    const groups = new Map()
+    for (const entry of entries) {
+      const label = labelOf(entry)
+      const group = groups.get(label) || []
+      group.push(entry)
+      groups.set(label, group)
+    }
+    let grew = false
+    for (const group of groups.values()) {
+      if (group.length < 2) continue
+      for (const entry of group) {
+        const room = entry.words.findIndex((word, index) => entry.takes[index] < word.length)
+        if (room >= 0) {
+          entry.takes[room] += 1
+          grew = true
+        }
+      }
+    }
+    if (!grew) break
+  }
+
+  return new Map(entries.map((entry) => [entry.name, labelOf(entry) || entry.name]))
+}
+
+let shortCacheKey = ''
+let shortCache = new Map()
+
+/** Initials for the timetable cells. Full names stay on the team page and the day list. */
+export function teamShortName(name) {
+  const names = Object.keys(getTeamDirectory())
+  const key = names.join('\n')
+  if (key !== shortCacheKey) {
+    shortCacheKey = key
+    shortCache = buildShortNames(names)
+  }
+  if (shortCache.has(name)) return shortCache.get(name)
+  return buildShortNames([name]).get(name) || name
+}
+
 /** Short label when the same name is registered in more than one sheet section (colour/league). */
 export function teamDisplayName(name, division) {
   const meta = teamMeta(name)
