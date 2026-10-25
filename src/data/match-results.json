@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-09T16:06:55Z",
+  "updated_at": "2026-10-25T18:18:22Z",
   "results": [
     {
       "weekStartsOn": "2026-09-28",
@@ -186,6 +186,13 @@
     },
     {
       "weekStartsOn": "2026-10-05",
+      "home": "Barely Athletic FC",
+      "away": "Eng ballers",
+      "homeScore": 14,
+      "awayScore": 10
+    },
+    {
+      "weekStartsOn": "2026-10-05",
       "home": "Choose Football",
       "away": "Pavillionaires",
       "homeScore": 4,
@@ -351,6 +358,349 @@
       "away": "Ctrl Alt Defeat",
       "homeScore": 7,
       "awayScore": 13
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Ajaxidative Phosphorylation",
+      "away": "Real MAldrid",
+      "homeScore": 8,
+      "awayScore": 17
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Ajaxidative Phosphorylation",
+      "away": "Visiting Ballers",
+      "homeScore": 5,
+      "awayScore": 12
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "CSB FC",
+      "away": "Reels Betis",
+      "homeScore": 10,
+      "awayScore": 14
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Chicken Chasers",
+      "away": "The Palpators 2.0",
+      "homeScore": 6,
+      "awayScore": 5
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Coolock says Goal",
+      "away": "Pav Furniture",
+      "homeScore": 12,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Ctrl Alt Defeat",
+      "away": "Roman Empire",
+      "homeScore": 14,
+      "awayScore": 9
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Dropouts FC",
+      "away": "Pavaria",
+      "homeScore": 17,
+      "awayScore": 22
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Fiery Middle Aged Women",
+      "away": "MAMAs Revenge",
+      "homeScore": 3,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Goaldiggers fc",
+      "away": "The Stoppable Force",
+      "homeScore": 9,
+      "awayScore": 4
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Himmy Saville",
+      "away": "Mauled by the trinners",
+      "homeScore": 13,
+      "awayScore": 10
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Integer Milan",
+      "away": "Choose Football",
+      "homeScore": 9,
+      "awayScore": 5
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Inter Milanagement",
+      "away": "\u00d8 Zone",
+      "homeScore": 12,
+      "awayScore": 16
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Liampool",
+      "away": "Navier Stokes",
+      "homeScore": 17,
+      "awayScore": 4
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "PBB FC",
+      "away": "Trin Tigers",
+      "homeScore": 8,
+      "awayScore": 5
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Ponzie Prowlers",
+      "away": "Ateltico Unatletico",
+      "homeScore": 13,
+      "awayScore": 7
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "TBXI",
+      "away": "Chicken Chasers",
+      "homeScore": 9,
+      "awayScore": 9
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "The Screaming Goafers",
+      "away": "git gud",
+      "homeScore": 11,
+      "awayScore": 9
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Trin Tigers",
+      "away": "HurriKanes",
+      "homeScore": 7,
+      "awayScore": 7
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Unathletic Bilbao",
+      "away": "The Fish Tank",
+      "homeScore": 12,
+      "awayScore": 6
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Visiting Ballers",
+      "away": "Strokes Academy",
+      "homeScore": 13,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "Wings of a Sparrow",
+      "away": "River dodder rodent",
+      "homeScore": 10,
+      "awayScore": 16
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "git gud",
+      "away": "Fiery Middle Aged Women",
+      "homeScore": 12,
+      "awayScore": 6
+    },
+    {
+      "weekStartsOn": "2026-10-12",
+      "home": "\u00d8 Zone",
+      "away": "Real Medrid",
+      "homeScore": 17,
+      "awayScore": 18
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Ateltico Unatletico",
+      "away": "Ajaxidative Phosphorylation",
+      "homeScore": 9,
+      "awayScore": 25
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Barely Athletic FC",
+      "away": "Engibeering",
+      "homeScore": 5,
+      "awayScore": 10
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Carling F.C.",
+      "away": "Chicken Chasers",
+      "homeScore": 8,
+      "awayScore": 9
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Choose Football",
+      "away": "Mountjoy FC",
+      "homeScore": 13,
+      "awayScore": 7
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Egg Fried Reus",
+      "away": "Engibeering",
+      "homeScore": 11,
+      "awayScore": 10
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Euro football studs",
+      "away": "Lawds and Bizches",
+      "homeScore": 11,
+      "awayScore": 0
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "FC TRISS",
+      "away": "Coolock says Goal",
+      "homeScore": 8,
+      "awayScore": 18
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Hack Tuah",
+      "away": "PBB FC",
+      "homeScore": 14,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Himmy Saville",
+      "away": "Carling F.C.",
+      "homeScore": 9,
+      "awayScore": 7
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "HurriKanes",
+      "away": "Hack Tuah",
+      "homeScore": 9,
+      "awayScore": 12
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Inter Milanagement",
+      "away": "Sools fc",
+      "homeScore": 14,
+      "awayScore": 12
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Lawds and Bizches",
+      "away": "Botany Baes",
+      "homeScore": 11,
+      "awayScore": 10
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Lionel MSISS",
+      "away": "Coolock says Goal",
+      "homeScore": 15,
+      "awayScore": 10
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Pav Furniture",
+      "away": "Hangover97",
+      "homeScore": 7,
+      "awayScore": 11
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Pavaria",
+      "away": "Hedley Burnley",
+      "homeScore": 13,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Pavillionaires",
+      "away": "Egg Fried Reus",
+      "homeScore": 5,
+      "awayScore": 10
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Real MAldrid",
+      "away": "Visiting Ballers",
+      "homeScore": 8,
+      "awayScore": 8
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Real Medrid",
+      "away": "CSB FC",
+      "homeScore": 9,
+      "awayScore": 7
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Reels Betis",
+      "away": "Unathletic Bilbao",
+      "homeScore": 8,
+      "awayScore": 7
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Strokes Academy",
+      "away": "Goaldiggers fc",
+      "homeScore": 6,
+      "awayScore": 13
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "TPSG",
+      "away": "Buenos Aires ballers XI",
+      "homeScore": 7,
+      "awayScore": 14
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "The Fish Tank",
+      "away": "Inter Milanagement",
+      "homeScore": 0,
+      "awayScore": 3
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "The Palpators 2.0",
+      "away": "SpVgg F.K. Spartak Ussher 04",
+      "homeScore": 0,
+      "awayScore": 3
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "The Stoppable Force",
+      "away": "Ponzie Prowlers",
+      "homeScore": 7,
+      "awayScore": 6
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "Trin Tigers",
+      "away": "Wings of a Sparrow",
+      "homeScore": 11,
+      "awayScore": 13
+    },
+    {
+      "weekStartsOn": "2026-10-19",
+      "home": "git gud",
+      "away": "MAMAs Revenge",
+      "homeScore": 13,
+      "awayScore": 7
     }
   ]
 }
