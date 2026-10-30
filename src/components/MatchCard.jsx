@@ -21,7 +21,13 @@ function TeamName({ name, division, compact, plain }) {
   )
 }
 
-export default function MatchCard({ fixture, compact = false, blank = false, plain = false }) {
+export default function MatchCard({
+  fixture,
+  compact = false,
+  blank = false,
+  plain = false,
+  quiet = false,
+}) {
   if (blank) {
     return (
       <article
@@ -59,8 +65,8 @@ export default function MatchCard({ fixture, compact = false, blank = false, pla
 
   return (
     <article
-      className={`match-card ${compact ? 'grid-slot' : ''}`}
-      style={{ background: color, color: text }}
+      className={`match-card ${compact ? 'grid-slot' : ''} ${quiet ? 'quiet' : ''}`}
+      style={quiet ? { '--accent': color } : { background: color, color: text }}
     >
       <div className="card-meta">
         {compact ? null : (

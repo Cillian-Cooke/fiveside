@@ -26,7 +26,7 @@ export default function Team() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const navType = useNavigationType()
-  const { status, weeks, open } = useSchedule()
+  const { status, weeks, catchups = [], open } = useSchedule()
   const ready = status === 'ready'
 
   useLayoutEffect(() => {
@@ -64,20 +64,12 @@ export default function Team() {
 
   const rescheduled = useMemo(() => {
     if (!team) return []
-    return weeks.flatMap((item) =>
-      (item.rescheduled || [])
-        .filter(
-          (game) =>
-            (game.home === team.name || game.away === team.name) &&
-            game.division === team.division,
-        )
-        .map((game) => ({
-          ...game,
-          weekLabel: item.week.label,
-          routeId: item.week.routeId,
-        })),
+    return catchups.filter(
+      (game) =>
+        (game.home === team.name || game.away === team.name) &&
+        game.division === team.division,
     )
-  }, [team, weeks])
+  }, [team, catchups])
 
   const history = useMemo(() => {
     if (!team) return []
@@ -164,7 +156,7 @@ export default function Team() {
         <>
           <h2 className="section-title">To be rescheduled</h2>
           {rescheduled.map((fixture) => (
-            <MatchCard key={fixture.id} fixture={fixture} />
+            <MatchCard key={fixture.id} fixture={fixture} quiet />
           ))}
         </>
       ) : null}

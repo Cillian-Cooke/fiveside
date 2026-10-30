@@ -28,7 +28,7 @@ export function WeekRedirect() {
 export default function WeekPage() {
   const { weekId } = useParams()
   const navigate = useNavigate()
-  const { status, error, source, updatedAt, weeks, open, between } = useSchedule()
+  const { status, error, source, updatedAt, weeks, catchups = [], open, between } = useSchedule()
 
   const entry = findWeek(weeks, weekId)
   const index = weeks.findIndex((item) => item.week.routeId === entry?.week.routeId)
@@ -57,7 +57,7 @@ export default function WeekPage() {
   const stamp = formatUpdatedAt(updatedAt)
   const showBetween = Boolean(between) && entry.week.isCurrent
   const listed = entry.fixtures.some((fixture) => fixture.status === 'match')
-  const catchup = Boolean(entry.rescheduled?.length)
+  const catchup = catchups.length > 0
   const readingQuiet = entry.week.reading && !listed && !catchup
 
   return (
@@ -87,7 +87,7 @@ export default function WeekPage() {
           <FixturesBoard
             key={entry.week.id}
             fixtures={entry.fixtures}
-            rescheduled={entry.rescheduled}
+            rescheduled={catchups}
             dayNotes={entry.week.dayNotes}
             weekId={entry.week.id}
             initialDay={initialDay(entry.week, entry.fixtures)}

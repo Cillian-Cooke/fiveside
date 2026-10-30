@@ -766,6 +766,54 @@ input:focus-visible {
   color: #f3f3f2;
 }
 
+/* Catch-up games keep a see-through division colour, smaller than a fixture with a slot. */
+.match-card.quiet {
+  margin-bottom: 6px;
+  padding: 7px 12px 7px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent, var(--line)) 34%, #cfcfcd);
+  border-left-width: 3px;
+  border-radius: 6px;
+  background: #f7f7f6;
+  background: color-mix(in srgb, var(--accent, #ddd) 16%, #f7f7f6);
+  color: var(--ink);
+  box-shadow: none;
+}
+
+.match-card.quiet .card-meta {
+  margin-bottom: 2px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  opacity: 1;
+}
+
+.match-card.quiet .teams {
+  gap: 0;
+}
+
+.match-card.quiet .team-name {
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.match-card.quiet .vs {
+  font-size: 0.72rem;
+  line-height: 1.1;
+  opacity: 0.55;
+}
+
+.match-card.quiet .score {
+  margin: 3px 0 0;
+  font-size: 0.9rem;
+}
+
+.rescheduled .lede {
+  margin-bottom: 10px;
+  font-size: 0.92rem;
+}
+
 .card-meta {
   display: flex;
   justify-content: space-between;
