@@ -11,9 +11,12 @@
     "seed:refresh": "node scripts/refresh-seed.mjs"
   },
   "dependencies": {
+    "@resvg/resvg-wasm": "^2.6.2",
+    "@vercel/functions": "^3.10.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.8.0"
+    "react-router-dom": "^7.8.0",
+    "satori": "^0.63.2"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.0",

@@ -1,9 +1,9 @@
 import { useLayoutEffect, useMemo } from 'react'
-import { Link, useNavigate, useNavigationType, useParams } from 'react-router-dom'
-import { DAY_LONG, VENUE_LABEL } from '../constants.js'
+import { useNavigate, useNavigationType, useParams } from 'react-router-dom'
+import { DAY_LONG } from '../constants.js'
 import { uniqueTeams } from '../lib/fixtures.js'
 import { useSchedule } from '../lib/useSchedule.jsx'
-import { teamHorizon, weekPath } from '../lib/schedule.js'
+import { teamHorizon } from '../lib/schedule.js'
 import {
   findTeamBySlug,
   pastGames,
@@ -118,7 +118,7 @@ export default function Team() {
         ← Back
       </button>
       <p className="page-kicker">{team.division}</p>
-      <h1 className="page-title">{teamDisplayName(team.name, team.division)}</h1>
+      <h1 className="page-title team-title">{teamDisplayName(team.name, team.division)}</h1>
       {instagramUrl ? (
         <p className="team-instagram">
           <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
@@ -130,19 +130,6 @@ export default function Team() {
       <h2 className="section-title">Next game</h2>
       {next ? (
         <div className="next-game">
-          <p className="week-range">
-            {next.weekLabel ? `${next.weekLabel} · ` : ''}
-            {DAY_LONG[next.day]} · {next.time}
-            {next.venue ? ` · ${VENUE_LABEL[next.venue]}` : ''}
-            {next.routeId ? (
-              <>
-                {' · '}
-                <Link to={weekPath({ routeId: next.routeId })}>
-                  Fixtures
-                </Link>
-              </>
-            ) : null}
-          </p>
           <MatchCard fixture={next} />
         </div>
       ) : (

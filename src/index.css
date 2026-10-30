@@ -171,6 +171,10 @@ input:focus-visible {
   line-height: 1.15;
 }
 
+.team-title {
+  font-size: clamp(2.45rem, 8vw, 3.5rem);
+}
+
 .week-nav-wrap {
   display: flex;
   flex-direction: column;
@@ -1491,12 +1495,13 @@ input:focus-visible {
 }
 
 .team-instagram {
-  margin: 0 0 12px;
-  font-size: 0.95rem;
+  margin: 0 0 14px;
+  font-size: 1.12rem;
 }
 
 .team-instagram a {
-  color: inherit;
+  color: var(--navy);
+  font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 3px;
 }

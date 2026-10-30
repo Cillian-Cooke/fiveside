@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/og.js": {
+      "includeFiles": "{assets/fonts/Sora-Bold.ttf,node_modules/@resvg/resvg-wasm/index_bg.wasm,src/data/seed-payload.json}"
+    },
+    "middleware.js": {
+      "includeFiles": "src/data/seed-payload.json"
+    }
+  }
+}
