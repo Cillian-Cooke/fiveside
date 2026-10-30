@@ -66,7 +66,7 @@ export default function MatchCard({
   return (
     <article
       className={`match-card ${compact ? 'grid-slot' : ''} ${quiet ? 'quiet' : ''}`}
-      style={{ background: color, color: text }}
+      style={quiet ? { '--accent': color } : { background: color, color: text }}
     >
       <div className="card-meta">
         {compact ? null : (
