@@ -1,6 +1,7 @@
 import { applyPitchSlotRules } from './fixtures.js'
 import { overlayMatchScores } from './match-results.js'
 import { buildFixtures } from './build-fixtures.js'
+import { normalizeTeamKey } from './names.js'
 import {
   currentWeekMonday,
   dublinToday,
@@ -82,6 +83,31 @@ export function initialDay(week, fixtures, now = new Date()) {
   return nextWithMatch(0)
 }
 
+function catchupPairKey(game) {
+  const teams = [normalizeTeamKey(game.home), normalizeTeamKey(game.away)].sort().join('|')
+  return `${teams}|${game.division || ''}`
+}
+
+/** Catch-up games from every sheet tab, once. Week pages all show this list. */
+export function catchupGames(weeks) {
+  const seen = new Set()
+  const games = []
+  for (const entry of weeks || []) {
+    for (const game of entry.rescheduled || []) {
+      const key = catchupPairKey(game)
+      if (seen.has(key)) continue
+      seen.add(key)
+      games.push(game)
+    }
+  }
+  return games.sort(
+    (a, b) =>
+      String(a.division || '').localeCompare(String(b.division || '')) ||
+      String(a.home || '').localeCompare(String(b.home || '')) ||
+      String(a.away || '').localeCompare(String(b.away || '')),
+  )
+}
+
 export function decorateWeeks(payload, now = new Date()) {
   const source = payload?.weeks || []
   const scoreRows = Array.isArray(payload?.results) ? payload.results : undefined
@@ -118,6 +144,7 @@ export function decorateWeeks(payload, now = new Date()) {
   const openEntry = weeks.find((item) => item.week.startsOn === openStartsOn)
   return {
     weeks,
+    catchups: catchupGames(weeks),
     open: { ...open, week: openEntry?.week || null },
     between: betweenNote(open),
   }

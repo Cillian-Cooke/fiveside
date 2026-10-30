@@ -45,7 +45,7 @@ export function RescheduledList({ games }) {
       <h2 className="section-title">To be rescheduled</h2>
       <p className="lede">Catch-up games from the sheet that don’t have a slot yet.</p>
       {games.map((game) => (
-        <MatchCard key={game.id} fixture={game} />
+        <MatchCard key={game.id} fixture={game} quiet />
       ))}
     </section>
   )

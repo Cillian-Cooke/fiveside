@@ -32,6 +32,7 @@ export function ScheduleProvider({ children }) {
     source: null,
     updatedAt: null,
     weeks: [],
+    catchups: [],
     open: null,
     between: null,
   })

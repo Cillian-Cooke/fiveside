@@ -4,7 +4,7 @@ import {
   assignTabDates,
   formatPickerLabel,
 } from '../src/lib/week-dates.js'
-import { betweenNote, initialDay, selectOpenWeek, teamHorizon } from '../src/lib/schedule.js'
+import { betweenNote, decorateWeeks, initialDay, selectOpenWeek, teamHorizon } from '../src/lib/schedule.js'
 import { isGrey, nearestDivision } from '../src/lib/sheet-model.js'
 
 const TABS = [
@@ -127,4 +127,53 @@ test('Friday 17:00 Dublin flips to next week, 16:59 does not', async () => {
   assert.equal(selectOpenWeek(weeks, new Date('2026-10-30T16:59:00Z')).week.weekNumber, 5)
   assert.equal(selectOpenWeek(weeks, new Date('2026-10-30T17:00:00Z')).week.weekNumber, 6)
   assert.equal(selectOpenWeek(weeks, new Date('2026-11-02T09:00:00Z')).week.weekNumber, 6)
+})
+
+test('catch-up games are listed once and shared by every week page', () => {
+  const view = decorateWeeks(
+    {
+      weeks: [
+        {
+          startsOn: '2026-10-05',
+          weekNumber: 2,
+          tab: 'Week 2',
+          matches: [],
+          rescheduled: [],
+        },
+        {
+          startsOn: '2026-10-12',
+          weekNumber: 3,
+          tab: 'Week 3',
+          matches: [],
+          rescheduled: [
+            { home: 'Lads on toure', away: 'Liampool', division: 'Division 2', color: '#F9CB9C' },
+            { home: 'Egg Fried Reus', away: 'Integer Milan', division: 'Division 1', color: '#EA9999' },
+          ],
+        },
+        {
+          startsOn: '2026-10-19',
+          weekNumber: 4,
+          tab: 'Week 4',
+          matches: [],
+          rescheduled: [
+            { home: 'Integer Milan', away: 'Egg Fried Reus', division: 'Division 1', color: '#EA9999' },
+            { home: 'Buenos Aires ballers XI', away: 'Lionel MSISS', division: 'Division 3', color: '#FFE599' },
+          ],
+        },
+      ],
+    },
+    new Date('2026-10-22T12:00:00Z'),
+  )
+
+  assert.equal(view.weeks[0].rescheduled.length, 0)
+  assert.equal(view.weeks[1].rescheduled.length, 2)
+  assert.deepEqual(
+    view.catchups.map((game) => [game.home, game.away, game.division]),
+    [
+      ['Egg Fried Reus', 'Integer Milan', 'Division 1'],
+      ['Lads on toure', 'Liampool', 'Division 2'],
+      ['Buenos Aires ballers XI', 'Lionel MSISS', 'Division 3'],
+    ],
+  )
+  assert.equal(new Set(view.catchups.map((game) => game.id)).size, view.catchups.length)
 })
