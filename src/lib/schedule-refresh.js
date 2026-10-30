@@ -1,4 +1,4 @@
-import { dublinToday } from './week-dates.js'
+import { dublinToday, roundIsOver } from './week-dates.js'
 
 /** How often an open tab asks `/api/fixtures` for a newer sheet. */
 export const FIXTURES_REFRESH_MS = 60_000
@@ -29,18 +29,21 @@ export function scheduleSignature(payload) {
 }
 
 /**
- * Identity of what the page is showing. The Dublin date is included so a tab
- * left open overnight can move to the next week without a sheet edit.
+ * Identity of what the page is showing. The Dublin date and the Friday 17:00
+ * cutoff are included so a tab left open can move to the next week without a
+ * sheet edit.
  */
 export function liveScheduleKey(payload, now = new Date()) {
-  return `${dublinToday(now).iso}\n${scheduleSignature(payload)}`
+  const today = dublinToday(now)
+  const phase = roundIsOver(now) ? 'next' : 'this'
+  return `${today.iso}\n${phase}\n${scheduleSignature(payload)}`
 }
 
 /**
  * Poll `/api/fixtures` while the page is open, and again when the tab is shown
- * or the window is focused. Calls `onLive` only when the sheet body or the
- * Dublin day changed. The first failed load calls `onFallback`; later failures
- * leave the current fixtures in place.
+ * or the window is focused. Calls `onLive` only when the sheet body, the Dublin
+ * day, or the Friday 17:00 week flip changed. The first failed load calls
+ * `onFallback`; later failures leave the current fixtures in place.
  *
  * Returns a stop function for effect cleanup.
  */

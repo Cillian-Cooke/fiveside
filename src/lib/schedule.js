@@ -7,6 +7,7 @@ import {
   formatCompactRange,
   formatPickerLabel,
   formatWeekRange,
+  roundIsOver,
   shiftStartsOn,
 } from './week-dates.js'
 
@@ -29,10 +30,7 @@ export function selectOpenWeek(weeks, now = new Date()) {
   const list = weeks || []
   if (!list.length) return { week: null, between: false, finished: null }
   const today = dublinToday(now)
-  const weekend =
-    today.dayName === 'saturday' ||
-    today.dayName === 'sunday' ||
-    (today.dayName === 'friday' && today.hour >= 17)
+  const weekend = roundIsOver(now)
   let containing = null
   for (const week of list) {
     const nextMonday = shiftStartsOn(week.startsOn, 1)

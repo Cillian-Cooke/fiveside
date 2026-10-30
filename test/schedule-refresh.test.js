@@ -135,6 +135,14 @@ test('live key changes on the next Dublin day', () => {
   assert.notEqual(liveScheduleKey(payload, friday), liveScheduleKey(payload, saturday))
 })
 
+test('live key changes at Friday 17:00 Dublin and ignores a cache timestamp', () => {
+  const payload = sheet([])
+  const before = new Date('2026-10-30T16:59:00Z')
+  const after = new Date('2026-10-30T17:00:00Z')
+  assert.notEqual(liveScheduleKey(payload, before), liveScheduleKey(payload, after))
+  assert.equal(liveScheduleKey(payload, after), liveScheduleKey(sheet([], 'later'), after))
+})
+
 test('refreshes on an interval and stays quiet when the sheet body is unchanged', async () => {
   const pending = []
   const env = harness({
@@ -201,6 +209,29 @@ test('refetches when the tab becomes visible or the window is focused', async ()
   env.stop()
   assert.equal(env.documentRef.listenerCount(), 0)
   assert.equal(env.focusTarget.listenerCount(), 0)
+})
+
+test('a tab left open past Friday 17:00 Dublin applies the same sheet again', async () => {
+  const pending = []
+  const env = harness({
+    start: Date.parse('2026-10-30T16:00:00.000Z'),
+    fetchPayload: () =>
+      new Promise((resolve) => {
+        pending.push(resolve)
+      }),
+  })
+  await settled()
+  pending[0](sheet([{ home: 'A' }]))
+  await settled()
+
+  env.clock.setTime(Date.parse('2026-10-30T17:00:00.000Z'))
+  env.documentRef.emit()
+  await settled()
+  assert.equal(pending.length, 2)
+  pending[1](sheet([{ home: 'A' }], '2026-10-30T17:00:00.000Z'))
+  await settled()
+  assert.equal(env.live.length, 2)
+  env.stop()
 })
 
 test('a tab left open overnight applies the same sheet again on the next Dublin day', async () => {
