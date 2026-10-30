@@ -1,20 +1,54 @@
-import { findWeek } from './schedule.js'
-import { baySlot } from './fixtures.js'
-import { BAY_TIMES, DAYS } from '../constants.js'
-import { teamShortName } from './teams.js'
+import { findWeek, teamHorizon } from './schedule.js'
+import { baySlot, uniqueTeams } from './fixtures.js'
+import { BAY_TIMES, DAY_LONG, DAYS, VENUE_LABEL } from '../constants.js'
+import { findTeamBySlug, teamDisplayName, teamShortName, upcomingGames } from './teams.js'
 
 const SITE_NAME = "TCD Men's Five-a-side"
 const PRODUCTION_ORIGIN = 'https://fiveside.vercel.app'
 
-export function weekIdFromPath(pathname) {
-  const match = String(pathname || '').match(/^\/week\/([^/?#]+)/)
+function safePathPart(pathname, pattern, max) {
+  const match = String(pathname || '').match(pattern)
   if (!match) return null
   try {
     const id = decodeURIComponent(match[1])
-    return /^[a-z0-9-]{1,32}$/i.test(id) ? id : null
+    return new RegExp(`^[a-z0-9-]{1,${max}}$`, 'i').test(id) ? id : null
   } catch {
     return null
   }
+}
+
+export function weekIdFromPath(pathname) {
+  return safePathPart(pathname, /^\/week\/([^/?#]+)/, 32)
+}
+
+export function teamSlugFromPath(pathname) {
+  return safePathPart(pathname, /^\/teams\/([^/?#]+)/, 120)
+}
+
+export function nextTeamFixture(schedule, slug) {
+  const roster = uniqueTeams((schedule?.weeks || []).flatMap((item) => item.fixtures))
+  const team = findTeamBySlug(roster, slug)
+  if (!team) return { team: null, fixture: null }
+  const horizon = teamHorizon(schedule.open)
+  const upcoming = (schedule.weeks || [])
+    .filter((item) => String(item.week.startsOn || item.week.id) >= horizon)
+    .flatMap((item) =>
+      upcomingGames(team.name, item.fixtures, team.division).map((fixture) => ({
+        ...fixture,
+        weekLabel: item.week?.pickerLabel || item.week?.label || '',
+      })),
+    )
+  return { team, fixture: upcoming[0] || null }
+}
+
+function matchWhen(fixture) {
+  const day = DAY_LONG[fixture.day] || ''
+  const time = fixture.time || ''
+  return [day, time].filter(Boolean).join(', ')
+}
+
+function matchPlace(fixture) {
+  return VENUE_LABEL[fixture.venue] || 'Venue to be confirmed'
 }
 
 function chosenWeek(schedule, pathname) {
@@ -27,20 +61,20 @@ function chosenWeek(schedule, pathname) {
   return weeks.find((item) => item.week.isCurrent) || weeks[0] || null
 }
 
-export function ogTeamLabel(name) {
-  const full = String(name || '')
+export function ogPlain(value) {
+  return String(value || '')
     .replace(/\u00a0/g, ' ')
     .normalize('NFKD')
     .replace(/\p{M}/gu, '')
     .replace(/[^\x20-\x7E]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
+}
+
+export function ogTeamLabel(name) {
+  const full = ogPlain(name)
   const label = full.length > 0 && full.length <= 18 ? full : teamShortName(name)
-  return String(label)
-    .normalize('NFKD')
-    .replace(/\p{M}/gu, '')
-    .replace(/[^\x20-\x7E]/g, '')
-    .trim()
+  return ogPlain(label)
 }
 
 export function bayMatchCount(entry) {
@@ -49,7 +83,42 @@ export function bayMatchCount(entry) {
   ).length
 }
 
+function teamSharePreview(schedule, slug) {
+  const { team, fixture } = nextTeamFixture(schedule, slug)
+  const imagePath = `/api/og?team=${encodeURIComponent(slug)}`
+  if (!fixture) {
+    const name = team ? teamDisplayName(team.name, team.division) : 'Team'
+    const description = `${name} has no game coming up.`
+    return {
+      kind: 'match',
+      title: name,
+      description,
+      imageAlt: description,
+      imagePath,
+      fixture: null,
+      teamName: name,
+    }
+  }
+  const home = teamDisplayName(fixture.home, fixture.division)
+  const away = teamDisplayName(fixture.away, fixture.division)
+  const title = `${home} v ${away}`
+  const when = matchWhen(fixture)
+  const place = matchPlace(fixture)
+  const description = when ? `${when} at ${place}.` : place
+  return {
+    kind: 'match',
+    title,
+    description,
+    imageAlt: `${title}. ${description}`,
+    imagePath,
+    fixture,
+    teamName: team ? teamDisplayName(team.name, team.division) : '',
+  }
+}
+
 export function sharePreview(schedule, pathname = '/') {
+  const slug = teamSlugFromPath(pathname)
+  if (slug) return teamSharePreview(schedule, slug)
   const entry = chosenWeek(schedule, pathname)
   const week = entry?.week
   const label = week?.pickerLabel || week?.label || 'This week'
@@ -62,6 +131,7 @@ export function sharePreview(schedule, pathname = '/') {
     : "This week's Botany Bay fixtures for the Trinity College Dublin men's five-a-side league."
   const weekId = week?.routeId || ''
   return {
+    kind: 'week',
     title,
     description,
     imageAlt: week ? `Botany Bay fixtures for ${label}` : 'Botany Bay fixtures',

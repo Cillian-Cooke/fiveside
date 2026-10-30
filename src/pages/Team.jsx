@@ -1,6 +1,6 @@
-import { useLayoutEffect, useMemo } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import { useNavigate, useNavigationType, useParams } from 'react-router-dom'
-import { DAY_LONG } from '../constants.js'
+import { DAY_LONG, VENUE_LABEL } from '../constants.js'
 import { uniqueTeams } from '../lib/fixtures.js'
 import { useSchedule } from '../lib/useSchedule.jsx'
 import { teamHorizon } from '../lib/schedule.js'
@@ -23,10 +23,43 @@ function playedWhen(fixture) {
   return parts.filter(Boolean).join(' · ')
 }
 
+function nextMatchLine(fixture) {
+  const day = DAY_LONG[fixture.day]
+  const place = VENUE_LABEL[fixture.venue] || 'Venue to be confirmed'
+  const when = [day, fixture.time].filter(Boolean).join(', ')
+  return when ? `${when} at ${place}` : place
+}
+
+function shareData(title, text, url) {
+  const candidates = [
+    { title, text, url },
+    { text: `${title}. ${text}`, url },
+    { url },
+  ]
+  if (typeof navigator.canShare !== 'function') return candidates[0]
+  return candidates.find((data) => navigator.canShare(data)) || null
+}
+
+function ShareIcon() {
+  return (
+    <svg className="share-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M12 3v10M8.5 6.5 12 3l3.5 3.5M6 11v8a1.5 1.5 0 0 0 1.5 1.5h9A1.5 1.5 0 0 0 18 19v-8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 export default function Team() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const navType = useNavigationType()
+  const [shareNote, setShareNote] = useState('')
   const { status, weeks, catchups = [], open, instagram = {} } = useSchedule()
   const ready = status === 'ready'
 
@@ -86,6 +119,29 @@ export default function Team() {
     return pastGames(team.name, games, team.division)
   }, [team, weeks, horizon])
 
+  async function shareNextMatch() {
+    if (!next) return
+    const url = new URL(`/teams/${slug}`, window.location.origin).href
+    const title = `${next.home} v ${next.away}`
+    const text = nextMatchLine(next)
+    const data = shareData(title, text, url)
+    const phone = window.matchMedia('(max-width: 960px), (pointer: coarse)').matches
+    if (data && typeof navigator.share === 'function') {
+      try {
+        await navigator.share(data)
+        return
+      } catch (error) {
+        if (error?.name === 'AbortError' || phone) return
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(`${title}\n${text}\n${url}`)
+      setShareNote('Link copied')
+    } catch {
+      setShareNote(url)
+    }
+  }
+
   function goBack() {
     if ((window.history.state?.idx ?? 0) > 0) {
       navigate(-1)
@@ -131,6 +187,11 @@ export default function Team() {
       {next ? (
         <div className="next-game">
           <MatchCard fixture={next} />
+          <button type="button" className="share-next" onClick={shareNextMatch}>
+            <ShareIcon />
+            Share next match
+          </button>
+          {shareNote ? <p className="share-note">{shareNote}</p> : null}
         </div>
       ) : (
         <article className="placeholder-card">

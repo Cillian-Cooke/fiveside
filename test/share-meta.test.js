@@ -64,6 +64,25 @@ test('a shared week link points at that week’s Botany Bay card', () => {
   assert.equal(weekIdFromPath('/tables'), null)
 })
 
+test('a team link previews that side’s next game, with the time and place', () => {
+  const schedule = decorateWeeks(payload(), new Date('2026-11-03T12:00:00Z'))
+  const preview = sharePreview(schedule, '/teams/carling-f-c-div-5')
+  assert.equal(preview.kind, 'match')
+  assert.match(preview.title, /Carling F\.C\./)
+  assert.match(preview.title, / v /)
+  assert.equal(preview.description, 'Tuesday, 11-12pm at Botany Bay.')
+  assert.equal(preview.imagePath, '/api/og?team=carling-f-c-div-5')
+  assert.equal(preview.fixture.venue, 'botany_bay')
+})
+
+test('a team with nothing coming up says so', () => {
+  const schedule = decorateWeeks(payload(), new Date('2026-11-03T12:00:00Z'))
+  const preview = sharePreview(schedule, '/teams/nobody-div-5')
+  assert.equal(preview.title, 'Team')
+  assert.match(preview.description, /no game coming up/)
+  assert.equal(preview.fixture, null)
+})
+
 test('the homepage card is the open week', () => {
   const schedule = decorateWeeks(payload(), new Date('2026-11-03T12:00:00Z'))
   const preview = sharePreview(schedule, '/')

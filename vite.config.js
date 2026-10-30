@@ -25,14 +25,16 @@ function fixturesApi() {
         try {
           const url = new URL(req.url || '/', 'http://localhost')
           const week = url.searchParams.get('week') || ''
+          const team = url.searchParams.get('team') || ''
           const weekId = /^[a-z0-9-]{1,32}$/i.test(week) ? week : ''
+          const teamSlug = /^[a-z0-9-]{1,120}$/i.test(team) ? team : ''
           let payload = fallbackPayload
           try {
             payload = await loadPublishedSchedule()
           } catch (error) {
             console.error('[og]', error)
           }
-          const png = await renderSharePng(payload, weekId)
+          const png = await renderSharePng(payload, weekId, teamSlug)
           res.setHeader('Content-Type', 'image/png')
           res.setHeader('Cache-Control', 'public, max-age=60')
           res.end(png)

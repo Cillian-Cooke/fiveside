@@ -4,7 +4,7 @@ import satori from 'satori'
 import { Resvg, initWasm } from '@resvg/resvg-wasm'
 import { setDivisionColors } from '../constants.js'
 import { setTeamDirectory } from './fixtures.js'
-import { ogCard } from './og-card.js'
+import { ogCard, ogMatchCard } from './og-card.js'
 import { decorateWeeks } from './schedule.js'
 import { sharePreview } from './share-meta.js'
 
@@ -19,13 +19,15 @@ function ensureWasm() {
   return wasmReady
 }
 
-export async function renderSharePng(payload, weekId) {
+export async function renderSharePng(payload, weekId, teamSlug = '') {
   setTeamDirectory(payload?.teams)
   setDivisionColors(payload?.legend)
   const schedule = decorateWeeks(payload)
-  const preview = sharePreview(schedule, weekId ? `/week/${weekId}` : '/')
+  const preview = teamSlug
+    ? sharePreview(schedule, `/teams/${teamSlug}`)
+    : sharePreview(schedule, weekId ? `/week/${weekId}` : '/')
   await ensureWasm()
-  const svg = await satori(ogCard(preview.entry), {
+  const svg = await satori(preview.kind === 'match' ? ogMatchCard(preview) : ogCard(preview.entry), {
     width: 1200,
     height: 630,
     fonts: [
