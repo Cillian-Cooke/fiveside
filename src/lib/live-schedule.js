@@ -16,5 +16,9 @@ export async function loadPublishedSchedule(options) {
     console.error('[results]', results.reason)
     return fixtures.value
   }
-  return { ...fixtures.value, results: results.value.results }
+  return {
+    ...fixtures.value,
+    results: results.value.results,
+    instagram: results.value.instagram || {},
+  }
 }

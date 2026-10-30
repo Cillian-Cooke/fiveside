@@ -427,3 +427,25 @@ test('a hanging or non-xlsx results export is rejected and not cached', async ()
   assert.equal(calls.n, 1)
   assert.equal(loaded.results.length, 3)
 })
+
+import { parseTeamLinksWorkbook as parseTeamLinks } from '../src/lib/live-results.js'
+
+test('Teams tab gives Instagram links only for filled rows', () => {
+  const links = parseTeamLinks([
+    { name: 'Results', rows: [] },
+    {
+      name: 'Teams',
+      rows: [
+        [{ text: 'Team' }, { text: 'Division' }, { text: 'Instagram' }],
+        [{ text: 'Egg Fried Reus' }, { text: 'Division 1' }, { text: 'https://instagram.com/eggfriedreus' }],
+        [{ text: 'Mountjoy FC' }, { text: 'Division 1' }, { text: '' }],
+        [{ text: 'TPSG' }, { text: 'Division 3' }, { text: '@tpsg_fc' }],
+      ],
+    },
+  ])
+  assert.deepEqual(links, {
+    'egg fried reus': 'https://instagram.com/eggfriedreus',
+    tpsg: 'https://www.instagram.com/tpsg_fc/',
+  })
+  assert.deepEqual(parseTeamLinks([{ name: 'Results', rows: [] }]), {})
+})

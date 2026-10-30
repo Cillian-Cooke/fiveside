@@ -14,6 +14,7 @@ import {
 import MatchCard from '../components/MatchCard.jsx'
 import TeamLink from '../components/TeamLink.jsx'
 import { useStackPage } from '../lib/navStack.js'
+import { normalizeTeamKey } from '../lib/match-results.js'
 
 function playedWhen(fixture) {
   const parts = [fixture.weekLabel]
@@ -26,7 +27,7 @@ export default function Team() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const navType = useNavigationType()
-  const { status, weeks, catchups = [], open } = useSchedule()
+  const { status, weeks, catchups = [], open, instagram = {} } = useSchedule()
   const ready = status === 'ready'
 
   useLayoutEffect(() => {
@@ -109,6 +110,7 @@ export default function Team() {
   }
 
   const next = upcoming[0]
+  const instagramUrl = instagram[normalizeTeamKey(team.name)] || ''
 
   return (
     <>
@@ -117,6 +119,13 @@ export default function Team() {
       </button>
       <p className="page-kicker">{team.division}</p>
       <h1 className="page-title">{teamDisplayName(team.name, team.division)}</h1>
+      {instagramUrl ? (
+        <p className="team-instagram">
+          <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
+            Team Instagram
+          </a>
+        </p>
+      ) : null}
 
       <h2 className="section-title">Next game</h2>
       {next ? (

@@ -1474,3 +1474,14 @@ input:focus-visible {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+.team-instagram {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+}
+
+.team-instagram a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

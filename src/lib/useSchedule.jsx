@@ -10,7 +10,7 @@ const ScheduleContext = createContext(null)
 function applyPayload(payload) {
   setTeamDirectory(payload.teams)
   setDivisionColors(payload.legend)
-  return decorateWeeks(payload)
+  return { ...decorateWeeks(payload), instagram: payload.instagram || {} }
 }
 
 async function fetchPayload() {
@@ -35,6 +35,7 @@ export function ScheduleProvider({ children }) {
     catchups: [],
     open: null,
     between: null,
+    instagram: {},
   })
 
   useEffect(
