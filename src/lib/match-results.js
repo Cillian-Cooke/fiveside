@@ -23,22 +23,21 @@ function pairKey(weekId, home, away) {
   return `${weekId}|${left}|${right}`
 }
 
-function buildScoreIndex() {
+function indexResults(rows) {
   const byExact = new Map()
   const byPair = new Map()
-  for (const row of matchResults.results || []) {
+  for (const row of rows || []) {
+    if (typeof row?.homeScore !== 'number' || typeof row?.awayScore !== 'number') continue
     byExact.set(resultKey(row.weekStartsOn, row.home, row.away), row)
     byPair.set(pairKey(row.weekStartsOn, row.home, row.away), row)
   }
   return { byExact, byPair }
 }
 
-const scoreIndex = buildScoreIndex()
-
-function lookupResult(weekId, fixtureHome, fixtureAway) {
-  const direct = scoreIndex.byExact.get(resultKey(weekId, fixtureHome, fixtureAway))
+function lookupResult(index, weekId, fixtureHome, fixtureAway) {
+  const direct = index.byExact.get(resultKey(weekId, fixtureHome, fixtureAway))
   if (direct) return { row: direct, swap: false }
-  const flipped = scoreIndex.byPair.get(pairKey(weekId, fixtureHome, fixtureAway))
+  const flipped = index.byPair.get(pairKey(weekId, fixtureHome, fixtureAway))
   if (!flipped) return null
   const swap =
     normalizeTeamKey(flipped.home) !== normalizeTeamKey(fixtureHome) ||
@@ -126,12 +125,13 @@ function weekIdFromFixtures(fixtures) {
   return null
 }
 
-function syntheticFixturesFromResults(fixtures) {
+function syntheticFixturesFromResults(fixtures, rows) {
   const weekId = weekIdFromFixtures(fixtures)
   if (!weekId) return []
 
   const extras = []
-  for (const row of matchResults.results || []) {
+  for (const row of rows || []) {
+    if (typeof row?.homeScore !== 'number' || typeof row?.awayScore !== 'number') continue
     if (row.weekStartsOn !== weekId) continue
     if (resultAppliedToFixtures(row, fixtures)) continue
     const homeMeta = lookupTeamMeta(row.home)
@@ -157,11 +157,14 @@ function syntheticFixturesFromResults(fixtures) {
   return extras
 }
 
-export function overlayMatchScores(fixtures) {
-  if (!scoreIndex.byExact.size && !scoreIndex.byPair.size) return fixtures
+/** `results` defaults to the baked JSON. Pass an array to use those rows instead. */
+export function overlayMatchScores(fixtures, results) {
+  const rows = results === undefined ? matchResults.results || [] : results || []
+  const index = indexResults(rows)
+  if (!index.byExact.size && !index.byPair.size) return fixtures
   const overlaid = fixtures.map((fixture) => {
     if (fixture.status !== 'match') return fixture
-    const hit = lookupResult(fixture.weekId, fixture.home, fixture.away)
+    const hit = lookupResult(index, fixture.weekId, fixture.home, fixture.away)
     if (!hit) return fixture
     const scores = scoresForFixture(fixture.home, fixture.away, hit.row, hit.swap)
     return {
@@ -169,7 +172,7 @@ export function overlayMatchScores(fixtures) {
       ...scores,
     }
   })
-  const extras = syntheticFixturesFromResults(overlaid)
+  const extras = syntheticFixturesFromResults(overlaid, rows)
   if (!extras.length) return overlaid
   return [...overlaid, ...extras]
 }

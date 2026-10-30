@@ -82,11 +82,13 @@ export function initialDay(week, fixtures, now = new Date()) {
 
 export function decorateWeeks(payload, now = new Date()) {
   const source = payload?.weeks || []
+  const scoreRows = Array.isArray(payload?.results) ? payload.results : undefined
   const open = selectOpenWeek(source, now)
   const openStartsOn = open.week?.startsOn
   const weeks = source.map((entry) => {
     const fixtures = overlayMatchScores(
       applyPitchSlotRules(buildFixtures(entry.startsOn, entry.matches, entry.slotOverrides), entry.startsOn),
+      scoreRows,
     )
     return {
       week: {
