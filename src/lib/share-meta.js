@@ -3,7 +3,7 @@ import { baySlot, uniqueTeams } from './fixtures.js'
 import { BAY_TIMES, DAY_LONG, DAYS, VENUE_LABEL } from '../constants.js'
 import { findTeamBySlug, teamDisplayName, teamShortName, upcomingGames } from './teams.js'
 
-const SITE_NAME = "TCD Men's Five-a-side"
+const SITE_NAME = 'TCD Five-a-side'
 const PRODUCTION_ORIGIN = 'https://fiveside.vercel.app'
 
 function safePathPart(pathname, pattern, max) {
@@ -128,7 +128,7 @@ export function sharePreview(schedule, pathname = '/') {
   const title = week ? `${label} — ${SITE_NAME}` : SITE_NAME
   const description = week
     ? `Botany Bay fixtures for ${label}. ${gameLine}, Monday to Friday.`
-    : "This week's Botany Bay fixtures for the Trinity College Dublin men's five-a-side league."
+    : "This week's Botany Bay fixtures for the Trinity College Dublin five-a-side league."
   const weekId = week?.routeId || ''
   return {
     kind: 'week',

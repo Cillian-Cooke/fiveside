@@ -37,7 +37,7 @@ export default function WeekPage() {
 
   useEffect(() => {
     if (!entry) return
-    document.title = `${entry.week.pickerLabel} — TCD Men's Five-a-side`
+    document.title = `${entry.week.pickerLabel} — TCD Five-a-side`
   }, [entry])
 
   if (status === 'loading') return <Loading label="Loading this week’s fixtures…" />

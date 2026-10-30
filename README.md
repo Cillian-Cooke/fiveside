@@ -1,6 +1,6 @@
 # Five-a-side
 
-JavaScript React app (Vite) for the TCD men's five-a-side league. The homepage opens on this week's fixtures.
+JavaScript React app (Vite) for the TCD five-a-side league. The homepage opens on this week's fixtures.
 
 ## Run
 
