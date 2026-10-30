@@ -146,6 +146,45 @@ export function parseResultsWorkbook(sheets) {
   return parseResultsRows(sheet.rows)
 }
 
+/** Only http(s) links count; anything else (blank, "n/a") means no link. */
+function cleanInstagramUrl(value) {
+  let text = clean(value)
+  if (!text) return ''
+  if (/^@?[A-Za-z0-9._]+$/.test(text) && !/^https?:/i.test(text)) {
+    text = `https://www.instagram.com/${text.replace(/^@/, '')}/`
+  } else if (/^(www\.)?instagram\.com\//i.test(text)) {
+    text = `https://${text}`
+  }
+  try {
+    const url = new URL(text)
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') return ''
+    return url.toString()
+  } catch {
+    return ''
+  }
+}
+
+/**
+ * Optional Teams tab: "Team" + "Instagram" columns. Returns
+ * { [normalizeTeamKey(team)]: url } for rows with a usable link only.
+ */
+export function parseTeamLinksWorkbook(sheets) {
+  const sheet = (sheets || []).find((item) => clean(item?.name).toLowerCase() === 'teams')
+  if (!sheet) return {}
+  const rows = sheet.rows || []
+  const headers = headerIndex(rows[0] || [])
+  const teamCol = headers.has('team') ? 'team' : headers.has('teamname') ? 'teamname' : null
+  if (!teamCol || !headers.has('instagram')) return {}
+  const links = {}
+  for (let i = 1; i < rows.length; i += 1) {
+    const row = rows[i] || []
+    const name = clean(valueAt(row, headers, teamCol))
+    const url = cleanInstagramUrl(valueAt(row, headers, 'instagram'))
+    if (name && url) links[normalizeTeamKey(name)] = url
+  }
+  return links
+}
+
 function parseCsv(text) {
   const source = String(text ?? '').replace(/^\uFEFF/, '')
   const rows = []
@@ -218,10 +257,17 @@ export async function loadLiveResults({
   if (!response.ok) throw new Error(`Results export failed (${response.status})`)
   const bytes = Buffer.from(await response.arrayBuffer())
   assertXlsx(bytes)
-  const results = parseResultsWorkbook(readWorkbook(bytes))
+  const sheets = readWorkbook(bytes)
+  const results = parseResultsWorkbook(sheets)
   if (!results.length) throw new Error('Results sheet had no score rows')
+  let instagram = {}
+  try {
+    instagram = parseTeamLinksWorkbook(sheets)
+  } catch (error) {
+    console.error('[results] Teams tab', error)
+  }
 
-  cached = { results, updatedAt: now.toISOString() }
+  cached = { results, instagram, updatedAt: now.toISOString() }
   cachedAt = now.getTime()
   return cached
 }
