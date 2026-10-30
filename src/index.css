@@ -147,9 +147,10 @@ input:focus-visible {
 }
 
 .page {
+  flex: 1 0 auto;
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 20px 0 calc(32px + var(--safe-bottom));
+  padding: 20px 0 32px;
 }
 
 .page-kicker {
@@ -1224,11 +1225,28 @@ input:focus-visible {
   background: #f4cccc;
 }
 
+.site-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
 .site-footer {
   padding: 18px 16px calc(24px + var(--safe-bottom));
   color: var(--muted);
   text-align: center;
   font-size: 0.95rem;
+}
+
+.site-footer p {
+  margin: 0 0 8px;
+}
+
+.site-footer a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .grid {
