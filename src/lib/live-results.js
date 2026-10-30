@@ -1,3 +1,4 @@
+import { normalizeTeamKey, pairKey } from './match-results.js'
 import { readWorkbook } from './xlsx.js'
 
 export const RESULTS_SHEET_ID = '1FP8_MLzGjGBecs3EUyjHZT_rASMqTODmItUFqzstqcA'
@@ -108,7 +109,34 @@ export function parseResultsRows(rows) {
     if (sourceNote) parsed.sourceNote = sourceNote
     results.push(parsed)
   }
-  return results
+  return dedupeResultRows(results)
+}
+
+/** Same week and the same two sides, even if the captains swapped home and away. */
+function samePostedScore(kept, row) {
+  const sameEnds = normalizeTeamKey(kept.home) === normalizeTeamKey(row.home)
+  if (sameEnds) return kept.homeScore === row.homeScore && kept.awayScore === row.awayScore
+  return kept.homeScore === row.awayScore && kept.awayScore === row.homeScore
+}
+
+function dedupeResultRows(rows) {
+  const keptByPair = new Map()
+  const unique = []
+  for (const row of rows) {
+    const key = pairKey(row.weekStartsOn, row.home, row.away)
+    const kept = keptByPair.get(key)
+    if (!kept) {
+      keptByPair.set(key, row)
+      unique.push(row)
+      continue
+    }
+    if (!samePostedScore(kept, row)) {
+      console.warn(
+        `[results] Duplicate match ${row.weekStartsOn} ${kept.home} vs ${kept.away}: keeping ${kept.homeScore}-${kept.awayScore}, ignoring ${row.home} ${row.homeScore}-${row.awayScore} ${row.away}`,
+      )
+    }
+  }
+  return unique
 }
 
 /** Results tab only. Unresolved and Instructions are not score rows. */

@@ -1,7 +1,7 @@
 import matchResults from '../data/match-results.json' with { type: 'json' }
 import { canonicalDivision, getTeamDirectory } from './fixtures.js'
 
-function normalizeTeamKey(name) {
+export function normalizeTeamKey(name) {
   return String(name || '')
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -16,7 +16,7 @@ function resultKey(weekId, home, away) {
 }
 
 /** Same fixture regardless of which side is listed as home in WhatsApp vs the sheet. */
-function pairKey(weekId, home, away) {
+export function pairKey(weekId, home, away) {
   const a = normalizeTeamKey(home)
   const b = normalizeTeamKey(away)
   const [left, right] = a < b ? [a, b] : [b, a]

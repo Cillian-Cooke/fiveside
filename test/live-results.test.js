@@ -12,6 +12,7 @@ import {
   parseResultsCsv,
   parseResultsWorkbook,
 } from '../src/lib/live-results.js'
+import { buildLeagueTables } from '../src/lib/fixtures.js'
 import { overlayMatchScores } from '../src/lib/match-results.js'
 import { decorateWeeks } from '../src/lib/schedule.js'
 import { readWorkbook } from '../src/lib/xlsx.js'
@@ -216,6 +217,63 @@ test('Results csv keeps quoted snippets from shifting columns', () => {
   assert.equal(results[1].home, 'Barely Athletic FC')
   assert.equal(results[1].awayScore, 10)
   assert.equal(results.some((row) => row.home === 'Ghost'), false)
+})
+
+test('a match posted twice in one week counts once', () => {
+  const warnings = []
+  const originalWarn = console.warn
+  console.warn = (...args) => warnings.push(args.join(' '))
+  let rows
+  let conflict
+  try {
+    rows = parseResultsCsv([
+      'weekStartsOn,home,away,homeScore,awayScore',
+      '2026-10-26,Iteam,Carling F.C.,8,3',
+      '2026-10-26,Iteam,Carling F.C.,8,3',
+      '2026-10-26,Carling F.C.,Iteam,3,8',
+      '2026-11-02,Iteam,Carling F.C.,2,1',
+    ].join('\n'))
+    conflict = parseResultsCsv([
+      'weekStartsOn,home,away,homeScore,awayScore',
+      '2026-10-26,Iteam,Carling F.C.,8,3',
+      '2026-10-26,Carling F.C.,Iteam,9,1',
+    ].join('\n'))
+  } finally {
+    console.warn = originalWarn
+  }
+
+  assert.equal(warnings.length, 1)
+  assert.match(warnings[0], /keeping 8-3/)
+  assert.match(warnings[0], /ignoring Carling F\.C\. 9-1 Iteam/)
+  assert.equal(rows.length, 2)
+  assert.deepEqual(
+    rows.map((row) => [row.weekStartsOn, row.home, row.away, row.homeScore, row.awayScore]),
+    [
+      ['2026-10-26', 'Iteam', 'Carling F.C.', 8, 3],
+      ['2026-11-02', 'Iteam', 'Carling F.C.', 2, 1],
+    ],
+  )
+  assert.equal(conflict.length, 1)
+  assert.equal(conflict[0].homeScore, 8)
+  assert.equal(conflict[0].awayScore, 3)
+
+  const fixtures = [
+    { status: 'match', weekId: '2026-10-26', home: 'Iteam', away: 'Carling F.C.', division: 'Division 5', color: '#A4C2F4' },
+    { status: 'match', weekId: '2026-11-02', home: 'Carling F.C.', away: 'Iteam', division: 'Division 5', color: '#A4C2F4' },
+  ]
+  const overlaid = overlayMatchScores(fixtures, rows)
+  const scored = overlaid.filter((fixture) => typeof fixture.homeScore === 'number')
+  assert.equal(scored.length, 2)
+  assert.equal(scored[0].homeScore, 8)
+  assert.equal(scored[0].awayScore, 3)
+  assert.equal(scored[1].homeScore, 1)
+  assert.equal(scored[1].awayScore, 2)
+
+  const iteam = buildLeagueTables(overlaid).get('Division 5').find((row) => row.name === 'Iteam')
+  assert.equal(iteam.played, 2)
+  assert.equal(iteam.gf, 10)
+  assert.equal(iteam.ga, 4)
+  assert.equal(iteam.points, 6)
 })
 
 test('baked scores still apply, and live rows replace them', () => {
