@@ -117,3 +117,14 @@ test('mobile day jumps to today, or the next day that has a game', () => {
     'tuesday',
   )
 })
+
+test('Friday 17:00 Dublin flips to next week, 16:59 does not', async () => {
+  const { selectOpenWeek } = await import('../src/lib/schedule.js')
+  const weeks = [
+    { startsOn: '2026-10-26', weekNumber: 5 },
+    { startsOn: '2026-11-02', weekNumber: 6 },
+  ]
+  assert.equal(selectOpenWeek(weeks, new Date('2026-10-30T16:59:00Z')).week.weekNumber, 5)
+  assert.equal(selectOpenWeek(weeks, new Date('2026-10-30T17:00:00Z')).week.weekNumber, 6)
+  assert.equal(selectOpenWeek(weeks, new Date('2026-11-02T09:00:00Z')).week.weekNumber, 6)
+})

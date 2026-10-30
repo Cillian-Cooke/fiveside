@@ -31,6 +31,8 @@ export function dublinParts(now = new Date()) {
     month: 'numeric',
     day: 'numeric',
     weekday: 'short',
+    hour: 'numeric',
+    hourCycle: 'h23',
   }).formatToParts(now)
   const get = (type) => parts.find((part) => part.type === type)?.value
   return {
@@ -38,6 +40,7 @@ export function dublinParts(now = new Date()) {
     month: Number(get('month')),
     day: Number(get('day')),
     weekday: get('weekday'),
+    hour: Number(get('hour')),
   }
 }
 
