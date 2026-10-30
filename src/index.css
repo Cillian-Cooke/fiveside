@@ -1055,6 +1055,7 @@ input:focus-visible {
 }
 
 .grid-slot .score {
+  display: none;
   margin: 1px 0 0;
   font-size: 0.58rem;
   text-align: center;
@@ -1426,6 +1427,10 @@ input:focus-visible {
 
   .grid-slot .vs {
     font-size: 0.7rem;
+  }
+
+  .grid-slot .score {
+    display: block;
   }
 
   .grid-slot .free-copy {
