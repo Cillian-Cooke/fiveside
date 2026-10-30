@@ -3,6 +3,7 @@ import fallbackPayload from '../data/seed-payload.json' with { type: 'json' }
 import { setDivisionColors } from '../constants.js'
 import { setTeamDirectory } from './fixtures.js'
 import { decorateWeeks } from './schedule.js'
+import { startFixturesRefresh } from './schedule-refresh.js'
 
 const ScheduleContext = createContext(null)
 
@@ -11,8 +12,6 @@ function applyPayload(payload) {
   setDivisionColors(payload.legend)
   return decorateWeeks(payload)
 }
-
-const REFRESH_MS = 60_000
 
 async function fetchPayload() {
   const response = await fetch('/api/fixtures', {
@@ -37,39 +36,31 @@ export function ScheduleProvider({ children }) {
     between: null,
   })
 
-  useEffect(() => {
-    let ignore = false
-
-    async function load(initial) {
-      try {
-        const payload = await fetchPayload()
-        if (ignore) return
-        setState({
-          status: 'ready',
-          error: null,
-          source: 'live',
-          updatedAt: payload.updatedAt,
-          ...applyPayload(payload),
-        })
-      } catch (error) {
-        if (ignore || !initial) return
-        setState({
-          status: 'ready',
-          error: error?.message || 'Could not load the sheet',
-          source: 'seed',
-          updatedAt: fallbackPayload.updatedAt,
-          ...applyPayload(fallbackPayload),
-        })
-      }
-    }
-
-    load(true)
-    const timer = setInterval(() => load(false), REFRESH_MS)
-    return () => {
-      ignore = true
-      clearInterval(timer)
-    }
-  }, [])
+  useEffect(
+    () =>
+      startFixturesRefresh({
+        fetchPayload,
+        onLive(payload) {
+          setState({
+            status: 'ready',
+            error: null,
+            source: 'live',
+            updatedAt: payload.updatedAt,
+            ...applyPayload(payload),
+          })
+        },
+        onFallback(error) {
+          setState({
+            status: 'ready',
+            error: error?.message || 'Could not load the sheet',
+            source: 'seed',
+            updatedAt: fallbackPayload.updatedAt,
+            ...applyPayload(fallbackPayload),
+          })
+        },
+      }),
+    [],
+  )
 
   return <ScheduleContext.Provider value={state}>{children}</ScheduleContext.Provider>
 }
