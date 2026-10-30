@@ -1,8 +1,8 @@
-import { loadLiveFixtures } from '../src/lib/live-fixtures.js'
+import { loadPublishedSchedule } from '../src/lib/live-schedule.js'
 
 export default async function handler(_req, res) {
   try {
-    const payload = await loadLiveFixtures()
+    const payload = await loadPublishedSchedule()
     res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300')
     res.setHeader('Content-Type', 'application/json; charset=utf-8')
     res.status(200).json(payload)

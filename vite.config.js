@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { loadLiveFixtures } from './src/lib/live-fixtures.js'
+import { loadPublishedSchedule } from './src/lib/live-schedule.js'
 
 function fixturesApi() {
   return {
@@ -8,7 +8,7 @@ function fixturesApi() {
     configureServer(server) {
       server.middlewares.use('/api/fixtures', async (_req, res) => {
         try {
-          const payload = await loadLiveFixtures()
+          const payload = await loadPublishedSchedule()
           res.setHeader('Content-Type', 'application/json; charset=utf-8')
           res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300')
           res.end(JSON.stringify(payload))

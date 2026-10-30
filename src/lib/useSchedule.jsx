@@ -12,9 +12,12 @@ function applyPayload(payload) {
   return decorateWeeks(payload)
 }
 
+const REFRESH_MS = 60_000
+
 async function fetchPayload() {
   const response = await fetch('/api/fixtures', {
     headers: { accept: 'application/json' },
+    cache: 'no-store',
     signal: AbortSignal.timeout(12000),
   })
   if (!response.ok) throw new Error(`Could not load the sheet (${response.status})`)
@@ -36,8 +39,10 @@ export function ScheduleProvider({ children }) {
 
   useEffect(() => {
     let ignore = false
-    fetchPayload()
-      .then((payload) => {
+
+    async function load(initial) {
+      try {
+        const payload = await fetchPayload()
         if (ignore) return
         setState({
           status: 'ready',
@@ -46,9 +51,8 @@ export function ScheduleProvider({ children }) {
           updatedAt: payload.updatedAt,
           ...applyPayload(payload),
         })
-      })
-      .catch((error) => {
-        if (ignore) return
+      } catch (error) {
+        if (ignore || !initial) return
         setState({
           status: 'ready',
           error: error?.message || 'Could not load the sheet',
@@ -56,9 +60,14 @@ export function ScheduleProvider({ children }) {
           updatedAt: fallbackPayload.updatedAt,
           ...applyPayload(fallbackPayload),
         })
-      })
+      }
+    }
+
+    load(true)
+    const timer = setInterval(() => load(false), REFRESH_MS)
     return () => {
       ignore = true
+      clearInterval(timer)
     }
   }, [])
 

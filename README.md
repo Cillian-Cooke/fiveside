@@ -24,4 +24,6 @@ node scripts/refresh-seed.mjs
 
 That refreshes the bundled fallback only. It is not scheduled.
 
-Match scores live in `src/data/match-results.json` and are matched onto fixtures by week Monday and the two team names.
+Match scores come from the [Results sheet](https://docs.google.com/spreadsheets/d/1FP8_MLzGjGBecs3EUyjHZT_rASMqTODmItUFqzstqcA/edit). `/api/fixtures` reads that workbook’s Results tab (public xlsx export, same one-minute cache as the fixtures). Scores are matched onto fixtures by week Monday and the two team names. If the export cannot be reached, the site uses `src/data/match-results.json` so the tables stay up.
+
+To record a score, append a row on the Results tab with `weekStartsOn` (that week’s Monday), `home`, `away`, `homeScore`, and `awayScore`. Anyone-with-the-link viewer sharing has to stay on, or the export stops loading and the site falls back to the saved file. The Unresolved tab is ignored.
