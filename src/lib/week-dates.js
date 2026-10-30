@@ -114,6 +114,16 @@ export function dublinToday(now = new Date()) {
   }
 }
 
+/** From Friday 17:00 Dublin through Sunday the current round is finished. */
+export function roundIsOver(now = new Date()) {
+  const today = dublinToday(now)
+  return (
+    today.dayName === 'saturday' ||
+    today.dayName === 'sunday' ||
+    (today.dayName === 'friday' && today.hour >= 17)
+  )
+}
+
 /** Mon–Fri range, compact when both days share a month: "19–23 Oct". */
 export function formatCompactRange(startsOn) {
   const [year, month, day] = String(startsOn).split('-').map(Number)
