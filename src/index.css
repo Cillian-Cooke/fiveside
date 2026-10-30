@@ -992,15 +992,7 @@ input:focus-visible {
   color: #fff;
 }
 
-.slot-select {
-  display: block;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  text-align: inherit;
+.slot-cell {
   cursor: pointer;
 }
 
@@ -1423,8 +1415,8 @@ input:focus-visible {
     box-shadow: none;
   }
 
-  .slot-select.mobile-only {
-    display: none;
+  .timetable td.slot-cell {
+    cursor: default;
   }
 
   .grid-slot .team-name {

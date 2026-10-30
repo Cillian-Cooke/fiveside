@@ -98,13 +98,6 @@ function slotIsBlank(fixture, query, league, searching) {
   return !isMatchVisible(fixture, query, league)
 }
 
-function slotLabel(fixture, day) {
-  const when = DAY_LONG[day]
-  if (!fixture || fixture.status === 'unavailable') return `${when}, unavailable`
-  if (fixture.status === 'free') return `${when}, free slot`
-  return `${when}, ${fixture.home} versus ${fixture.away}`
-}
-
 function DayHeading({ day, selectedDay, todayName, onSelectDay }) {
   const selected = day === selectedDay
   return (
@@ -123,23 +116,22 @@ function DayHeading({ day, selectedDay, todayName, onSelectDay }) {
   )
 }
 
+function selectDayFromCell(event, day, onSelectDay) {
+  if (window.matchMedia('(min-width: 960px)').matches) return
+  if (event.target instanceof Element && event.target.closest('a')) return
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+  onSelectDay(day)
+}
+
 function GridCell({ fixture, day, selectedDay, onSelectDay, query, league, searching }) {
   const selected = day === selectedDay
   const blank = slotIsBlank(fixture, query, league, searching)
   return (
-    <td className={selected ? 'is-on' : undefined}>
-      <button
-        type="button"
-        className="slot-select mobile-only"
-        aria-pressed={selected}
-        aria-label={slotLabel(fixture, day)}
-        onClick={() => onSelectDay(day)}
-      >
-        <MatchCard fixture={fixture} compact plain blank={blank} />
-      </button>
-      <div className="desktop-only">
-        <MatchCard fixture={fixture} compact blank={blank} />
-      </div>
+    <td
+      className={selected ? 'is-on slot-cell' : 'slot-cell'}
+      onClick={(event) => selectDayFromCell(event, day, onSelectDay)}
+    >
+      <MatchCard fixture={fixture} compact blank={blank} />
     </td>
   )
 }
@@ -213,31 +205,18 @@ function DesktopGrid({ fixtures, query, league, searching, selectedDay, todayNam
                 {DAYS.map((day) => {
                   const halls = hallCellFixtures(fixtures, day, venue)
                   return (
-                    <td key={day} className={day === selectedDay ? 'is-on' : undefined}>
+                    <td
+                      key={day}
+                      className={day === selectedDay ? 'is-on slot-cell' : 'slot-cell'}
+                      onClick={(event) => selectDayFromCell(event, day, onSelectDay)}
+                    >
                       {halls.map((hall) => (
-                        <span key={hall.id} className="hall-slot">
-                          <button
-                            type="button"
-                            className="slot-select mobile-only"
-                            aria-pressed={day === selectedDay}
-                            aria-label={slotLabel(hall, day)}
-                            onClick={() => onSelectDay(day)}
-                          >
-                            <MatchCard
-                              fixture={hall}
-                              compact
-                              plain
-                              blank={slotIsBlank(hall, query, league, searching)}
-                            />
-                          </button>
-                          <span className="desktop-only">
-                            <MatchCard
-                              fixture={hall}
-                              compact
-                              blank={slotIsBlank(hall, query, league, searching)}
-                            />
-                          </span>
-                        </span>
+                        <MatchCard
+                          key={hall.id}
+                          fixture={hall}
+                          compact
+                          blank={slotIsBlank(hall, query, league, searching)}
+                        />
                       ))}
                     </td>
                   )

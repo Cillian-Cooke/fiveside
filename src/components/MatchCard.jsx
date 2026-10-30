@@ -3,7 +3,7 @@ import { canonicalMatchColor, contrastText } from '../lib/fixtures.js'
 import TeamLink from './TeamLink.jsx'
 import { teamDisplayName, teamShortName } from '../lib/teams.js'
 
-function TeamName({ name, division, compact, plain }) {
+function TeamName({ name, division, compact }) {
   const full = teamDisplayName(name, division)
   const body = compact ? (
     <>
@@ -13,7 +13,6 @@ function TeamName({ name, division, compact, plain }) {
   ) : (
     full
   )
-  if (plain) return <span className="team-name">{body}</span>
   return (
     <TeamLink className="team-name team-link" name={name} division={division}>
       {body}
@@ -25,7 +24,6 @@ export default function MatchCard({
   fixture,
   compact = false,
   blank = false,
-  plain = false,
   quiet = false,
 }) {
   if (blank) {
@@ -75,9 +73,9 @@ export default function MatchCard({
         <span className="division-label">{divisionLabel(fixture.division, { short: compact })}</span>
       </div>
       <div className="teams">
-        <TeamName name={fixture.home} division={fixture.division} compact={compact} plain={plain} />
+        <TeamName name={fixture.home} division={fixture.division} compact={compact} />
         <div className="vs">v</div>
-        <TeamName name={fixture.away} division={fixture.division} compact={compact} plain={plain} />
+        <TeamName name={fixture.away} division={fixture.division} compact={compact} />
       </div>
       {hasScore ? (
         <p className="score">
