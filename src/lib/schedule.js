@@ -22,13 +22,17 @@ export function weekPath(week) {
 
 /**
  * The week the site should open on.
+ * From Friday 17:00 Dublin through Sunday the round is over, so the next tab is shown with a note.
  * Saturday and Sunday are between rounds, so the next tab is shown with a note.
  */
 export function selectOpenWeek(weeks, now = new Date()) {
   const list = weeks || []
   if (!list.length) return { week: null, between: false, finished: null }
   const today = dublinToday(now)
-  const weekend = today.dayName === 'saturday' || today.dayName === 'sunday'
+  const weekend =
+    today.dayName === 'saturday' ||
+    today.dayName === 'sunday' ||
+    (today.dayName === 'friday' && today.hour >= 17)
   let containing = null
   for (const week of list) {
     const nextMonday = shiftStartsOn(week.startsOn, 1)
