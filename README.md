@@ -27,3 +27,17 @@ That refreshes the bundled fallback only. It is not scheduled.
 Match scores come from the [Results sheet](https://docs.google.com/spreadsheets/d/1FP8_MLzGjGBecs3EUyjHZT_rASMqTODmItUFqzstqcA/edit). `/api/fixtures` reads that workbook’s Results tab (public xlsx export, same one-minute cache as the fixtures). Scores are matched onto fixtures by week Monday and the two team names. If the export cannot be reached, the site uses `src/data/match-results.json` so the tables stay up.
 
 To record a score, append a row on the Results tab with `weekStartsOn` (that week’s Monday), `home`, `away`, `homeScore`, and `awayScore`. Anyone-with-the-link viewer sharing has to stay on, or the export stops loading and the site falls back to the saved file. The Unresolved tab is ignored.
+
+## Deep links
+
+The app is a client-side router. Vercel only serves a file when one exists, so a direct open of `/teams` or `/teams/<slug>` used to come back as plain text `NOT_FOUND`. `vercel.json` rewrites every other path to `index.html` after the filesystem is checked. `/api/*` (including `/api/fixtures` and `/api/og`) and built files under `/assets/` are excluded from that rewrite. Link-preview bots still get share HTML from `middleware.js` on `/`, `/week/*`, `/tables`, `/tournament`, and `/teams/*`.
+
+After a production deploy, these should be `200` with `content-type: text/html` and a document that contains `<div id="root">`. A `text/plain` body of `NOT_FOUND` means the rewrite did not apply:
+
+```bash
+curl -sI https://fiveside.vercel.app/teams
+curl -sI https://fiveside.vercel.app/tables
+curl -sI https://fiveside.vercel.app/teams/git-gud-division-7
+```
+
+`/api/fixtures` should stay `application/json`. A WhatsApp user-agent on `/teams/<slug>` should stay `200` HTML with `cache-control` containing `s-maxage=120`.
