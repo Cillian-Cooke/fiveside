@@ -6,5 +6,11 @@
     "middleware.js": {
       "includeFiles": "src/data/seed-payload.json"
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/((?!api/|assets/).*)",
+      "destination": "/index.html"
+    }
+  ]
 }
