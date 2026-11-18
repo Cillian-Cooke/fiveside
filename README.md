@@ -28,6 +28,8 @@ Match scores come from the [Results sheet](https://docs.google.com/spreadsheets/
 
 To record a score, append a row on the Results tab with `weekStartsOn` (that week’s Monday), `home`, `away`, `homeScore`, and `awayScore`. Anyone-with-the-link viewer sharing has to stay on, or the export stops loading and the site falls back to the saved file. The Unresolved tab is ignored.
 
+Knockout ties use the same Results tab. Add a `stage` column. Leave it blank for a league game. For a cup tie write `Quarter-final`, `Semi-final`, or `Final` (shorter forms such as `quarter`, `semi`, and `final` are fine). Include `division`, `home`, and `away`. Scores can stay blank until the match is played; that row still fills the division’s bracket. The fixtures sheet still says when and where the game is played. The site matches the two sheets by the week Monday and the two team names, then shows that stage on the bracket and on each team’s next game and past results.
+
 ## Deep links
 
 The app is a client-side router. Vercel only serves a file when one exists, so a direct open of `/teams` or `/teams/<slug>` used to come back as plain text `NOT_FOUND`. `vercel.json` rewrites every other path to `index.html` after the filesystem is checked. `/api/*` (including `/api/fixtures` and `/api/og`) and built files under `/assets/` are excluded from that rewrite. Link-preview bots still get share HTML from `middleware.js` on `/`, `/week/*`, `/tables`, `/tournament`, and `/teams/*`.

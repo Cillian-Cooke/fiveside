@@ -152,6 +152,7 @@ function syntheticFixturesFromResults(fixtures, rows) {
       division,
       color,
       resultOnly: true,
+      ...(row.knockoutRound ? { knockoutRound: row.knockoutRound } : {}),
     })
   }
   return extras
@@ -170,6 +171,7 @@ export function overlayMatchScores(fixtures, results) {
     return {
       ...fixture,
       ...scores,
+      ...(hit.row.knockoutRound ? { knockoutRound: hit.row.knockoutRound } : {}),
     }
   })
   const extras = syntheticFixturesFromResults(overlaid, rows)

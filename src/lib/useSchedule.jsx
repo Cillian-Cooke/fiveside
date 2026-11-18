@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import fallbackPayload from '../data/seed-payload.json' with { type: 'json' }
 import { setDivisionColors } from '../constants.js'
+import { setKnockoutDraw } from '../data/knockouts.js'
 import { setTeamDirectory } from './fixtures.js'
 import { decorateWeeks } from './schedule.js'
 import { startFixturesRefresh } from './schedule-refresh.js'
@@ -10,7 +11,12 @@ const ScheduleContext = createContext(null)
 function applyPayload(payload) {
   setTeamDirectory(payload.teams)
   setDivisionColors(payload.legend)
-  return { ...decorateWeeks(payload), instagram: payload.instagram || {} }
+  setKnockoutDraw(payload.knockouts)
+  return {
+    ...decorateWeeks(payload),
+    instagram: payload.instagram || {},
+    knockouts: payload.knockouts || [],
+  }
 }
 
 async function fetchPayload() {
@@ -36,6 +42,7 @@ export function ScheduleProvider({ children }) {
     open: null,
     between: null,
     instagram: {},
+    knockouts: [],
   })
 
   useEffect(

@@ -23,7 +23,8 @@ function emptyDraw() {
 export const KNOCKOUT_DRAW = Object.fromEntries(DIVISIONS.map((name) => [name, emptyDraw()]))
 
 export function knockoutDraw(division) {
-  return KNOCKOUT_DRAW[division] || emptyDraw()
+  const source = liveDraw || KNOCKOUT_DRAW
+  return source[divisionName(division)] || emptyDraw()
 }
 
 const ROUND_LABEL = {
@@ -32,9 +33,66 @@ const ROUND_LABEL = {
   final: 'Final',
 }
 
+export function canonicalStage(value) {
+  const text = String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z]/g, '')
+  if (!text) return ''
+  if (['quarter', 'quarters', 'quarterfinal', 'quarterfinals', 'qf'].includes(text)) {
+    return 'Quarter-final'
+  }
+  if (['semi', 'semis', 'semifinal', 'semifinals', 'sf'].includes(text)) return 'Semi-final'
+  if (['final', 'finals'].includes(text)) return 'Final'
+  return ''
+}
+
 function divisionName(name) {
-  if (name === 'Mixed League' || name === 'Mixed') return 'Mixed Division'
-  return name || ''
+  const text = String(name || '').replace(/\s+/g, ' ').trim()
+  if (/^mixed(?:\s+(?:division|league))?$/i.test(text)) return 'Mixed Division'
+  const match = text.match(/^(?:div(?:ision)?\.?\s*)(\d+)$/i)
+  if (match) return `Division ${match[1]}`
+  return text
+}
+
+const ROUND_ID = {
+  'Quarter-final': 'quarters',
+  'Semi-final': 'semis',
+  Final: 'final',
+}
+
+/** Places Results-sheet ties into each division's bracket, in sheet order. */
+export function knockoutDrawFromTies(ties) {
+  const draws = Object.fromEntries(DIVISIONS.map((name) => [name, emptyDraw()]))
+  for (const tie of ties || []) {
+    const division = divisionName(tie.division)
+    const round = ROUND_ID[tie.knockoutRound] || ROUND_ID[canonicalStage(tie.stage || tie.knockoutRound)]
+    const slots = draws[division]?.[round]
+    if (!slots || !tie.home || !tie.away) continue
+    const key = pairKey(tie.home, tie.away)
+    let placed = false
+    for (let index = 0; index < slots.length; index += 2) {
+      if (slots[index] && slots[index + 1] && pairKey(slots[index], slots[index + 1]) === key) {
+        placed = true
+        break
+      }
+    }
+    if (placed) continue
+    for (let index = 0; index < slots.length; index += 2) {
+      if (!slots[index] && !slots[index + 1]) {
+        slots[index] = tie.home
+        slots[index + 1] = tie.away
+        break
+      }
+    }
+  }
+  return draws
+}
+
+let liveDraw = null
+
+/** Ties from the Results sheet. An empty list clears back to blank brackets. */
+export function setKnockoutDraw(ties) {
+  liveDraw = Array.isArray(ties) && ties.length ? knockoutDrawFromTies(ties) : null
 }
 
 function pairKey(home, away) {
@@ -45,7 +103,7 @@ function pairKey(home, away) {
 export function knockoutRoundLabel(fixture) {
   if (!fixture || fixture.status === 'free' || fixture.status === 'unavailable') return ''
   if (fixture.knockoutRound) return fixture.knockoutRound
-  const draw = KNOCKOUT_DRAW[divisionName(fixture.division)]
+  const draw = (liveDraw || KNOCKOUT_DRAW)[divisionName(fixture.division)]
   if (!draw || !fixture.home || !fixture.away) return ''
   const key = pairKey(fixture.home, fixture.away)
   for (const id of ['final', 'semis', 'quarters']) {

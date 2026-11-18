@@ -9,6 +9,7 @@ import {
   RESULTS_SHEET_ID,
   clearResultsCache,
   loadLiveResults,
+  parseKnockoutRows,
   parseResultsCsv,
   parseResultsWorkbook,
 } from '../src/lib/live-results.js'
@@ -429,6 +430,44 @@ test('a hanging or non-xlsx results export is rejected and not cached', async ()
 })
 
 import { parseTeamLinksWorkbook as parseTeamLinks } from '../src/lib/live-results.js'
+
+test('stage marks a knockout result and an unscored draw still fills the bracket', () => {
+  const scored = [
+    'weekStartsOn,division,home,away,homeScore,awayScore,stage',
+    '2026-11-16,Division 4,CSB FC,Inter Milanagement,3,1,Quarter-final',
+    '2026-11-16,Division 4,Ø Zone,Real Medrid,2,2,',
+    '2026-11-23,Div 4,CSB FC,Sools fc,,,semi',
+  ].join('\n')
+  const results = parseResultsCsv(scored)
+  assert.equal(results.length, 2)
+  assert.equal(results[0].knockoutRound, 'Quarter-final')
+  assert.equal(results[1].knockoutRound, undefined)
+
+  const ties = parseKnockoutRows(scored.split('\n').map((line) => line.split(',')))
+  assert.deepEqual(
+    ties.map((tie) => [tie.home, tie.knockoutRound]),
+    [
+      ['CSB FC', 'Quarter-final'],
+      ['CSB FC', 'Semi-final'],
+    ],
+  )
+
+  const overlaid = overlayMatchScores(
+    [
+      {
+        status: 'match',
+        weekId: '2026-11-16',
+        home: 'Inter Milanagement',
+        away: 'CSB FC',
+        division: 'Division 4',
+      },
+    ],
+    results,
+  )
+  assert.equal(overlaid[0].homeScore, 1)
+  assert.equal(overlaid[0].awayScore, 3)
+  assert.equal(overlaid[0].knockoutRound, 'Quarter-final')
+})
 
 test('Teams tab gives Instagram links only for filled rows', () => {
   const links = parseTeamLinks([

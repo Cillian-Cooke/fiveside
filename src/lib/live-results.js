@@ -1,3 +1,4 @@
+import { canonicalStage } from '../data/knockouts.js'
 import { normalizeTeamKey, pairKey } from './match-results.js'
 import { readWorkbook } from './xlsx.js'
 
@@ -10,6 +11,7 @@ const MEMORY_TTL_MS = 60_000
 const SHEET_TIMEOUT_MS = 8_000
 
 const REQUIRED_HEADERS = ['weekstartson', 'home', 'away', 'homescore', 'awayscore']
+const STAGE_HEADERS = ['stage', 'round', 'level', 'knockout', 'matchlevel']
 
 let cached = null
 let cachedAt = 0
@@ -69,24 +71,36 @@ function valueAt(row, headers, key) {
   return textOf(row[index])
 }
 
-/**
- * Rows shaped like match-results.json: weekStartsOn, home, away, homeScore, awayScore.
- * Incomplete rows are dropped. `rows` may be xlsx cells (`{ text }`) or plain strings.
- */
-export function parseResultsRows(rows) {
+function locateResultsTable(rows) {
   const list = rows || []
-  let headerRow = -1
-  let headers = null
   const scan = Math.min(list.length, 8)
   for (let i = 0; i < scan; i += 1) {
     const map = headerIndex(list[i] || [])
     if (REQUIRED_HEADERS.every((key) => map.has(key))) {
-      headerRow = i
-      headers = map
-      break
+      return { headerRow: i, headers: map, list }
     }
   }
-  if (!headers) throw new Error('Results sheet is missing a header row')
+  return null
+}
+
+function stageFrom(row, headers) {
+  for (const key of STAGE_HEADERS) {
+    if (!headers.has(key)) continue
+    const label = canonicalStage(valueAt(row, headers, key))
+    if (label) return label
+  }
+  return ''
+}
+
+/**
+ * Rows shaped like match-results.json: weekStartsOn, home, away, homeScore, awayScore.
+ * Incomplete rows are dropped. `rows` may be xlsx cells (`{ text }`) or plain strings.
+ * Optional `stage` (also `round`, `level`, or `match level`) marks a knockout tie.
+ */
+export function parseResultsRows(rows) {
+  const table = locateResultsTable(rows)
+  if (!table) throw new Error('Results sheet is missing a header row')
+  const { headerRow, headers, list } = table
 
   const results = []
   for (let i = headerRow + 1; i < list.length; i += 1) {
@@ -103,13 +117,39 @@ export function parseResultsRows(rows) {
     const division = clean(valueAt(row, headers, 'division'))
     const fixtureMatched = clean(valueAt(row, headers, 'fixturematched'))
     const sourceNote = clean(valueAt(row, headers, 'sourcenote'))
+    const knockoutRound = stageFrom(row, headers)
     if (playedOn) parsed.playedOn = playedOn
     if (division) parsed.division = division
     if (fixtureMatched) parsed.fixtureMatched = fixtureMatched
     if (sourceNote) parsed.sourceNote = sourceNote
+    if (knockoutRound) parsed.knockoutRound = knockoutRound
     results.push(parsed)
   }
   return dedupeResultRows(results)
+}
+
+/**
+ * Knockout ties from the Results tab, including rows that are drawn but not scored yet.
+ * A row counts when it has two teams, a division, and a stage. League rows are skipped.
+ */
+export function parseKnockoutRows(rows) {
+  const table = locateResultsTable(rows)
+  if (!table) return []
+  const { headerRow, headers, list } = table
+  const ties = []
+  for (let i = headerRow + 1; i < list.length; i += 1) {
+    const row = list[i] || []
+    const home = clean(valueAt(row, headers, 'home'))
+    const away = clean(valueAt(row, headers, 'away'))
+    const division = clean(valueAt(row, headers, 'division'))
+    const knockoutRound = stageFrom(row, headers)
+    if (!home || !away || !division || !knockoutRound) continue
+    const tie = { division, home, away, knockoutRound }
+    const weekStartsOn = parseDate(valueAt(row, headers, 'weekstartson'))
+    if (weekStartsOn) tie.weekStartsOn = weekStartsOn
+    ties.push(tie)
+  }
+  return ties
 }
 
 /** Same week and the same two sides, even if the captains swapped home and away. */
@@ -139,11 +179,22 @@ function dedupeResultRows(rows) {
   return unique
 }
 
+function resultsSheet(sheets) {
+  return (sheets || []).find((item) => clean(item?.name).toLowerCase() === 'results')
+}
+
 /** Results tab only. Unresolved and Instructions are not score rows. */
 export function parseResultsWorkbook(sheets) {
-  const sheet = (sheets || []).find((item) => clean(item?.name).toLowerCase() === 'results')
+  const sheet = resultsSheet(sheets)
   if (!sheet) throw new Error('Results sheet export had no Results tab')
   return parseResultsRows(sheet.rows)
+}
+
+/** Knockout ties on the Results tab. Missing tab or column yields an empty draw. */
+export function parseKnockoutWorkbook(sheets) {
+  const sheet = resultsSheet(sheets)
+  if (!sheet) return []
+  return parseKnockoutRows(sheet.rows)
 }
 
 /** Only http(s) links count; anything else (blank, "n/a") means no link. */
@@ -260,6 +311,12 @@ export async function loadLiveResults({
   const sheets = readWorkbook(bytes)
   const results = parseResultsWorkbook(sheets)
   if (!results.length) throw new Error('Results sheet had no score rows')
+  let knockouts = []
+  try {
+    knockouts = parseKnockoutWorkbook(sheets)
+  } catch (error) {
+    console.error('[results] Knockouts', error)
+  }
   let instagram = {}
   try {
     instagram = parseTeamLinksWorkbook(sheets)
@@ -267,7 +324,7 @@ export async function loadLiveResults({
     console.error('[results] Teams tab', error)
   }
 
-  cached = { results, instagram, updatedAt: now.toISOString() }
+  cached = { results, knockouts, instagram, updatedAt: now.toISOString() }
   cachedAt = now.getTime()
   return cached
 }

@@ -3,8 +3,9 @@ import { useLocation } from 'react-router-dom'
 import { divisionPalette } from '../constants.js'
 import LeagueFilters from '../components/LeagueFilters.jsx'
 import TeamLink from '../components/TeamLink.jsx'
-import { knockoutDraw } from '../data/knockouts.js'
+import { knockoutDrawFromTies } from '../data/knockouts.js'
 import { contrastText } from '../lib/fixtures.js'
+import { useSchedule } from '../lib/useSchedule.jsx'
 import { readSnapshot, useStackPage } from '../lib/navStack.js'
 
 const ROUNDS = [
@@ -18,9 +19,7 @@ function Slot({ name, division }) {
   return <TeamLink className="bracket-slot bracket-team" name={name} division={division} />
 }
 
-function Bracket({ color, division }) {
-  const draw = knockoutDraw(division)
-
+function Bracket({ color, division, draw }) {
   return (
     <div className="bracket" style={{ '--division': color }}>
       {ROUNDS.map((round, roundIndex) => (
@@ -33,8 +32,8 @@ function Bracket({ color, division }) {
                 key={matchIndex}
                 aria-label={`${round.label}, match ${matchIndex + 1}`}
               >
-                <Slot name={draw[round.id][matchIndex * 2]} division={division} />
-                <Slot name={draw[round.id][matchIndex * 2 + 1]} division={division} />
+                <Slot name={draw?.[round.id]?.[matchIndex * 2]} division={division} />
+                <Slot name={draw?.[round.id]?.[matchIndex * 2 + 1]} division={division} />
                 {roundIndex < ROUNDS.length - 1 ? <span className="bracket-join" aria-hidden="true" /> : null}
               </div>
             ))}
@@ -49,8 +48,11 @@ export default function Tournament() {
   const location = useLocation()
   const snap = readSnapshot(location.key)
   const [league, setLeague] = useState(snap?.league ?? 'all')
+  const { knockouts = [] } = useSchedule()
 
   useStackPage({ league }, true)
+
+  const draws = useMemo(() => knockoutDrawFromTies(knockouts), [knockouts])
 
   const divisions = useMemo(
     () => divisionPalette().filter((division) => league === 'all' || division.name === league),
@@ -71,7 +73,7 @@ export default function Tournament() {
           >
             <h2>{division.name}</h2>
           </header>
-          <Bracket color={division.color} division={division.name} />
+          <Bracket color={division.color} division={division.name} draw={draws[division.name]} />
         </section>
       ))}
     </>

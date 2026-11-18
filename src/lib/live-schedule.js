@@ -19,6 +19,7 @@ export async function loadPublishedSchedule(options) {
   return {
     ...fixtures.value,
     results: results.value.results,
+    knockouts: results.value.knockouts || [],
     instagram: results.value.instagram || {},
   }
 }
