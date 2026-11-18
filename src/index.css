@@ -1090,6 +1090,93 @@ input:focus-visible {
   font-weight: 700;
 }
 
+.bracket {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding: 12px 12px 14px;
+}
+
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.bracket-round-label {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.bracket-round-matches {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 440px;
+}
+
+.bracket-match {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.bracket-slot {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  border: 1px solid color-mix(in srgb, var(--division, var(--line)) 42%, #cfcfcd);
+  border-left: 3px solid var(--division, var(--header));
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--division, #ddd) 14%, #fff);
+  overflow: hidden;
+}
+
+a.bracket-team {
+  height: auto;
+  min-height: 36px;
+  padding: 4px 6px;
+  color: var(--navy);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.15;
+  text-decoration: none;
+}
+
+a.bracket-team:hover,
+a.bracket-team:focus-visible {
+  text-decoration: underline;
+}
+
+.bracket-join {
+  position: absolute;
+  top: 50%;
+  right: -16px;
+  width: 16px;
+  height: calc(50% + 2px);
+  border-top: 2px solid var(--division, var(--header));
+  border-right: 2px solid var(--division, var(--header));
+}
+
+.bracket-match:nth-child(even) .bracket-join {
+  top: auto;
+  bottom: 50%;
+  height: calc(50% + 2px);
+  border-top: 0;
+  border-bottom: 2px solid var(--division, var(--header));
+}
+
 .placeholder-card {
   padding: 28px 22px;
   border: 1px solid var(--line);
@@ -1195,6 +1282,11 @@ input:focus-visible {
   color: var(--muted);
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+.result-round {
+  color: var(--ink);
+  font-weight: 800;
 }
 
 .result-row strong {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { BAY_TIMES, DAY_LONG, DAY_SHORT, DAYS, TIME_SHORT, VENUE_LABEL } from '../constants.js'
+import { BAY_TIMES, DAY_LONG, DAY_SHORT, DAYS, TIME_SHORT, VENUE_LABEL, divisionLabel } from '../constants.js'
 import { baySlot, canonicalMatchColor, contrastText } from './fixtures.js'
 import { ogPlain, ogTeamLabel } from './share-meta.js'
 
@@ -70,19 +70,22 @@ function TimeLabel({ time }) {
 }
 
 function nameSize(name) {
-  if (name.length > 28) return 42
-  if (name.length > 18) return 54
-  return 72
+  if (name.length > 28) return 52
+  if (name.length > 22) return 64
+  return 80
 }
 
 export function ogMatchCard(preview) {
   const fixture = preview?.fixture
-  const home = ogPlain(fixture?.home)
-  const away = ogPlain(fixture?.away)
+  const background = fixture ? canonicalMatchColor(fixture) : '#f6f6f5'
+  const color = fixture ? contrastText(background) : '#2c3034'
+  const home = ogPlain(fixture?.home) || ''
+  const away = ogPlain(fixture?.away) || ''
   const day = ogPlain(DAY_LONG[fixture?.day] || '')
   const time = ogPlain(fixture?.time).replace(/[–—]/g, '-')
   const place = ogPlain(VENUE_LABEL[fixture?.venue] || 'Venue to be confirmed')
-  const accent = fixture ? canonicalMatchColor(fixture) : '#005aa8'
+  const division = ogPlain(fixture?.knockoutRound || divisionLabel(fixture?.division))
+  const when = [day, time].filter(Boolean).join(', ')
 
   return React.createElement(
     'div',
@@ -92,8 +95,8 @@ export function ogMatchCard(preview) {
         height: H,
         display: 'flex',
         flexDirection: 'column',
-        background: '#f6f6f5',
-        padding: 28,
+        background,
+        color,
         fontFamily: 'Sora',
       },
     },
@@ -101,109 +104,66 @@ export function ogMatchCard(preview) {
       'div',
       {
         style: {
-          height: 84,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          background: '#33363b',
-          color: '#ffffff',
-          borderRadius: 8,
-          borderTop: '6px solid #005aa8',
-          padding: '0 28px',
-        },
-      },
-      React.createElement(
-        'div',
-        { style: { fontSize: 32, fontWeight: 700, letterSpacing: 1 } },
-        'TCD 5-A-SIDE',
-      ),
-      React.createElement(
-        'div',
-        { style: { fontSize: 28, fontWeight: 700, color: '#d7d8d6' } },
-        'Next game',
-      ),
-    ),
-    fixture
-      ? React.createElement(
-          'div',
-          {
-            style: {
-              flexGrow: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-            },
-          },
-          React.createElement(
-            'div',
-            { style: { fontSize: nameSize(home), fontWeight: 700, color: '#2c3034' } },
-            home || 'Home',
-          ),
-          React.createElement(
-            'div',
-            { style: { fontSize: 28, fontWeight: 700, color: '#5a5e63', marginTop: 6, marginBottom: 6 } },
-            'v',
-          ),
-          React.createElement(
-            'div',
-            { style: { fontSize: nameSize(away), fontWeight: 700, color: '#2c3034' } },
-            away || 'Away',
-          ),
-        )
-      : React.createElement(
-          'div',
-          {
-            style: {
-              flexGrow: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 54,
-              fontWeight: 700,
-              color: '#2c3034',
-            },
-          },
-          ogPlain(preview?.teamName) || 'No game coming up',
-        ),
-    React.createElement(
-      'div',
-      {
-        style: {
+          flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
           justifyContent: 'center',
-          background: '#ffffff',
-          borderRadius: 8,
-          borderLeft: `12px solid ${accent}`,
-          padding: '22px 28px',
+          padding: '40px 56px 48px',
         },
       },
+      React.createElement(
+        'div',
+        {
+          style: {
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+          },
+        },
+        React.createElement(
+          'div',
+          { style: { display: 'flex', flexDirection: 'column' } },
+          React.createElement(
+            'div',
+            { style: { fontSize: 36, fontWeight: 700, opacity: 0.9 } },
+            fixture ? when : 'Next game',
+          ),
+          React.createElement(
+            'div',
+            { style: { fontSize: 56, fontWeight: 700, marginTop: 2 } },
+            fixture ? place : ogPlain(preview?.teamName) || 'Team',
+          ),
+        ),
+        React.createElement(
+          'div',
+          { style: { fontSize: 32, fontWeight: 700, opacity: 0.9 } },
+          division,
+        ),
+      ),
       fixture
         ? React.createElement(
             'div',
-            { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } },
+            { style: { display: 'flex', flexDirection: 'column', marginTop: 28 } },
             React.createElement(
               'div',
-              { style: { fontSize: 32, fontWeight: 700, color: '#5a5e63' } },
-              day,
+              { style: { fontSize: nameSize(home), fontWeight: 700, lineHeight: 1.05 } },
+              home,
             ),
             React.createElement(
               'div',
-              { style: { fontSize: 64, fontWeight: 700, color: '#2c3034', marginTop: 4 } },
-              time,
+              { style: { fontSize: 32, fontWeight: 700, opacity: 0.72, marginTop: 4, marginBottom: 4 } },
+              'v',
             ),
             React.createElement(
               'div',
-              { style: { fontSize: 40, fontWeight: 700, color: '#005aa8', marginTop: 4 } },
-              place,
+              { style: { fontSize: nameSize(away), fontWeight: 700, lineHeight: 1.05 } },
+              away,
             ),
           )
         : React.createElement(
             'div',
-            { style: { fontSize: 36, fontWeight: 700, color: '#5a5e63' } },
+            { style: { fontSize: 54, fontWeight: 700, marginTop: 28 } },
             'No game coming up',
           ),
     ),

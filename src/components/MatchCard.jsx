@@ -70,7 +70,11 @@ export default function MatchCard({
         {compact ? null : (
           <span>{fixture.venue ? VENUE_LABEL[fixture.venue] : 'No slot yet'}</span>
         )}
-        <span className="division-label">{divisionLabel(fixture.division, { short: compact })}</span>
+        <span className="division-label">
+          {!compact && fixture.knockoutRound
+            ? fixture.knockoutRound
+            : divisionLabel(fixture.division, { short: compact })}
+        </span>
       </div>
       <div className="teams">
         <TeamName name={fixture.home} division={fixture.division} compact={compact} />

@@ -1,6 +1,6 @@
 import { useLayoutEffect, useMemo, useState } from 'react'
 import { useNavigate, useNavigationType, useParams } from 'react-router-dom'
-import { DAY_LONG, VENUE_LABEL } from '../constants.js'
+import { DAY_LONG } from '../constants.js'
 import { uniqueTeams } from '../lib/fixtures.js'
 import { useSchedule } from '../lib/useSchedule.jsx'
 import { teamHorizon } from '../lib/schedule.js'
@@ -15,29 +15,13 @@ import MatchCard from '../components/MatchCard.jsx'
 import TeamLink from '../components/TeamLink.jsx'
 import { useStackPage } from '../lib/navStack.js'
 import { normalizeTeamKey } from '../lib/match-results.js'
+import { annotateKnockout } from '../data/knockouts.js'
 
 function playedWhen(fixture) {
   const parts = [fixture.weekLabel]
   if (DAY_LONG[fixture.day]) parts.push(DAY_LONG[fixture.day])
   if (fixture.time) parts.push(fixture.time)
   return parts.filter(Boolean).join(' · ')
-}
-
-function nextMatchLine(fixture) {
-  const day = DAY_LONG[fixture.day]
-  const place = VENUE_LABEL[fixture.venue] || 'Venue to be confirmed'
-  const when = [day, fixture.time].filter(Boolean).join(', ')
-  return when ? `${when} at ${place}` : place
-}
-
-function shareData(title, text, url) {
-  const candidates = [
-    { title, text, url },
-    { text: `${title}. ${text}`, url },
-    { url },
-  ]
-  if (typeof navigator.canShare !== 'function') return candidates[0]
-  return candidates.find((data) => navigator.canShare(data)) || null
 }
 
 function ShareIcon() {
@@ -87,22 +71,26 @@ export default function Team() {
     return weeks
       .filter((item) => String(item.week.startsOn || item.week.id) >= horizon)
       .flatMap((item) =>
-        upcomingGames(team.name, item.fixtures, team.division).map((fixture) => ({
-          ...fixture,
-          weekLabel: item.week?.label || item.week?.rangeLabel,
-          startsOn: item.week?.startsOn,
-          routeId: item.week?.routeId,
-        })),
+        upcomingGames(team.name, item.fixtures, team.division).map((fixture) =>
+          annotateKnockout({
+            ...fixture,
+            weekLabel: item.week?.label || item.week?.rangeLabel,
+            startsOn: item.week?.startsOn,
+            routeId: item.week?.routeId,
+          }),
+        ),
       )
   }, [team, weeks, horizon])
 
   const rescheduled = useMemo(() => {
     if (!team) return []
-    return catchups.filter(
-      (game) =>
-        (game.home === team.name || game.away === team.name) &&
-        game.division === team.division,
-    )
+    return catchups
+      .filter(
+        (game) =>
+          (game.home === team.name || game.away === team.name) &&
+          game.division === team.division,
+      )
+      .map(annotateKnockout)
   }, [team, catchups])
 
   const history = useMemo(() => {
@@ -110,11 +98,13 @@ export default function Team() {
     const games = weeks
       .filter((item) => String(item.week.startsOn || item.week.id) < horizon)
       .flatMap((item) =>
-        item.fixtures.map((fixture) => ({
-          ...fixture,
-          weekLabel: item.week.label || item.week.rangeLabel,
-          startsOn: item.week.startsOn,
-        })),
+        item.fixtures.map((fixture) =>
+          annotateKnockout({
+            ...fixture,
+            weekLabel: item.week.label || item.week.rangeLabel,
+            startsOn: item.week.startsOn,
+          }),
+        ),
       )
     return pastGames(team.name, games, team.division)
   }, [team, weeks, horizon])
@@ -122,20 +112,17 @@ export default function Team() {
   async function shareNextMatch() {
     if (!next) return
     const url = new URL(`/teams/${slug}`, window.location.origin).href
-    const title = `${next.home} v ${next.away}`
-    const text = nextMatchLine(next)
-    const data = shareData(title, text, url)
     const phone = window.matchMedia('(max-width: 960px), (pointer: coarse)').matches
-    if (data && typeof navigator.share === 'function') {
+    if (typeof navigator.share === 'function') {
       try {
-        await navigator.share(data)
+        await navigator.share({ url })
         return
       } catch (error) {
         if (error?.name === 'AbortError' || phone) return
       }
     }
     try {
-      await navigator.clipboard.writeText(`${title}\n${text}\n${url}`)
+      await navigator.clipboard.writeText(url)
       setShareNote('Link copied')
     } catch {
       setShareNote(url)
@@ -234,6 +221,9 @@ export default function Team() {
                   <TeamLink className="team-link" name={opponent} division={fixture.division}>
                     {opponent}
                   </TeamLink>
+                  {fixture.knockoutRound ? (
+                    <small className="result-round">{fixture.knockoutRound}</small>
+                  ) : null}
                   <small>{playedWhen(fixture)}</small>
                 </div>
                 <strong>

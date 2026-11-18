@@ -1,6 +1,7 @@
 import { findWeek, teamHorizon } from './schedule.js'
 import { baySlot, uniqueTeams } from './fixtures.js'
 import { BAY_TIMES, DAY_LONG, DAYS, VENUE_LABEL } from '../constants.js'
+import { annotateKnockout } from '../data/knockouts.js'
 import { findTeamBySlug, teamDisplayName, teamShortName, upcomingGames } from './teams.js'
 
 const SITE_NAME = 'TCD Five-a-side'
@@ -33,10 +34,12 @@ export function nextTeamFixture(schedule, slug) {
   const upcoming = (schedule.weeks || [])
     .filter((item) => String(item.week.startsOn || item.week.id) >= horizon)
     .flatMap((item) =>
-      upcomingGames(team.name, item.fixtures, team.division).map((fixture) => ({
-        ...fixture,
-        weekLabel: item.week?.pickerLabel || item.week?.label || '',
-      })),
+      upcomingGames(team.name, item.fixtures, team.division).map((fixture) =>
+        annotateKnockout({
+          ...fixture,
+          weekLabel: item.week?.pickerLabel || item.week?.label || '',
+        }),
+      ),
     )
   return { team, fixture: upcoming[0] || null }
 }
@@ -104,7 +107,7 @@ function teamSharePreview(schedule, slug) {
   const title = `${home} v ${away}`
   const when = matchWhen(fixture)
   const place = matchPlace(fixture)
-  const description = when ? `${when} at ${place}.` : place
+  const description = when ? `${when} · ${place}` : place
   return {
     kind: 'match',
     title,

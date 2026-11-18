@@ -97,7 +97,7 @@ export function divisionLabel(name, { short = false } = {}) {
 export const NAV = [
   { to: '/', label: 'Fixtures' },
   { to: '/tables', label: 'Tables' },
-  { to: '/tournament', label: 'Tournament' },
+  { to: '/tournament', label: 'Knockouts' },
 ]
 
 export const LEAGUE_FILTERS = [
