@@ -61,7 +61,7 @@ export default function Tournament() {
 
   return (
     <>
-      <h1 className="page-title">Knockouts</h1>
+      <h1 className="page-title">Playoffs</h1>
       <p className="week-range">Eight-team bracket for every division</p>
       <LeagueFilters value={league} onChange={setLeague} />
 

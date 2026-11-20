@@ -25,7 +25,7 @@ test('client routes rewrite to the SPA shell', () => {
     '/',
     '/teams',
     '/tables',
-    '/tournament',
+    '/playoffs',
     '/results',
     '/week/5',
     '/teams/git-gud-division-7',
@@ -52,6 +52,7 @@ test('share preview middleware still matches team and week routes', () => {
     '/',
     '/week/:path*',
     '/tables',
+    '/playoffs',
     '/tournament',
     '/teams/:path*',
   ])

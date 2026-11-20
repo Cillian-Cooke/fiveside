@@ -15,7 +15,7 @@ const PREVIEW_BOT =
 
 export const config = {
   runtime: 'nodejs',
-  matcher: ['/', '/week/:path*', '/tables', '/tournament', '/teams/:path*'],
+  matcher: ['/', '/week/:path*', '/tables', '/playoffs', '/tournament', '/teams/:path*'],
 }
 
 async function scheduleForShare() {
