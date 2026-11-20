@@ -26,8 +26,8 @@ function matchLabel(round, matchIndex, home, away, score) {
   const label = `${round.label}, match ${matchIndex + 1}`
   if (!home && !away) return label
   const versus = `${home || 'Empty'} versus ${away || 'Empty'}`
-  const result = score ? `${score.homeScore}–${score.awayScore}` : 'upcoming'
-  return `${label}, ${versus}, ${result}`
+  if (!score) return `${label}, ${versus}`
+  return `${label}, ${versus}, ${score.homeScore}–${score.awayScore}`
 }
 
 function Bracket({ color, division, draw }) {
@@ -41,7 +41,6 @@ function Bracket({ color, division, draw }) {
               const home = draw?.[round.id]?.[matchIndex * 2]
               const away = draw?.[round.id]?.[matchIndex * 2 + 1]
               const score = draw?.scores?.[round.id]?.[matchIndex] || null
-              const upcoming = Boolean(home || away) && !score
               return (
                 <div
                   className="bracket-match"
@@ -53,8 +52,6 @@ function Bracket({ color, division, draw }) {
                     <p className="bracket-score">
                       {score.homeScore} – {score.awayScore}
                     </p>
-                  ) : upcoming ? (
-                    <p className="bracket-score is-upcoming">Upcoming</p>
                   ) : null}
                   <Slot name={away} division={division} />
                   {roundIndex < ROUNDS.length - 1 ? <span className="bracket-join" aria-hidden="true" /> : null}
