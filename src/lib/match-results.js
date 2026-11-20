@@ -1,4 +1,5 @@
 import matchResults from '../data/match-results.json' with { type: 'json' }
+import { isPlaceholderName } from '../data/knockouts.js'
 import { canonicalDivision, getTeamDirectory } from './fixtures.js'
 
 export function normalizeTeamKey(name) {
@@ -28,6 +29,7 @@ function indexResults(rows) {
   const byPair = new Map()
   for (const row of rows || []) {
     if (typeof row?.homeScore !== 'number' || typeof row?.awayScore !== 'number') continue
+    if (isPlaceholderName(row.home) || isPlaceholderName(row.away)) continue
     byExact.set(resultKey(row.weekStartsOn, row.home, row.away), row)
     byPair.set(pairKey(row.weekStartsOn, row.home, row.away), row)
   }
@@ -132,6 +134,7 @@ function syntheticFixturesFromResults(fixtures, rows) {
   const extras = []
   for (const row of rows || []) {
     if (typeof row?.homeScore !== 'number' || typeof row?.awayScore !== 'number') continue
+    if (isPlaceholderName(row.home) || isPlaceholderName(row.away)) continue
     if (row.weekStartsOn !== weekId) continue
     if (resultAppliedToFixtures(row, fixtures)) continue
     const homeMeta = lookupTeamMeta(row.home)

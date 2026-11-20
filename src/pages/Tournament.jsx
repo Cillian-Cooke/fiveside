@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { divisionPalette } from '../constants.js'
 import LeagueFilters from '../components/LeagueFilters.jsx'
 import TeamLink from '../components/TeamLink.jsx'
-import { knockoutDrawFromTies } from '../data/knockouts.js'
+import { isPlaceholderName, knockoutDrawFromTies } from '../data/knockouts.js'
 import { contrastText } from '../lib/fixtures.js'
 import { useSchedule } from '../lib/useSchedule.jsx'
 import { readSnapshot, useStackPage } from '../lib/navStack.js'
@@ -16,7 +16,18 @@ const ROUNDS = [
 
 function Slot({ name, division }) {
   if (!name) return <div className="bracket-slot" />
+  if (isPlaceholderName(name)) {
+    return <div className="bracket-slot bracket-placeholder">{name}</div>
+  }
   return <TeamLink className="bracket-slot bracket-team" name={name} division={division} />
+}
+
+function matchLabel(round, matchIndex, home, away, score) {
+  const label = `${round.label}, match ${matchIndex + 1}`
+  if (!home && !away) return label
+  const versus = `${home || 'Empty'} versus ${away || 'Empty'}`
+  const result = score ? `${score.homeScore}–${score.awayScore}` : 'upcoming'
+  return `${label}, ${versus}, ${result}`
 }
 
 function Bracket({ color, division, draw }) {
@@ -26,17 +37,30 @@ function Bracket({ color, division, draw }) {
         <div className="bracket-round" key={round.id}>
           <p className="bracket-round-label">{round.label}</p>
           <div className="bracket-round-matches">
-            {Array.from({ length: round.matches }, (_, matchIndex) => (
-              <div
-                className="bracket-match"
-                key={matchIndex}
-                aria-label={`${round.label}, match ${matchIndex + 1}`}
-              >
-                <Slot name={draw?.[round.id]?.[matchIndex * 2]} division={division} />
-                <Slot name={draw?.[round.id]?.[matchIndex * 2 + 1]} division={division} />
-                {roundIndex < ROUNDS.length - 1 ? <span className="bracket-join" aria-hidden="true" /> : null}
-              </div>
-            ))}
+            {Array.from({ length: round.matches }, (_, matchIndex) => {
+              const home = draw?.[round.id]?.[matchIndex * 2]
+              const away = draw?.[round.id]?.[matchIndex * 2 + 1]
+              const score = draw?.scores?.[round.id]?.[matchIndex] || null
+              const upcoming = Boolean(home || away) && !score
+              return (
+                <div
+                  className="bracket-match"
+                  key={matchIndex}
+                  aria-label={matchLabel(round, matchIndex, home, away, score)}
+                >
+                  <Slot name={home} division={division} />
+                  {score ? (
+                    <p className="bracket-score">
+                      {score.homeScore} – {score.awayScore}
+                    </p>
+                  ) : upcoming ? (
+                    <p className="bracket-score is-upcoming">Upcoming</p>
+                  ) : null}
+                  <Slot name={away} division={division} />
+                  {roundIndex < ROUNDS.length - 1 ? <span className="bracket-join" aria-hidden="true" /> : null}
+                </div>
+              )
+            })}
           </div>
         </div>
       ))}

@@ -1,4 +1,4 @@
-import { canonicalStage } from '../data/knockouts.js'
+import { canonicalSlot, canonicalStage, isPlaceholderName, roundFromSlot } from '../data/knockouts.js'
 import { normalizeTeamKey, pairKey } from './match-results.js'
 import { readWorkbook } from './xlsx.js'
 
@@ -12,6 +12,7 @@ const SHEET_TIMEOUT_MS = 8_000
 
 const REQUIRED_HEADERS = ['weekstartson', 'home', 'away', 'homescore', 'awayscore']
 const STAGE_HEADERS = ['stage', 'round', 'level', 'knockout', 'matchlevel']
+const SLOT_HEADERS = ['slot', 'tie', 'bracketslot', 'bracketposition', 'position']
 
 let cached = null
 let cachedAt = 0
@@ -92,10 +93,22 @@ function stageFrom(row, headers) {
   return ''
 }
 
+/** Optional slot/tie column. Blank and unknown values stay blank so row order still works. */
+function slotFrom(row, headers) {
+  for (const key of SLOT_HEADERS) {
+    if (!headers.has(key)) continue
+    const label = canonicalSlot(valueAt(row, headers, key))
+    if (label) return label
+  }
+  return ''
+}
+
 /**
  * Rows shaped like match-results.json: weekStartsOn, home, away, homeScore, awayScore.
  * Incomplete rows are dropped. `rows` may be xlsx cells (`{ text }`) or plain strings.
  * Optional `stage` (also `round`, `level`, or `match level`) marks a knockout tie.
+ * Optional `slot` (also `tie`) is ignored here; the bracket reads it separately.
+ * A placeholder side is not a result, so it never reaches the tables or team pages.
  */
 export function parseResultsRows(rows) {
   const table = locateResultsTable(rows)
@@ -111,6 +124,7 @@ export function parseResultsRows(rows) {
     const awayScore = parseScore(valueAt(row, headers, 'awayscore'))
     const weekStartsOn = parseDate(valueAt(row, headers, 'weekstartson'))
     if (!home || !away || homeScore == null || awayScore == null || !weekStartsOn) continue
+    if (isPlaceholderName(home) || isPlaceholderName(away)) continue
 
     const parsed = { weekStartsOn, home, away, homeScore, awayScore }
     const playedOn = parseDate(valueAt(row, headers, 'playedon'))
@@ -130,7 +144,9 @@ export function parseResultsRows(rows) {
 
 /**
  * Knockout ties from the Results tab, including rows that are drawn but not scored yet.
- * A row counts when it has two teams, a division, and a stage. League rows are skipped.
+ * A row counts when it has a division, at least one side, and a stage or a slot.
+ * League rows are skipped. A blank score stays blank; it is not 0.
+ * `slot` (also `tie`) is optional. When it is set it picks the round, ahead of `stage`.
  */
 export function parseKnockoutRows(rows) {
   const table = locateResultsTable(rows)
@@ -142,9 +158,18 @@ export function parseKnockoutRows(rows) {
     const home = clean(valueAt(row, headers, 'home'))
     const away = clean(valueAt(row, headers, 'away'))
     const division = clean(valueAt(row, headers, 'division'))
-    const knockoutRound = stageFrom(row, headers)
-    if (!home || !away || !division || !knockoutRound) continue
+    const slot = slotFrom(row, headers)
+    const stage = stageFrom(row, headers)
+    const knockoutRound = (slot && roundFromSlot(slot)) || stage
+    if ((!home && !away) || !division || !knockoutRound) continue
     const tie = { division, home, away, knockoutRound }
+    if (slot) tie.slot = slot
+    const homeScore = parseScore(valueAt(row, headers, 'homescore'))
+    const awayScore = parseScore(valueAt(row, headers, 'awayscore'))
+    if (homeScore != null && awayScore != null) {
+      tie.homeScore = homeScore
+      tie.awayScore = awayScore
+    }
     const weekStartsOn = parseDate(valueAt(row, headers, 'weekstartson'))
     if (weekStartsOn) tie.weekStartsOn = weekStartsOn
     ties.push(tie)

@@ -469,6 +469,72 @@ test('stage marks a knockout result and an unscored draw still fills the bracket
   assert.equal(overlaid[0].knockoutRound, 'Quarter-final')
 })
 
+test('a slot, a placeholder, and a blank score stay out of the tables', () => {
+  const csv = [
+    'weekStartsOn,division,home,away,homeScore,awayScore,stage,tie',
+    '2026-11-16,Division 4,Real Medrid,5th place,3,1,Quarter-final,QF1',
+    '2026-11-16,Division 4,Real Medrid,CSB FC,2,0,Semi-final,SF1',
+    ',Division 4,Inter Milanagement,,,,quarter,QF3',
+    '2026-11-16,Division 4,Ø Zone,Sools fc,,,Final,F',
+    ',Div 4,The Fish Tank,Unathletic Bilbao,,,Quarter-final,',
+    ',Division 5,Iteam,TBD,,,,QF2',
+    ',Division 4,Sools fc,The Fish Tank,4,,Quarter-final,QF1',
+  ].join('\n')
+  const results = parseResultsCsv(csv)
+  assert.deepEqual(
+    results.map((row) => [row.home, row.away, row.homeScore, row.awayScore]),
+    [['Real Medrid', 'CSB FC', 2, 0]],
+  )
+  assert.equal(results.some((row) => row.home === '5th place' || row.away === '5th place'), false)
+  assert.equal(results.some((row) => row.away === 'TBD'), false)
+
+  const ties = parseKnockoutRows(csv.split('\n').map((line) => line.split(',')))
+  assert.deepEqual(
+    ties.map((tie) => [tie.home, tie.away, tie.knockoutRound, tie.slot || '', tie.homeScore, tie.awayScore]),
+    [
+      ['Real Medrid', '5th place', 'Quarter-final', 'QF1', 3, 1],
+      ['Real Medrid', 'CSB FC', 'Semi-final', 'SF1', 2, 0],
+      ['Inter Milanagement', '', 'Quarter-final', 'QF3', undefined, undefined],
+      ['Ø Zone', 'Sools fc', 'Final', 'F', undefined, undefined],
+      ['The Fish Tank', 'Unathletic Bilbao', 'Quarter-final', '', undefined, undefined],
+      ['Iteam', 'TBD', 'Quarter-final', 'QF2', undefined, undefined],
+      ['Sools fc', 'The Fish Tank', 'Quarter-final', 'QF1', undefined, undefined],
+    ],
+  )
+
+  const fixtures = [
+    {
+      status: 'match',
+      weekId: '2026-11-16',
+      home: 'Real Medrid',
+      away: 'CSB FC',
+      division: 'Division 4',
+      color: '#6AA84F',
+    },
+    {
+      status: 'match',
+      weekId: '2026-11-16',
+      home: 'Ø Zone',
+      away: 'Sools fc',
+      division: 'Division 4',
+      color: '#6AA84F',
+    },
+  ]
+  const overlaid = overlayMatchScores(fixtures, results)
+  assert.equal(overlaid.length, 2)
+  assert.equal(overlaid[0].homeScore, 2)
+  assert.equal(overlaid[0].awayScore, 0)
+  assert.equal(overlaid[1].homeScore, undefined)
+  assert.equal(overlaid[1].awayScore, undefined)
+
+  const table = buildLeagueTables(overlaid).get('Division 4')
+  assert.equal(table.some((row) => row.name === '5th place' || row.name === 'TBD'), false)
+  const real = table.find((row) => row.name === 'Real Medrid')
+  assert.equal(real.played, 1)
+  assert.equal(real.points, 3)
+  assert.equal(real.gf, 2)
+})
+
 test('Teams tab gives Instagram links only for filled rows', () => {
   const links = parseTeamLinks([
     { name: 'Results', rows: [] },
