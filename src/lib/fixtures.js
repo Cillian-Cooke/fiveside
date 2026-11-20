@@ -1,5 +1,6 @@
 import { BAY_TIMES, DAYS, DIVISIONS, divisionColor } from '../constants.js'
 import bundledTeams from '../data/team-divisions.json' with { type: 'json' }
+import { isPlaceholderName } from '../data/knockouts.js'
 import { normalizeTeamKey } from './names.js'
 
 let teamDivisions = bundledTeams
@@ -181,6 +182,7 @@ export function uniqueTeams(fixtures) {
     if (fixture.status !== 'match') continue
     const color = canonicalMatchColor(fixture)
     for (const name of [fixture.home, fixture.away]) {
+      if (!name || isPlaceholderName(name)) continue
       const meta = standingsDivision(fixture, name, color)
       const key = teamRowKey(name, meta.division)
       if (!teams.has(key)) {
@@ -316,6 +318,7 @@ export function buildLeagueTables(fixtures) {
   for (const fixture of fixtures) {
     if (fixture.status !== 'match') continue
     if (typeof fixture.homeScore !== 'number' || typeof fixture.awayScore !== 'number') continue
+    if (isPlaceholderName(fixture.home) || isPlaceholderName(fixture.away)) continue
     const dedupeKey = fixturePairKey(fixture)
     if (countedFixtures.has(dedupeKey)) continue
     countedFixtures.add(dedupeKey)

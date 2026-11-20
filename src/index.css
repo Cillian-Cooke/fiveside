@@ -1159,6 +1159,35 @@ a.bracket-team:focus-visible {
   text-decoration: underline;
 }
 
+.bracket-slot.bracket-placeholder {
+  height: auto;
+  min-height: 36px;
+  padding: 4px 6px;
+  border-style: dashed;
+  border-left-style: solid;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.bracket-score {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.bracket-score.is-upcoming {
+  color: var(--muted);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .bracket-join {
   position: absolute;
   top: 50%;
