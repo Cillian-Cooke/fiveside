@@ -286,6 +286,14 @@ test('bundled fallback and the sheet snapshot agree on the current week', () => 
 
   assert.equal(fallback.weeks[3].startsOn, '2026-10-19')
   assert.equal(fallback.weeks[3].tab, 'Week 4 19th')
+  assert.equal(fallback.weeks.at(-2).tab, 'PLAYOFFS WEEK 1')
+  assert.equal(fallback.weeks.at(-2).startsOn, '2026-11-23')
+  assert.equal(fallback.weeks.at(-1).tab, 'PLAYOFFS WEEK 2')
+  assert.equal(fallback.weeks.at(-1).playoffNumber, 2)
+  assert.equal(
+    fallback.weeks.every((week) => (week.rescheduled || []).length === 0),
+    true,
+  )
 
   const view = decorateWeeks(payload, new Date('2026-10-22T12:00:00Z'))
   const current = view.weeks.find((entry) => entry.week.isCurrent)
