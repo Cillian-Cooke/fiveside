@@ -66,12 +66,30 @@ export function isReadingTab(name) {
 }
 
 /**
- * Fixture tabs only. A tab counts when it starts with "Week 4" or "Reading week".
- * Names that merely contain those words, such as "Midweek" or "Week notes", do not.
+ * "PLAYOFFS WEEK 1" is a playoff round. "Playoff notes" and "Week 1" are not.
+ * The number is the playoff round, not the league week.
+ */
+export function playoffNumberFromTab(tab) {
+  const match = String(tab || '')
+    .trim()
+    .match(/^playoffs?\s+week\s+(\d+)\b/i)
+  if (!match) return null
+  const number = Number(match[1])
+  return Number.isFinite(number) && number > 0 ? number : null
+}
+
+export function isPlayoffTab(name) {
+  return playoffNumberFromTab(name) != null
+}
+
+/**
+ * Fixture tabs only. A tab counts when it starts with "Week 4", "Reading week",
+ * or "Playoffs week 1". Names that merely contain those words, such as
+ * "Midweek", "Week notes", or "Playoff notes", do not.
  */
 export function isScheduleTab(name) {
   const text = String(name || '').trim()
-  return /^week\s+\d+\b/i.test(text) || isReadingTab(text)
+  return /^week\s+\d+\b/i.test(text) || isReadingTab(text) || isPlayoffTab(text)
 }
 
 /**
@@ -84,11 +102,15 @@ export function assignTabDates(tabNames, seasonStart = SEASON_START) {
   for (const tab of tabNames) {
     if (!isScheduleTab(tab)) continue
     const reading = isReadingTab(tab)
+    const playoffNumber = playoffNumberFromTab(tab)
+    const playoff = playoffNumber != null
     dated.push({
       tab,
       startsOn,
       reading,
-      weekNumber: reading ? null : weekNumberFromTab(tab),
+      playoff,
+      weekNumber: reading || playoff ? null : weekNumberFromTab(tab),
+      playoffNumber: playoff ? playoffNumber : null,
     })
     startsOn = shiftStartsOn(startsOn, 1)
   }
@@ -152,6 +174,7 @@ export function formatUpdatedAt(iso) {
 export function formatPickerLabel(week) {
   const range = formatCompactRange(week.startsOn)
   if (week.reading) return `Reading week · ${range}`
+  if (week.playoff) return `Playoffs week ${week.playoffNumber} · ${range}`
   return `Week ${week.weekNumber} · ${range}`
 }
 

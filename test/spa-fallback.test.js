@@ -28,6 +28,7 @@ test('client routes rewrite to the SPA shell', () => {
     '/playoffs',
     '/results',
     '/week/5',
+    '/week/playoffs-1',
     '/teams/git-gud-division-7',
   ]) {
     assert.equal(SPA_PATH.test(path), true, path)

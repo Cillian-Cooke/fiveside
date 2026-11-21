@@ -167,7 +167,7 @@ export function overlayMatchScores(fixtures, results) {
   const index = indexResults(rows)
   if (!index.byExact.size && !index.byPair.size) return fixtures
   const overlaid = fixtures.map((fixture) => {
-    if (fixture.status !== 'match') return fixture
+    if (fixture.status !== 'match' || fixture.placeholder) return fixture
     const hit = lookupResult(index, fixture.weekId, fixture.home, fixture.away)
     if (!hit) return fixture
     const scores = scoresForFixture(fixture.home, fixture.away, hit.row, hit.swap)

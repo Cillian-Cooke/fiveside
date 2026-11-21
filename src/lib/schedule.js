@@ -15,7 +15,14 @@ import {
 export function weekRouteId(week) {
   if (week?.routeId) return week.routeId
   if (week?.reading) return 'reading'
+  if (week?.playoff && week.playoffNumber) return `playoffs-${week.playoffNumber}`
   return String(week?.weekNumber || '')
+}
+
+function weekLabel(entry) {
+  if (entry.reading) return 'Reading week'
+  if (entry.playoff) return `Playoffs week ${entry.playoffNumber}`
+  return `Week ${entry.weekNumber}`
 }
 
 export function weekPath(week) {
@@ -122,12 +129,14 @@ export function decorateWeeks(payload, now = new Date()) {
       week: {
         id: entry.startsOn,
         routeId: weekRouteId(entry),
-        label: entry.reading ? 'Reading week' : `Week ${entry.weekNumber}`,
+        label: weekLabel(entry),
         rangeLabel: formatWeekRange(entry.startsOn),
         pickerLabel: formatPickerLabel(entry),
         startsOn: entry.startsOn,
         weekNumber: entry.weekNumber,
         reading: Boolean(entry.reading),
+        playoff: Boolean(entry.playoff),
+        playoffNumber: entry.playoff ? entry.playoffNumber : null,
         tab: entry.tab,
         isCurrent: entry.startsOn === open.week?.startsOn,
         dayNotes: entry.dayNotes || {},
