@@ -110,6 +110,32 @@ function hallVenueFromLabel(label) {
   return null
 }
 
+const STAGE_BOOKING =
+  /^division\s+(?:mixed|one|two|three|four|five|six|seven|[1-7])(?:\s+\d+)?\s+(?:semis?|semi-?finals?|finals?|quarters?|quarter-?finals?)$/i
+
+function cellLines(text) {
+  return String(text || '')
+    .replace(/\u00a0/g, ' ')
+    .replace(/\r\n/g, '\n')
+    .split('\n')
+    .map((line) => line.replace(/[ \t]+/g, ' ').trim())
+    .filter(Boolean)
+}
+
+/**
+ * A whole-cell stage booking such as "DIVISION MIXED / 1 / SEMIS" or
+ * "DIVISION SIX\\n1\\nFINAL". The label stays the cell text. It is not two clubs.
+ */
+function stageBookingLabel(text) {
+  const lines = cellLines(text)
+    .map((line) => line.replace(/^[\s./]+/, '').trim())
+    .filter(Boolean)
+  if (!lines.length) return null
+  const flat = lines.join(' ').replace(/[|/]+/g, ' ').replace(/\s+/g, ' ').trim()
+  if (!STAGE_BOOKING.test(flat)) return null
+  return lines.join('\n')
+}
+
 function parseVsCell(text) {
   const cell = cleanCellText(text).replace(/^[\s./]+/, '')
   if (!cell) return null
@@ -118,8 +144,12 @@ function parseVsCell(text) {
   if (lower === 'free slot' || lower === 'free' || lower === '.') return { kind: 'free' }
   if (/cancel/i.test(cell)) return { kind: 'cancelled', note: cell }
   const parts = cell.split(/\s+V\s+/i).map((part) => cleanCellText(part))
-  if (parts.length !== 2 || !parts[0] || !parts[1]) return null
-  return { kind: 'match', home: parts[0], away: parts[1] }
+  if (parts.length === 2 && parts[0] && parts[1]) {
+    return { kind: 'match', home: parts[0], away: parts[1] }
+  }
+  const label = stageBookingLabel(text)
+  if (label) return { kind: 'placeholder', label }
+  return null
 }
 
 function readableNote(text) {
@@ -217,11 +247,23 @@ function emptyWeek(dated) {
     startsOn: dated.startsOn,
     weekNumber: dated.weekNumber,
     reading: dated.reading,
+    playoff: Boolean(dated.playoff),
+    playoffNumber: dated.playoff ? dated.playoffNumber : null,
     matches: [],
     slotOverrides: [],
     rescheduled: [],
     dayNotes: {},
   }
+}
+
+function paintCell(cell, tabLegend, mergedLegend) {
+  return (
+    nearestDivision(cell?.color, tabLegend) ||
+    nearestDivision(cell?.color, mergedLegend) || {
+      division: 'Mixed Division',
+      color: mergedLegend['Mixed Division'] || '#6AA84F',
+    }
+  )
 }
 
 export function parseFixtureTab(rows, dated, tabLegend, mergedLegend, teams) {
@@ -257,6 +299,19 @@ export function parseFixtureTab(rows, dated, tabLegend, mergedLegend, teams) {
           const away = nameOf(parsed.away)
           const { division, color } = paint(cell, home, away)
           matches.push({ day, time, venue: 'botany_bay', home, away, color, division })
+        } else if (parsed?.kind === 'placeholder' && !isGrey(cell?.color)) {
+          const { division, color } = paintCell(cell, tabLegend, mergedLegend)
+          matches.push({
+            day,
+            time,
+            venue: 'botany_bay',
+            home: '',
+            away: '',
+            label: parsed.label,
+            placeholder: true,
+            color,
+            division,
+          })
         } else if (parsed?.kind === 'cancelled') {
           cancelledDays.add(day)
           week.dayNotes[day] = readableNote(parsed.note)
@@ -279,6 +334,19 @@ export function parseFixtureTab(rows, dated, tabLegend, mergedLegend, teams) {
         const away = nameOf(parsed.away)
         const { division, color } = paint(cell, home, away)
         matches.push({ day, time: '12-1pm', venue: hallVenue, home, away, color, division })
+      } else if (parsed?.kind === 'placeholder' && !isGrey(cell?.color)) {
+        const { division, color } = paintCell(cell, tabLegend, mergedLegend)
+        matches.push({
+          day,
+          time: '12-1pm',
+          venue: hallVenue,
+          home: '',
+          away: '',
+          label: parsed.label,
+          placeholder: true,
+          color,
+          division,
+        })
       } else if (parsed?.kind === 'free' || parsed?.kind === 'unavailable') {
         slotOverrides.set(key, parsed.kind)
       } else if (isGrey(cell?.color) || parsed?.kind === 'cancelled') {

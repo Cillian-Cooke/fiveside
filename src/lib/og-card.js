@@ -37,6 +37,17 @@ function MatchCell({ fixture }) {
   }
   const background = canonicalMatchColor(fixture)
   const color = contrastText(background)
+  if (fixture.placeholder) {
+    return React.createElement(
+      'div',
+      { style: cellStyle(background, color) },
+      React.createElement(
+        'div',
+        { style: { fontSize: 12, fontWeight: 700, lineHeight: 1.1, padding: '0 4px', whiteSpace: 'normal' } },
+        ogPlain(fixture.label),
+      ),
+    )
+  }
   const home = ogTeamLabel(fixture.home)
   const away = ogTeamLabel(fixture.away)
   const size = home.length > 14 || away.length > 14 ? 13 : 15

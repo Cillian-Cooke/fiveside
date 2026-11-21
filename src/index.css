@@ -857,6 +857,14 @@ input:focus-visible {
   font-weight: 800;
 }
 
+.booking-label {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.25;
+  white-space: pre-line;
+}
+
 .legend {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1071,6 +1079,14 @@ input:focus-visible {
   width: 100%;
   margin: 0;
   font-size: 0.62rem;
+  text-align: center;
+}
+
+.grid-slot .booking-label {
+  width: 100%;
+  margin: 0;
+  font-size: 0.55rem;
+  line-height: 1.05;
   text-align: center;
 }
 
@@ -1565,6 +1581,11 @@ a.bracket-team:focus-visible {
     margin: 0;
     font-size: 1rem;
     text-align: center;
+  }
+
+  .grid-slot .booking-label {
+    font-size: 0.92rem;
+    line-height: 1.15;
   }
 
   .hall-row .grid-slot {

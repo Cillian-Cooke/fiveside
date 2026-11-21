@@ -1,4 +1,5 @@
 import { VENUE_LABEL, divisionLabel } from '../constants.js'
+import { isPlaceholderName } from '../data/knockouts.js'
 import { canonicalMatchColor, contrastText } from '../lib/fixtures.js'
 import TeamLink from './TeamLink.jsx'
 import { teamDisplayName, teamShortName } from '../lib/teams.js'
@@ -13,6 +14,9 @@ function TeamName({ name, division, compact }) {
   ) : (
     full
   )
+  if (isPlaceholderName(name)) {
+    return <span className="team-name">{body}</span>
+  }
   return (
     <TeamLink className="team-name team-link" name={name} division={division}>
       {body}
@@ -58,6 +62,24 @@ export default function MatchCard({
 
   const color = canonicalMatchColor(fixture)
   const text = contrastText(color)
+  if (fixture.placeholder) {
+    return (
+      <article
+        className={`match-card booking ${compact ? 'grid-slot' : ''} ${quiet ? 'quiet' : ''}`}
+        style={quiet ? { '--accent': color } : { background: color, color: text }}
+        aria-label={String(fixture.label || '').replace(/\s*\n\s*/g, ', ')}
+      >
+        {compact ? null : (
+          <div className="card-meta">
+            <span>{fixture.venue ? VENUE_LABEL[fixture.venue] : 'No slot yet'}</span>
+            <span className="division-label">{divisionLabel(fixture.division)}</span>
+          </div>
+        )}
+        <p className="booking-label">{fixture.label}</p>
+      </article>
+    )
+  }
+
   const hasScore =
     typeof fixture.homeScore === 'number' && typeof fixture.awayScore === 'number'
 

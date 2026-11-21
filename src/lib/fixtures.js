@@ -179,7 +179,7 @@ export function hallCellFixtures(fixtures, day, venue) {
 export function uniqueTeams(fixtures) {
   const teams = new Map()
   for (const fixture of fixtures) {
-    if (fixture.status !== 'match') continue
+    if (fixture.status !== 'match' || fixture.placeholder) continue
     const color = canonicalMatchColor(fixture)
     for (const name of [fixture.home, fixture.away]) {
       if (!name || isPlaceholderName(name)) continue
@@ -243,6 +243,7 @@ export function isMatchVisible(fixture, query = '', league = 'all') {
   return (
     (fixture.home || '').toLowerCase().includes(needle) ||
     (fixture.away || '').toLowerCase().includes(needle) ||
+    (fixture.label || '').toLowerCase().includes(needle) ||
     division.includes(needle)
   )
 }
@@ -316,7 +317,7 @@ export function buildLeagueTables(fixtures) {
   seedRosterRows(rowFor)
 
   for (const fixture of fixtures) {
-    if (fixture.status !== 'match') continue
+    if (fixture.status !== 'match' || fixture.placeholder) continue
     if (typeof fixture.homeScore !== 'number' || typeof fixture.awayScore !== 'number') continue
     if (isPlaceholderName(fixture.home) || isPlaceholderName(fixture.away)) continue
     const dedupeKey = fixturePairKey(fixture)

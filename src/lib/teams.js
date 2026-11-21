@@ -155,7 +155,7 @@ function fixtureDivision(fixture) {
 export function teamGames(name, fixtures, division) {
   const want = division ? canonicalDivision(division) : null
   return fixtures.filter((fixture) => {
-    if (fixture.status !== 'match') return false
+    if (fixture.status !== 'match' || fixture.placeholder) return false
     if (fixture.home !== name && fixture.away !== name) return false
     if (want && fixtureDivision(fixture) !== want) return false
     return true

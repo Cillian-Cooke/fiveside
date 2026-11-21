@@ -46,6 +46,61 @@ test('tab order sets Mondays, and reading week keeps the following round in 2026
   assert.equal(formatPickerLabel(dated[4]), 'Reading week · 26–30 Oct')
 })
 
+test('playoff tabs follow the league in order, with their own labels and routes', () => {
+  const dated = assignTabDates([
+    ...TABS,
+    'PLAYOFFS WEEK 1',
+    'PLAYOFFS WEEK 2',
+    'Week notes',
+    'Midweek fixtures',
+    'Playoff notes',
+    'Notes about week 9',
+  ])
+  assert.equal(dated.length, 10)
+  assert.equal(dated.some((week) => /notes|midweek/i.test(week.tab)), false)
+
+  const playoffs = dated.filter((week) => week.playoff)
+  assert.deepEqual(
+    playoffs.map((week) => [week.tab, week.startsOn, week.weekNumber, week.playoffNumber, week.reading]),
+    [
+      ['PLAYOFFS WEEK 1', '2026-11-23', null, 1, false],
+      ['PLAYOFFS WEEK 2', '2026-11-30', null, 2, false],
+    ],
+  )
+  assert.equal(formatPickerLabel(playoffs[0]), 'Playoffs week 1 · 23–27 Nov')
+  assert.equal(formatPickerLabel(playoffs[1]), 'Playoffs week 2 · 30 Nov–4 Dec')
+
+  const view = decorateWeeks(
+    {
+      results: [],
+      weeks: dated.map((week) => ({ ...week, matches: [], rescheduled: [] })),
+    },
+    new Date('2026-11-21T12:00:00Z'),
+  )
+  const route = (id) => view.weeks.find((entry) => entry.week.routeId === id).week
+  assert.equal(route('1').label, 'Week 1')
+  assert.equal(route('1').pickerLabel, 'Week 1 · 28 Sep–2 Oct')
+  assert.equal(route('2').label, 'Week 2')
+  assert.equal(route('playoffs-1').label, 'Playoffs week 1')
+  assert.equal(route('playoffs-1').pickerLabel, 'Playoffs week 1 · 23–27 Nov')
+  assert.equal(route('playoffs-1').startsOn, '2026-11-23')
+  assert.equal(route('playoffs-2').label, 'Playoffs week 2')
+  assert.equal(route('playoffs-2').pickerLabel, 'Playoffs week 2 · 30 Nov–4 Dec')
+  assert.equal(view.weeks.filter((entry) => entry.week.routeId === '1').length, 1)
+  assert.equal(view.weeks.filter((entry) => entry.week.routeId === '2').length, 1)
+
+  const saturday = selectOpenWeek(dated, new Date('2026-11-21T12:00:00Z'))
+  assert.equal(saturday.week.playoffNumber, 1)
+  assert.equal(saturday.week.startsOn, '2026-11-23')
+  assert.equal(saturday.between, true)
+  assert.match(betweenNote(saturday), /16–20 Nov/)
+  assert.equal(view.open.week.routeId, 'playoffs-1')
+  assert.equal(view.weeks.find((entry) => entry.week.isCurrent).week.routeId, 'playoffs-1')
+
+  assert.equal(selectOpenWeek(dated, new Date('2026-11-20T16:59:00Z')).week.weekNumber, 7)
+  assert.equal(selectOpenWeek(dated, new Date('2026-11-20T17:00:00Z')).week.playoffNumber, 1)
+})
+
 test('a tab name has to be a numbered week or reading week', () => {
   const dated = assignTabDates([
     'Contact Info',
